@@ -11,6 +11,6 @@ public class InteractPopup : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	 	font.text = "";
+	 	//font.text = "";
 	}
 }
