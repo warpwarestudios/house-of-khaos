@@ -15,7 +15,7 @@ public class ItemWheelControl : MonoBehaviour {
 	{
 		
 		//Set Current weapon to 0
-		currentItem = items[0];
+		//currentItem = items[0];
 	}
 	
 	void Update ()

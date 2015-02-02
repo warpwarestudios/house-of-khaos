@@ -13,8 +13,12 @@ public class Crosshair : MonoBehaviour {
 	void Update () 
 	{
 		Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2,Screen.height/2, 0));
-		if(Physics.Raycast(ray, out hit, 5)){
+		if(Physics.Raycast(ray, out hit, 10))
+		{
+			if(hit.collider.gameObject.GetComponent<Interaction>() != null)
+			{
 				hit.collider.gameObject.GetComponent<Interaction>().OnLookEnter();
+			}
 		}
 	}
 }
