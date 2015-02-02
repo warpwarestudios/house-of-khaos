@@ -6,13 +6,26 @@ public class Interaction : MonoBehaviour {
 	UILabel font;
 	GameObject interactLabel;
 	GameObject uiRoot;
-	bool selected; 
+	bool selected;
+	public enum TestEnum{Item, Door};
 	
+	//This is what you need to show in the inspector.
+	public TestEnum interactionType;
+
+	
+//	Crosshair crossHair;
+//	GameObject FPC;
+//	GameObject mainCamera;
+//	
 	// Use this for initialization
 	void Start () {
 		uiRoot = GameObject.Find("UI Root");
 		interactLabel = uiRoot.transform.FindChild("InteractLabel").gameObject;
 		font = interactLabel.GetComponent<UILabel>();
+		
+//		FPC = GameObject.Find ("First Person Controller");
+//		mainCamera = FPC.transform.FindChild("Main Camera").gameObject;
+//		crossHair = mainCamera.GetComponent<Crosshair>();
 	}
 	
 	// Update is called once per frame
@@ -22,7 +35,7 @@ public class Interaction : MonoBehaviour {
 	
 	void Interact()
 	{
-		if(this.gameObject.tag == "Item")
+		if(interactionType == TestEnum.Item)
 		{
 			if (getSelected() == true)
 			{
@@ -40,7 +53,7 @@ public class Interaction : MonoBehaviour {
 				font.text = "";
 			}
 		}
-		else if (this.gameObject.tag == "Door")
+		else if (interactionType == TestEnum.Door)
 		{
 			if (getSelected() == true)
 			{
@@ -67,10 +80,6 @@ public class Interaction : MonoBehaviour {
 	public void OnLookEnter()
 	{
 		setSelected(true);
-		Debug.Log("Enter the OnlookEnterScript");
-		Debug.Log("The Cube Should be red");
-		
-		Debug.Log("E to interact should be popped");
 	}
 	
 	

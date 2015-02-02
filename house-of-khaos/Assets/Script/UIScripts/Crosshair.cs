@@ -8,7 +8,11 @@ public class Crosshair : MonoBehaviour {
 	Interaction interaction;
 	// Use this for initialization
 	void Start () {
-		interaction = GetComponent<Interaction>();
+		item = GameObject.FindWithTag("Interaction");
+		
+		interaction = item.GetComponent<Interaction>();
+		Screen.showCursor = false;
+		Screen.lockCursor = true;
 	}
 	
 	// Update is called once per frame
@@ -17,10 +21,8 @@ public class Crosshair : MonoBehaviour {
 		Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2,Screen.height/2, 0));
 		if(Physics.Raycast(ray, out hit, 5))
 		{
-			
 			if(hit.collider.gameObject.GetComponent<Interaction>() != null)
 			{
-				Debug.Log("Hit");
 				hit.collider.gameObject.GetComponent<Interaction>().OnLookEnter();
 			}
 			else
