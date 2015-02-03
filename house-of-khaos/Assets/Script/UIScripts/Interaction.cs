@@ -11,21 +11,14 @@ public class Interaction : MonoBehaviour {
 	
 	//This is what you need to show in the inspector.
 	public TestEnum interactionType;
-
 	
-//	Crosshair crossHair;
-//	GameObject FPC;
-//	GameObject mainCamera;
-//	
 	// Use this for initialization
 	void Start () {
 		uiRoot = GameObject.Find("UI Root");
 		interactLabel = uiRoot.transform.FindChild("InteractLabel").gameObject;
 		font = interactLabel.GetComponent<UILabel>();
 		
-//		FPC = GameObject.Find ("First Person Controller");
-//		mainCamera = FPC.transform.FindChild("Main Camera").gameObject;
-//		crossHair = mainCamera.GetComponent<Crosshair>();
+
 	}
 	
 	// Update is called once per frame
