@@ -3,10 +3,10 @@ using System.Collections;
 
 public class Interaction : MonoBehaviour {
 	
-	UILabel font;
-	GameObject interactLabel;
-	GameObject uiRoot;
-	bool selected;
+	public UILabel font;
+	private GameObject interactLabel;
+	private GameObject uiRoot;
+	public bool selected;
 	public enum TestEnum{Item, Door};
 	
 	//This is what you need to show in the inspector.
@@ -14,6 +14,7 @@ public class Interaction : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+
 		uiRoot = GameObject.Find("UI Root");
 		interactLabel = uiRoot.transform.FindChild("InteractLabel").gameObject;
 		font = interactLabel.GetComponent<UILabel>();
@@ -28,9 +29,30 @@ public class Interaction : MonoBehaviour {
 	
 	void Interact()
 	{
+		if (interactionType == TestEnum.Door)
+		{
+			if (selected == true)
+			{
+				//If door is open
+				this.renderer.material.color = Color.yellow;
+				font.text = "'E' to open Door";
+				Debug.Log(font.text);
+				if (Input.GetKeyDown(KeyCode.E))
+				{
+					//animate the door to be opened
+				}
+				
+				//if door is closed
+				
+			}
+			else
+			{
+				this.renderer.material.color = Color.blue;
+			}
+		}
 		if(interactionType == TestEnum.Item)
 		{
-			if (getSelected() == true)
+			if (selected == true)
 			{
 				this.renderer.material.color = Color.red;
 				font.text = "'E' to Use Item";
@@ -45,25 +67,12 @@ public class Interaction : MonoBehaviour {
 				this.renderer.material.color = Color.white;
 			}
 		}
-		else if (interactionType == TestEnum.Door)
-		{
-			if (getSelected() == true)
-			{
-				//If door is open
-				font.text = "'E' to open Door";
-				if (Input.GetKeyDown(KeyCode.E))
-				{
-					//animate the door to be opened
-				}
-				
-				//if door is closed
-				
-			}
-		}
+
 		if (!selected) 
 		{
 			font.text = "";
 		}
+		//selected = false;
 	}
 	
 	

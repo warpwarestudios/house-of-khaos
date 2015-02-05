@@ -18,13 +18,10 @@ public class Crosshair : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2,Screen.height/2, 0));
+		Ray ray = Camera.main.ScreenPointToRay (new Vector3 (Screen.width / 2, Screen.height / 2, 0));
 		if (Physics.Raycast (ray, out hit, 5) && hit.collider.gameObject.GetComponent<Interaction> () != null) 
 		{
-			hit.collider.gameObject.GetComponent<Interaction> ().OnLookEnter ();
-		} else 
-		{
-			interaction.setSelected(false);	
+				hit.collider.gameObject.GetComponent<Interaction> ().setSelected (true);
 		}
 	}
 }
