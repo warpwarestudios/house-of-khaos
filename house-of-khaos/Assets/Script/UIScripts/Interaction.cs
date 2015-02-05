@@ -43,7 +43,6 @@ public class Interaction : MonoBehaviour {
 			else
 			{
 				this.renderer.material.color = Color.white;
-				font.text = "";
 			}
 		}
 		else if (interactionType == TestEnum.Door)
@@ -60,11 +59,10 @@ public class Interaction : MonoBehaviour {
 				//if door is closed
 				
 			}
-			else
-			{
-				
-				font.text = "";
-			}
+		}
+		if (!selected) 
+		{
+			font.text = "";
 		}
 	}
 	
