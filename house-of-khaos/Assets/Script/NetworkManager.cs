@@ -37,7 +37,7 @@ public class NetworkManager : MonoBehaviour {
 				controller.enabled = true;
 				CharacterMotor charactermotor = player.GetComponent<CharacterMotor>();
 				charactermotor.enabled = true;
-				Transform playerCam = player.transform.Find ("Camera");
+				Transform playerCam = player.transform.Find ("Main Camera");
 				playerCam.active = true;
 			}
 		}
