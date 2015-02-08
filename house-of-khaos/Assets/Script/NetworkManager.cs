@@ -3,6 +3,8 @@ using System.Collections;
 
 public class NetworkManager : MonoBehaviour {
 
+	public bool createPlayer;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -24,7 +26,22 @@ public class NetworkManager : MonoBehaviour {
 	// call back on succesful room join
 	void OnJoinedRoom()
 	{
-		GameObject player = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity, 0);
+		if (createPlayer) 
+		{
+			GameObject player = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity, 0);
+			PhotonView pv = player.GetComponent<PhotonView>();
+			if (pv.isMine) {
+				MouseLook mouselook  = player.GetComponent<MouseLook>();
+				mouselook.enabled = true;
+				FPSInputController controller  = player.GetComponent<FPSInputController>();
+				controller.enabled = true;
+				CharacterMotor charactermotor = player.GetComponent<CharacterMotor>();
+				charactermotor.enabled = true;
+				Transform playerCam = player.transform.Find ("Camera");
+				playerCam.active = true;
+			}
+		}
+
 	}
 
 	// call back for failed to join
