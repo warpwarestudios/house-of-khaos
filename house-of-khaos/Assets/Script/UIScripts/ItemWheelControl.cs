@@ -6,13 +6,13 @@ public class ItemWheelControl : MonoBehaviour {
 	public GameObject[] items; //Array of items on the itemwheel
 	public int itemNumber = 0; //arrayNumber for item
 	public int rotatorNumber = 0; 
-	private float lSpeed = 60.0f; //Speed of spin
 	private GameObject empty;
 	private GameObject player;
 	private GameObject uiRoot;
 	private GameObject itemButton;
 	private UISprite uiSprite;
 	private Itemization itemization;
+	
 	
 	
 	void Start () 
@@ -23,14 +23,10 @@ public class ItemWheelControl : MonoBehaviour {
 		player = GameObject.FindWithTag("Player");
 		items = new GameObject[8];
 		empty = GameObject.Find("Empty");
-		items[0] = empty;
-		items[1] = empty;
-		items[2] = empty;
-		items[3] = empty;
-		items[4] = empty;
-		items[5] = empty;
-		items[6] = empty;
-		items[7] = empty;
+		for (int i = 0; i < items.Length; i++)
+		{
+			items[i] = empty;
+		}
 		//Set Current item to 0
 	}
 	
@@ -98,7 +94,12 @@ public class ItemWheelControl : MonoBehaviour {
 	{
 		if(!items[itemNumber].Equals(empty))
 		{
-			items[itemNumber].transform.position = player.transform.position;
+			Vector3 playerPos = player.transform.position;
+			Vector3 playerDirection = player.transform.forward;
+			float spawnDistance = -2;	
+			Vector3 spawnPos = playerPos + playerDirection*spawnDistance;
+			
+			items[itemNumber].transform.position = spawnPos;
 			items[itemNumber] = empty;
 			itemization = items[itemNumber].GetComponent<Itemization>();
 			uiSprite.spriteName = itemization.SpriteIconName;
@@ -109,8 +110,14 @@ public class ItemWheelControl : MonoBehaviour {
 	{
 		if(!items[itemNumber].Equals(empty))
 		{
-			items[itemNumber].transform.parent = player.transform;
-			items[itemNumber].transform.position = new Vector3(3, 0, -3);
+			Vector3 playerPos = player.transform.position;
+			Vector3 playerDirection = player.transform.forward;
+			float spawnDistance = 2;	
+			Vector3 spawnPos = playerPos + playerDirection*spawnDistance;
+			//items[itemNumber].transform.parent = player.transform;
+			items[itemNumber].transform.position = spawnPos;
+			items[itemNumber].rigidbody.AddForce(player.transform.up * 1000);
+			items[itemNumber].rigidbody.AddForce(player.transform.forward * 1000);
 			items[itemNumber] = empty;
 			itemization = items[itemNumber].GetComponent<Itemization>();
 			uiSprite.spriteName = itemization.SpriteIconName;
