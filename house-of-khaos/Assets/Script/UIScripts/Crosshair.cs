@@ -4,13 +4,10 @@ using System.Collections;
 public class Crosshair : MonoBehaviour {
 
 	public RaycastHit hit;
-	GameObject item;
-	Interaction interaction;
 	// Use this for initialization
 	void Start () {
-		item = GameObject.FindWithTag("Interaction");
+
 		
-		interaction = item.GetComponent<Interaction>();
 		Screen.showCursor = false;
 		Screen.lockCursor = true;
 	}

@@ -1,16 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class InteractPopup : MonoBehaviour {
+public class InteractionLabel : MonoBehaviour {
 
-	UILabel font;
 	// Use this for initialization
-	void Start () {
+	UILabel font;
+	public string TextChange {get; set;}
+	
+	void Start()
+	{
 		font = this.gameObject.GetComponent<UILabel>();
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	 	//font.text = "";
+	void Update () 
+	{
+		font.text = TextChange;
 	}
+
+	
 }

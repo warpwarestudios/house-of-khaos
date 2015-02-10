@@ -3,11 +3,20 @@ using System.Collections;
 
 public class Interaction : MonoBehaviour {
 	
-	public UILabel font;
+	public UILabel itemLabelDisplay;
+	public UILabel doorOpenLabelDisplay;
+	public UILabel doorCloseLabelDisplay;
 	private GameObject interactLabel;
 	private GameObject uiRoot;
+	private GameObject doorOpenLabel;
+	private GameObject doorCloseLabel;
+	private GameObject itemLabel;
 	public bool selected;
 	public enum TestEnum{Item, Door};
+	private string uiText = "";
+	
+	private ItemWheelControl itemControl;
+	private GameObject itemWheel;
 	
 	//This is what you need to show in the inspector.
 	public TestEnum interactionType;
@@ -17,9 +26,14 @@ public class Interaction : MonoBehaviour {
 
 		uiRoot = GameObject.Find("UI Root");
 		interactLabel = uiRoot.transform.FindChild("InteractLabel").gameObject;
-		font = interactLabel.GetComponent<UILabel>();
-		
-
+		doorOpenLabel = interactLabel.transform.FindChild("DoorOpenInteractLabel").gameObject;
+		doorCloseLabel = interactLabel.transform.FindChild("DoorCloseInteractLabel").gameObject;
+		itemLabel = interactLabel.transform.FindChild("ItemInteractLabel").gameObject;
+		itemWheel = uiRoot.transform.FindChild ("ItemWheel").gameObject;
+		itemControl = itemWheel.GetComponent<ItemWheelControl>();
+		doorOpenLabelDisplay = doorOpenLabel.GetComponent<UILabel>();
+		doorCloseLabelDisplay = doorCloseLabel.GetComponent<UILabel>();
+		itemLabelDisplay = itemLabel.GetComponent<UILabel>();
 	}
 	
 	// Update is called once per frame
@@ -34,9 +48,8 @@ public class Interaction : MonoBehaviour {
 			if (selected == true)
 			{
 				//If door is open
-				this.renderer.material.color = Color.yellow;
-				font.text = "'E' to open Door";
-				Debug.Log(font.text);
+				NGUITools.SetActive(doorOpenLabel, true);
+				
 				if (Input.GetKeyDown(KeyCode.E))
 				{
 					//animate the door to be opened
@@ -45,34 +58,28 @@ public class Interaction : MonoBehaviour {
 				//if door is closed
 				
 			}
-			else
-			{
-				this.renderer.material.color = Color.blue;
-			}
 		}
 		if(interactionType == TestEnum.Item)
 		{
 			if (selected == true)
 			{
-				this.renderer.material.color = Color.red;
-				font.text = "'E' to Use Item";
+				NGUITools.SetActive(itemLabel, true);
+				
 				if (Input.GetKeyDown(KeyCode.E))
 				{
-					this.rigidbody.AddForce(Vector3.up * 1000);
+					itemControl.SetItem(this.gameObject);
+					this.gameObject.transform.position = new Vector3 (0, -1000, 0);		
 				}
-				
-			}
-			else
-			{
-				this.renderer.material.color = Color.white;
 			}
 		}
 
 		if (!selected) 
 		{
-			font.text = "";
+			NGUITools.SetActive(doorOpenLabel, false);
+			NGUITools.SetActive(doorCloseLabel, false);
+			NGUITools.SetActive(itemLabel, false);
 		}
-		//selected = false;
+		selected = false;
 	}
 	
 	
