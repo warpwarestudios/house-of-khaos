@@ -3,9 +3,9 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
-	public Maze mazePrefab;
+	public Map mapPrefab;
 	
-	private Maze mazeInstance;
+	private Map mapInstance;
 
 	private void Start () {
 		BeginGame();
@@ -19,13 +19,14 @@ public class GameManager : MonoBehaviour {
 	
 
 	private void BeginGame () {
-		mazeInstance = Instantiate(mazePrefab) as Maze;
-		StartCoroutine(mazeInstance.Generate ());
+		mapInstance = Instantiate(mapPrefab) as Map;
+	    StartCoroutine(mapInstance.Generate ());
+		//mapInstance.Generate ();
 	}
 	
 	private void RestartGame () {
 		StopAllCoroutines ();
-		Destroy(mazeInstance.gameObject);
+		Destroy(mapInstance.gameObject);
 		BeginGame();
 
 	}
