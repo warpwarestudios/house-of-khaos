@@ -21,6 +21,11 @@ public class Cell : MonoBehaviour {
 		transform.GetChild(0).GetComponent<Renderer>().material = room.settings.floorMaterial;
 	}
 
+	public void ChangeColor()
+	{
+		transform.GetChild(0).GetComponent<Renderer>().material = room.settings.floorMaterial;
+	}
+
 	public void ResetMaterial()
 	{
 		transform.GetChild(0).GetComponent<Renderer>().material = defaultMat;

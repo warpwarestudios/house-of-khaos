@@ -27,4 +27,13 @@ public class MapRoom : MonoBehaviour {
 			cell.ResetMaterial();
 		}
 	}
+	public void ChangeColor(MapRoomSettings newSettings)
+	{
+		settings = newSettings;
+
+		foreach (Cell cell in cells) 
+		{
+			cell.ChangeColor();
+		}
+	}
 }

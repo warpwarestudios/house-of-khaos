@@ -10,7 +10,9 @@ public class Map : MonoBehaviour {
 	public MapRoom roomPrefab;
 	public Passage passagePrefab;
 	public Wall wallPrefab;
+	public Door doorPrefab;
 	public float generationStepDelay;
+	public float doorProbability;
 	public MapRoomSettings[] roomSettings;
 	public IntVector2 minRoomSize;
 	public IntVector2 maxRoomSize;
@@ -23,6 +25,7 @@ public class Map : MonoBehaviour {
 
 	private Cell[,] cells;
 	private List<MapRoom> rooms = new List<MapRoom>();
+	private List<Cell> connectors = new List<Cell>();
 
 	public IEnumerator Generate () {
 		WaitForSeconds delay = new WaitForSeconds(generationStepDelay);
@@ -32,25 +35,35 @@ public class Map : MonoBehaviour {
 		//create all cells
 		for (int x = 0; x < size.x; x++) {
 			for (int z = 0; z < size.z; z++) {
-				yield return delay;
 				CreateCell(new IntVector2(x, z));
 			}
 		}
 
-		//create rooms
+		//Step 1: create rooms
 		for (int i = 0; i < numRooms; i++) 
 		{
 			CreateRoom();
 		}
 
-		//generate maze in parts that aren't rooms
+		//Step 2: generate maze in parts that aren't rooms
 		DoFirstGenerationStep (activeCells);
 		while (activeCells.Count > 0) 
 		{
-			yield return delay;
 			DoNextGenerationStep(activeCells);
 		}
-		//add walls to rooms
+
+		//Step 3: Generate connections between rooms
+		activeCells.Clear();
+		List<MapRoom> connectedRooms = new List<MapRoom> ();
+		DoFirstConnectionStep (connectedRooms);
+		//Choose a random room
+		while (rooms.Count != connectedRooms.Count) 
+		{
+			yield return delay;
+			DoNextConnectionStep(connectedRooms,activeCells);
+		}
+
+
 	}
 
 	private void DoFirstGenerationStep (List<Cell> activeCells) {
@@ -91,7 +104,7 @@ public class Map : MonoBehaviour {
 				CreatePassageInSameRoom(currentCell, neighbor, direction);
 				activeCells.Add(neighbor);
 			}
-			//if room to halls, or room to different room create wall
+			//if room to halls, or room to different room create wall or door
 			else
 			{
 				CreateWall(currentCell, neighbor, direction);
@@ -105,8 +118,35 @@ public class Map : MonoBehaviour {
 		}
 	}
 
+	private void DoFirstConnectionStep(List<MapRoom> connectedRooms)
+	{
+		MapRoom first = rooms[0];
+		//setting color so I know it's been added
+		first.settingsIndex = 1;
+		first.ChangeColor (roomSettings[first.settingsIndex]);
+		connectedRooms.Add (first);
 
-	
+	}
+
+	private void DoNextConnectionStep(List<MapRoom> connectedRooms, List<Cell> activeCells)
+	{
+		//get last room
+		MapRoom room = connectedRooms[connectedRooms.Count - 1];
+		//get all connecting cells in that room
+		foreach (Cell cell in connectors) 
+		{
+			if(room = cell.room)
+			{
+				activeCells.Add(cell);
+			}
+		}
+		//choose a random connection and create a door there
+		//if it is a hallway traverse the hallway and find a room
+		//if it is another room add to connected region
+		//temp to be sure you get out of while loop
+		connectedRooms.Add (rooms [0]);
+	}
+
 	private void CreateCell (IntVector2 coordinates) 
 	{
 		Cell newCell = Instantiate (cellPrefab) as Cell;
@@ -121,6 +161,13 @@ public class Map : MonoBehaviour {
 
 	private void CreatePassage (Cell cell, Cell otherCell, MapDirection direction) {
 		Passage passage = Instantiate(passagePrefab) as Passage;
+		passage.Initialize(cell, otherCell, direction);
+		passage = Instantiate(passagePrefab) as Passage;
+		passage.Initialize(otherCell, cell, direction.GetOpposite());
+	}
+
+	private void CreateDoor (Cell cell, Cell otherCell, MapDirection direction) {
+		Passage passage = Instantiate(doorPrefab) as Passage;
 		passage.Initialize(cell, otherCell, direction);
 		passage = Instantiate(passagePrefab) as Passage;
 		passage.Initialize(otherCell, cell, direction.GetOpposite());
