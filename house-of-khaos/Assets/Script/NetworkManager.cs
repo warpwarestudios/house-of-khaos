@@ -28,7 +28,7 @@ public class NetworkManager : MonoBehaviour {
 	{
 		if (createPlayer) 
 		{
-			GameObject player = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity, 0);
+			GameObject player = PhotonNetwork.Instantiate("Player", this.transform.position, Quaternion.identity, 0);
 			PhotonView pv = player.GetComponent<PhotonView>();
 			if (pv.isMine) {
 				MouseLook mouselook  = player.GetComponent<MouseLook>();
@@ -38,7 +38,7 @@ public class NetworkManager : MonoBehaviour {
 				CharacterMotor charactermotor = player.GetComponent<CharacterMotor>();
 				charactermotor.enabled = true;
 				Transform playerCam = player.transform.Find ("Main Camera");
-				playerCam.active = true;
+				playerCam.gameObject.active = true;
 			}
 		}
 
