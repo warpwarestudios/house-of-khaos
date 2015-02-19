@@ -16,6 +16,7 @@ public class Map : MonoBehaviour {
 	public MapRoomSettings[] roomSettings;
 	public IntVector2 minRoomSize;
 	public IntVector2 maxRoomSize;
+	public MapRoom connectedRegion;
 
 	public IntVector2 RandomCoordinates {
 		get {
@@ -24,7 +25,7 @@ public class Map : MonoBehaviour {
 	}
 
 	private Cell[,] cells;
-	private List<MapRoom> rooms = new List<MapRoom>();
+	public List<MapRoom> rooms = new List<MapRoom>();
 	private List<Cell> connectors = new List<Cell>();
 
 	public IEnumerator Generate () {
@@ -57,11 +58,11 @@ public class Map : MonoBehaviour {
 		List<MapRoom> connectedRooms = new List<MapRoom> ();
 		DoFirstConnectionStep (connectedRooms);
 		//Choose a random room
-		while (rooms.Count != connectedRooms.Count) 
-		{
+		//while (rooms.Count != connectedRooms.Count) 
+		//{
 			yield return delay;
 			DoNextConnectionStep(connectedRooms,activeCells);
-		}
+		//}
 
 
 	}
@@ -104,11 +105,12 @@ public class Map : MonoBehaviour {
 				CreatePassageInSameRoom(currentCell, neighbor, direction);
 				activeCells.Add(neighbor);
 			}
-			//if room to halls, or room to different room create wall or door
+			//if room to halls, or room to different room create wall
 			else
 			{
 				CreateWall(currentCell, neighbor, direction);
 				activeCells.Add(neighbor);
+				connectors.Add(currentCell);
 			}
 
 		}
@@ -135,16 +137,61 @@ public class Map : MonoBehaviour {
 		//get all connecting cells in that room
 		foreach (Cell cell in connectors) 
 		{
-			if(room = cell.room)
+			if(room == cell.room)
 			{
 				activeCells.Add(cell);
 			}
 		}
-		//choose a random connection and create a door there
+		//for all connections, generate doors if under probability
+		bool doorCreated = false;
+		foreach(Cell door in activeCells)
+		{
+			//TODO: Separate probabilities of room to hall and room to room
+
+			if(!doorCreated)
+			{
+				bool doorCreatedOnCell = false;
+				for(int i = 0; i < 4; i++)
+				{
+					MapDirection direction = (MapDirection)i;
+					if(door.GetEdge(direction).GetType() == typeof(Wall) && !doorCreated)
+					{
+						Destroy(door.GetEdge(direction).gameObject);
+						IntVector2 coordinates = door.coordinates + direction.ToIntVector2();
+						Cell neighbor = GetCell(coordinates);
+						Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
+						CreateDoor(door, neighbor, direction);
+						doorCreatedOnCell = true;
+					}
+				}
+				doorCreated = true;
+			}
+			else if(Random.value < doorProbability && doorCreated)
+			{
+				//get edge equal to wall, change to door
+				bool doorCreatedOnCell = false;
+				for(int i = 0; i < 4; i++)
+				{
+					MapDirection direction = (MapDirection)i;
+					if(door.GetEdge(direction).GetType() == typeof(Wall) && !doorCreated)
+					{
+						Destroy(door.GetEdge(direction).gameObject);
+						IntVector2 coordinates = door.coordinates + direction.ToIntVector2();
+						Cell neighbor = GetCell(coordinates);
+						Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
+						CreateDoor(door, neighbor, direction);
+						doorCreatedOnCell = true;
+					}
+				}
+			}
+
+		}
+
 		//if it is a hallway traverse the hallway and find a room
 		//if it is another room add to connected region
 		//temp to be sure you get out of while loop
-		connectedRooms.Add (rooms [0]);
+		//connectedRooms.Add (rooms [0]);
+		activeCells.Clear();
 	}
 
 	private void CreateCell (IntVector2 coordinates) 
@@ -169,7 +216,7 @@ public class Map : MonoBehaviour {
 	private void CreateDoor (Cell cell, Cell otherCell, MapDirection direction) {
 		Passage passage = Instantiate(doorPrefab) as Passage;
 		passage.Initialize(cell, otherCell, direction);
-		passage = Instantiate(passagePrefab) as Passage;
+		passage = Instantiate(doorPrefab) as Passage;
 		passage.Initialize(otherCell, cell, direction.GetOpposite());
 	}
 
