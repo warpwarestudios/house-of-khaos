@@ -42,12 +42,27 @@ public class NetworkManager : MonoBehaviour {
 			}
 		}
 
+		// sync the room for the player
+		// *TESTING*
+		PhotonNetwork.automaticallySyncScene = true;
+
+		// debugging purpose: determination of master client for which all updates pass through
+		// *TESTING*
+		if (PhotonNetwork.isMasterClient) {
+			Debug.Log("Current client is master client");
+				}
+
+		Debug.Log("Player ID:" + PhotonNetwork.player.ID);
+		
 	}
 
 	// call back for failed to join
 	void OnPhotonRandomJoinFailed()
 	{
 		Debug.Log("Can't join random room!");
+		// should relay why the join failed, either too many players in room or no rooms avaliable
+		// *TESTING*
+		Debug.Log(PhotonNetworkingMessage.OnPhotonRandomJoinFailed.ToString());
 		PhotonNetwork.CreateRoom(null);
 	}
 

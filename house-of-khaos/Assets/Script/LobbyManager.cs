@@ -10,6 +10,12 @@ public class LobbyManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
+		// loading screen exit
+		//if (PhotonNetworkingMessage.OnConnectedToPhoton) {
+
+		//}
+
+		// start up
 		PhotonNetwork.logLevel = PhotonLogLevel.Full;
 		playerNameHolder = GameObject.Find ("PlayerNameInput").GetComponent <UIInput>();
 		joinNameHolder = GameObject.Find ("JoinRoomInput").GetComponent <UIInput>();
@@ -17,6 +23,7 @@ public class LobbyManager : MonoBehaviour {
 	}
 
 
+	// Randomly joins a room out of avaliable rooms, if space is availible or room exists
 	public void JoinRand()
 	{
 		Application.LoadLevel ("GameScreen");
@@ -43,4 +50,5 @@ public class LobbyManager : MonoBehaviour {
 		PhotonNetwork.CreateRoom(createNameHolder.value, new RoomOptions() 
 		                         { maxPlayers = 6 }, TypedLobby.Default);
 	}
+
 }
