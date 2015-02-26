@@ -18,10 +18,10 @@ public class NetworkManager : MonoBehaviour {
 	}
 
 	// call back for succesful lobby join
-	void OnJoinedLobby()
+	/*void OnJoinedLobby()
 	{
 		PhotonNetwork.JoinRandomRoom();
-	}
+	}*/
 
 	// call back on succesful room join
 	void OnJoinedRoom()
