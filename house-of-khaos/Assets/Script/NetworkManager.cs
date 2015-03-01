@@ -3,28 +3,10 @@ using System.Collections;
 
 public class NetworkManager : MonoBehaviour {
 
-	public bool createPlayer;
-
+	private bool createPlayer = true;
 
 	// Use this for initialization
 	void Start()
-	{
-		PhotonNetwork.logLevel = PhotonLogLevel.Full;
-	}
-	
-	void OnGUI()
-	{
-		GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
-	}
-
-	// call back for succesful lobby join
-	/*void OnJoinedLobby()
-	{
-		PhotonNetwork.JoinRandomRoom();
-	}*/
-
-	// call back on succesful room join
-	void OnJoinedRoom()
 	{
 		if (createPlayer) 
 		{
@@ -41,29 +23,23 @@ public class NetworkManager : MonoBehaviour {
 				playerCam.gameObject.active = true;
 			}
 		}
-
+		
 		// sync the room for the player
 		// *TESTING*
 		PhotonNetwork.automaticallySyncScene = true;
-
+		
 		// debugging purpose: determination of master client for which all updates pass through
 		// *TESTING*
 		if (PhotonNetwork.isMasterClient) {
 			Debug.Log("Current client is master client");
-				}
-
-		Debug.Log("Player ID:" + PhotonNetwork.player.ID);
+		}
 		
+		Debug.Log("Player ID:" + PhotonNetwork.player.ID);
 	}
-
-	// call back for failed to join
-	void OnPhotonRandomJoinFailed()
+	
+	void OnGUI()
 	{
-		Debug.Log("Can't join random room!");
-		// should relay why the join failed, either too many players in room or no rooms avaliable
-		// *TESTING*
-		Debug.Log(PhotonNetworkingMessage.OnPhotonRandomJoinFailed.ToString());
-		PhotonNetwork.CreateRoom(null);
+		GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
 	}
 
 }
