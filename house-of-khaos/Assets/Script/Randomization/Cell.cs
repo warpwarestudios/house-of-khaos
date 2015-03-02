@@ -19,6 +19,7 @@ public class Cell : MonoBehaviour {
 	public void Initialize (MapRoom room) {
 		room.Add(this);
 		transform.GetChild(0).GetComponent<Renderer>().material = room.settings.floorMaterial;
+		transform.parent = room.transform;
 	}
 
 	public void ChangeColor()

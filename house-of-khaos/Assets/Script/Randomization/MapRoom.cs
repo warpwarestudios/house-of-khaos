@@ -27,6 +27,15 @@ public class MapRoom : MonoBehaviour {
 			cell.ResetMaterial();
 		}
 	}
+
+	public void MergeInto(MapRoom room)
+	{
+		//merges this room into the given room
+		foreach (Cell cell in cells.ToArray()) 
+		{
+			cell.Initialize(room);
+		}
+	}
 	public void ChangeColor(MapRoomSettings newSettings)
 	{
 		settings = newSettings;

@@ -26,6 +26,8 @@ public class Map : MonoBehaviour {
 
 	private Cell[,] cells;
 	public List<MapRoom> rooms = new List<MapRoom>();
+	public List<MapRoom> halls = new List<MapRoom>();
+
 	private List<Cell> connectors = new List<Cell>();
 
 	public IEnumerator Generate () {
@@ -56,13 +58,20 @@ public class Map : MonoBehaviour {
 		//Step 3: Generate connections between rooms
 		activeCells.Clear();
 		List<MapRoom> connectedRooms = new List<MapRoom> ();
+		//get all connectors between rooms and hallways
+		GetAllConnectors ();
+		//join hallways together and add them to the list of rooms
+		CreateHallways ();
+		//add first room to connectedRooms
 		DoFirstConnectionStep (connectedRooms);
-		//Choose a random room
-		//while (rooms.Count != connectedRooms.Count) 
-		//{
+
+		Debug.Log ("Rooms: " + rooms.Count);
+		while (rooms.Count != connectedRooms.Count) 
+		{
 			yield return delay;
 			DoNextConnectionStep(connectedRooms,activeCells);
-		//}
+			Debug.Log ("Connected Rooms: " + connectedRooms.Count);
+		}
 
 
 	}
@@ -110,7 +119,6 @@ public class Map : MonoBehaviour {
 			{
 				CreateWall(currentCell, neighbor, direction);
 				activeCells.Add(neighbor);
-				connectors.Add(currentCell);
 			}
 
 		}
@@ -120,21 +128,42 @@ public class Map : MonoBehaviour {
 		}
 	}
 
-	private void DoFirstConnectionStep(List<MapRoom> connectedRooms)
+	private void GetAllConnectors()
 	{
-		MapRoom first = rooms[0];
-		//setting color so I know it's been added
-		first.settingsIndex = 1;
-		first.ChangeColor (roomSettings[first.settingsIndex]);
-		connectedRooms.Add (first);
+		foreach (Cell cell in cells) 
+		{
+			//check each direction
+			for(int i = 0; i < 4; i++)
+			{
+				MapDirection direction = (MapDirection)i;
+				if(cell.GetEdge(direction).GetType() == typeof(Wall))
+				{
+					IntVector2 coordinates = cell.coordinates + direction.ToIntVector2();
+					if(coordinates.x < size.x  && coordinates.z < size.z && coordinates.x > 0 && coordinates.z > 0)
+					{
+						Cell neighbor = GetCell(coordinates);
+						//if neighbor exists in grid, and the two cells are either different rooms
+						//or hallway and room
+						if (cell.room != neighbor.room)
+						{
+							if(!connectors.Contains(cell))
+							{
+								connectors.Add(cell);
+							}
+							if (!connectors.Contains(neighbor))
+							{
+								connectors.Add(neighbor);
+							}
+						}
+					}
+
+				}
+			}
+		}
 
 	}
-
-	private void DoNextConnectionStep(List<MapRoom> connectedRooms, List<Cell> activeCells)
+	private void GetConnectors(MapRoom room, List<Cell> activeCells)
 	{
-		//get last room
-		MapRoom room = connectedRooms[connectedRooms.Count - 1];
-		//get all connecting cells in that room
 		foreach (Cell cell in connectors) 
 		{
 			if(room == cell.room)
@@ -142,58 +171,228 @@ public class Map : MonoBehaviour {
 				activeCells.Add(cell);
 			}
 		}
-		//for all connections, generate doors if under probability
-		bool doorCreated = false;
-		foreach(Cell door in activeCells)
+	}
+	private void RemoveConnectors(List<Cell> remove)
+	{
+		foreach (Cell cell in remove) 
 		{
-			//TODO: Separate probabilities of room to hall and room to room
-
-			if(!doorCreated)
+			connectors.Remove(cell);
+		}
+	}
+	private void CreateHallways()
+	{
+		int count = 1;
+		foreach (Cell cell in cells) 
+		{
+			if(cell.room == null)
 			{
-				bool doorCreatedOnCell = false;
-				for(int i = 0; i < 4; i++)
-				{
-					MapDirection direction = (MapDirection)i;
-					if(door.GetEdge(direction).GetType() == typeof(Wall) && !doorCreated)
-					{
-						Destroy(door.GetEdge(direction).gameObject);
-						IntVector2 coordinates = door.coordinates + direction.ToIntVector2();
-						Cell neighbor = GetCell(coordinates);
-						Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
-						CreateDoor(door, neighbor, direction);
-						doorCreatedOnCell = true;
-					}
-				}
-				doorCreated = true;
-			}
-			else if(Random.value < doorProbability && doorCreated)
-			{
-				//get edge equal to wall, change to door
-				bool doorCreatedOnCell = false;
-				for(int i = 0; i < 4; i++)
-				{
-					MapDirection direction = (MapDirection)i;
-					if(door.GetEdge(direction).GetType() == typeof(Wall) && !doorCreated)
-					{
-						Destroy(door.GetEdge(direction).gameObject);
-						IntVector2 coordinates = door.coordinates + direction.ToIntVector2();
-						Cell neighbor = GetCell(coordinates);
-						Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
-						CreateDoor(door, neighbor, direction);
-						doorCreatedOnCell = true;
-					}
-				}
-			}
+				//generate hallway
+				MapRoom newHallway = Instantiate (roomPrefab) as MapRoom;
+				newHallway.size = new IntVector2 (0,0);
+				newHallway.settingsIndex = 2;
+				newHallway.settings = roomSettings[newHallway.settingsIndex];
+				newHallway.name = "Hallway " + count;
+				newHallway.transform.parent = transform;
+				newHallway.transform.localPosition = new Vector3 (0, 0, 0);
 
+				cell.Initialize(newHallway);
+
+				AddCellToHallway(cell,null,newHallway);
+
+				halls.Add(newHallway);
+				count++;
+			}
 		}
 
-		//if it is a hallway traverse the hallway and find a room
-		//if it is another room add to connected region
-		//temp to be sure you get out of while loop
-		//connectedRooms.Add (rooms [0]);
+
+	}
+
+	private Cell AddCellToHallway(Cell start, Cell last, MapRoom hallway)
+	{		
+		if (start == null) 
+		{
+			return last;
+		} 
+		else 
+		{
+			for(int i = 0; i < 4; i++)
+			{
+				MapDirection direction = (MapDirection)i;
+				if(start.GetEdge(direction).GetType() == typeof(Passage))
+				{
+					IntVector2 coordinates = start.coordinates + direction.ToIntVector2();
+					//if neighbor exists then...
+					Cell next = GetCell(coordinates);
+					if(next.room != hallway)
+					{
+						next.Initialize(hallway);
+					}
+					else
+					{
+						next = null;
+					}
+					AddCellToHallway(next, start, hallway);
+				}
+			}
+		}
+		return start;
+		
+	}
+
+
+	private void DoFirstConnectionStep(List<MapRoom> connectedRooms)
+	{
+		//create region
+		connectedRegion = Instantiate (roomPrefab) as MapRoom;
+		connectedRegion.size = new IntVector2 (0,0);
+		connectedRegion.settingsIndex = 1;
+		connectedRegion.settings = roomSettings[connectedRegion.settingsIndex];
+		connectedRegion.name = "Connected Region";
+		connectedRegion.transform.parent = transform;
+		connectedRegion.transform.localPosition = new Vector3 (0, 0, 0);
+		//TODO: Randomize room selection
+		MapRoom first = rooms[0];
+		connectedRooms.Add (first);
+
+
+	}
+
+	private void DoNextConnectionStep(List<MapRoom> connectedRooms, List<Cell> activeCells)
+	{
+		//get last room
+		MapRoom room = connectedRooms[connectedRooms.Count - 1];
+		bool done = false;
+		//get all connecting cells in that room
+		GetConnectors (room, activeCells);
+		room.MergeInto (connectedRegion);
+
+		//generate random cell to receive door
+		Cell door = activeCells[Random.Range (0, activeCells.Count - 1)];
+		while (!CanCreateDoor(door) && !done) 
+		{
+			//remove current failure
+			activeCells.Remove(door);
+			//randomize from remaining
+			if (activeCells.Count == 0)
+			{
+				done = true;
+			}
+			else
+			{
+				door = activeCells[Random.Range (0, activeCells.Count - 1)];
+			}
+		}
+		for(int i = 0; i < 4; i++)
+		{
+			MapDirection direction = (MapDirection)i;
+			if(door.GetEdge(direction).GetType() == typeof(Wall))
+			{
+				IntVector2 coordinates = door.coordinates + direction.ToIntVector2();
+				//if neighbor exists then...
+				if(coordinates.x < size.x  && coordinates.z < size.z && coordinates.x > 0 && coordinates.z > 0)
+				{
+					Cell neighbor = GetCell(coordinates);
+					if(neighbor.room != connectedRegion)
+					{
+						Destroy(door.GetEdge(direction).gameObject);
+						Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
+						CreateDoor(door, neighbor, direction);
+						//if it is a hallway add to region
+						if(halls.Contains(neighbor.room))
+						{
+							//get connectors and attach to new room
+							Cell newCell = ConnectHallToRoom(neighbor.room);
+							if(newCell != null)
+							{
+								neighbor.room.MergeInto(connectedRegion);
+								connectedRooms.Add(newCell.room);
+							}
+						}
+						//if it is a room add to connected rooms
+						else
+						{
+							connectedRooms.Add(neighbor.room);
+						}
+					}
+				}
+			}
+		}
+
 		activeCells.Clear();
 	}
 
+	private Cell ConnectHallToRoom(MapRoom room)
+	{
+		List<Cell> active = new List<Cell> ();
+		GetConnectors (room, active);
+		bool done = false;
+		Cell neighbor = null;
+		Cell door = active[Random.Range (0, active.Count - 1)];
+
+		while (!CanCreateDoor(door) && !done) 
+		{
+			//remove current failure
+			active.Remove(door);
+			//randomize from remaining
+			if (active.Count == 0)
+			{
+				done = true;
+			}
+			else
+			{
+				door = active[Random.Range (0, active.Count - 1)];
+			}
+		}
+		for(int i = 0; i < 4; i++)
+		{
+			MapDirection direction = (MapDirection)i;
+			if(door.GetEdge(direction).GetType() == typeof(Wall))
+			{
+				IntVector2 coordinates = door.coordinates + direction.ToIntVector2();
+				//if neighbor exists then...
+				if(coordinates.x < size.x  && coordinates.z < size.z && coordinates.x > 0 && coordinates.z > 0)
+				{
+					neighbor = GetCell(coordinates);
+					if(neighbor.room != connectedRegion && rooms.Contains (neighbor.room))
+					{
+						Destroy(door.GetEdge(direction).gameObject);
+						Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
+						CreateDoor(door, neighbor, direction);
+						return neighbor;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+
+	private bool CanCreateDoor(Cell door)
+	{
+		for(int i = 0; i < 4; i++)
+		{
+			MapDirection direction = (MapDirection)i;
+			if(door.GetEdge(direction).GetType() == typeof(Wall))
+			{
+				IntVector2 coordinates = door.coordinates + direction.ToIntVector2();
+				//if neighbor exists then...
+				if(coordinates.x < size.x  && coordinates.z < size.z && coordinates.x > 0 && coordinates.z > 0)
+				{
+					Cell neighbor = GetCell(coordinates);
+					if(neighbor.room != connectedRegion && rooms.Contains(neighbor.room))
+					{
+						//if room is not connected and isn't a hallway
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+			}
+		}
+		return false;
+	}
 	private void CreateCell (IntVector2 coordinates) 
 	{
 		Cell newCell = Instantiate (cellPrefab) as Cell;
@@ -277,7 +476,7 @@ public class Map : MonoBehaviour {
 						//initialize cell
 						newCell.Initialize(newRoom);
 						//parent cell to room
-						newCell.transform.parent = newRoom.transform;
+						//newCell.transform.parent = newRoom.transform;
 					}
 				}
 			}	
