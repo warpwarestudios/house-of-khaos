@@ -45,4 +45,9 @@ public class MapRoom : MonoBehaviour {
 			cell.ChangeColor();
 		}
 	}
+
+	public Cell GetRandomPosition()
+	{
+		return cells[Random.Range(0, cells.Count - 1)];
+	}
 }

@@ -18,6 +18,7 @@ public class Map : MonoBehaviour {
 	public IntVector2 maxRoomSize;
 	public MapRoom connectedRegion;
 
+
 	public IntVector2 RandomCoordinates {
 		get {
 			return new IntVector2(Random.Range(0, size.x), Random.Range(0, size.z));
@@ -65,14 +66,22 @@ public class Map : MonoBehaviour {
 		//add first room to connectedRooms
 		DoFirstConnectionStep (connectedRooms);
 
-		Debug.Log ("Rooms: " + rooms.Count);
-		while (rooms.Count != connectedRooms.Count) 
+		while (rooms.Count != 1)
 		{
 			yield return delay;
+			Debug.Log ("Rooms: " + rooms.Count);
 			DoNextConnectionStep(connectedRooms,activeCells);
-			Debug.Log ("Connected Rooms: " + connectedRooms.Count);
+			Debug.Log ("Rooms: " + rooms.Count);
+
 		}
 
+		//put player in random room
+		Cell randPosition = rooms[0].GetRandomPosition();
+		GameObject netMan = GameObject.Find("NetworkManager");
+		if(netMan != null)
+		{
+			netMan.transform.position = new Vector3(randPosition.transform.position.x,1, randPosition.transform.position.z);
+		}
 
 	}
 
@@ -239,7 +248,7 @@ public class Map : MonoBehaviour {
 		
 	}
 
-
+	//add random room to connected region
 	private void DoFirstConnectionStep(List<MapRoom> connectedRooms)
 	{
 		//create region
@@ -250,122 +259,124 @@ public class Map : MonoBehaviour {
 		connectedRegion.name = "Connected Region";
 		connectedRegion.transform.parent = transform;
 		connectedRegion.transform.localPosition = new Vector3 (0, 0, 0);
-		//TODO: Randomize room selection
-		MapRoom first = rooms[0];
-		connectedRooms.Add (first);
-
-
 	}
 
+	//search each possible connection for a room connection...keep those, discard the rest
+	//once all possible rooms are added, remove rooms from list, loop, choose new room to connect
+	//repeat until possible rooms are down to 1
 	private void DoNextConnectionStep(List<MapRoom> connectedRooms, List<Cell> activeCells)
 	{
 		//get last room
-		MapRoom room = connectedRooms[connectedRooms.Count - 1];
+		MapRoom room = rooms[rooms.Count - 1];
 		bool done = false;
 		//get all connecting cells in that room
 		GetConnectors (room, activeCells);
 		room.MergeInto (connectedRegion);
 
-		//generate random cell to receive door
-		Cell door = activeCells[Random.Range (0, activeCells.Count - 1)];
-		while (!CanCreateDoor(door) && !done) 
+		//search all connections for halls to rooms, and create doors
+		foreach(Cell door in activeCells)
 		{
-			//remove current failure
-			activeCells.Remove(door);
-			//randomize from remaining
-			if (activeCells.Count == 0)
+			for(int i = 0; i < 4; i++)
 			{
-				done = true;
-			}
-			else
-			{
-				door = activeCells[Random.Range (0, activeCells.Count - 1)];
-			}
-		}
-		for(int i = 0; i < 4; i++)
-		{
-			MapDirection direction = (MapDirection)i;
-			if(door.GetEdge(direction).GetType() == typeof(Wall))
-			{
-				IntVector2 coordinates = door.coordinates + direction.ToIntVector2();
-				//if neighbor exists then...
-				if(coordinates.x < size.x  && coordinates.z < size.z && coordinates.x > 0 && coordinates.z > 0)
+				MapDirection direction = (MapDirection)i;
+				if(door.GetEdge(direction).GetType() == typeof(Wall))
 				{
-					Cell neighbor = GetCell(coordinates);
-					if(neighbor.room != connectedRegion)
+					IntVector2 coordinates = door.coordinates + direction.ToIntVector2();
+					//if neighbor exists then...
+					if(coordinates.x < size.x  && coordinates.z < size.z && coordinates.x > 0 && coordinates.z > 0)
 					{
-						Destroy(door.GetEdge(direction).gameObject);
-						Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
-						CreateDoor(door, neighbor, direction);
-						//if it is a hallway add to region
-						if(halls.Contains(neighbor.room))
+						Cell neighbor = GetCell(coordinates);
+						if(neighbor.room != connectedRegion)
 						{
-							//get connectors and attach to new room
-							Cell newCell = ConnectHallToRoom(neighbor.room);
-							if(newCell != null)
+							//if it is a hallway add to region
+							if(halls.Contains(neighbor.room))
 							{
-								neighbor.room.MergeInto(connectedRegion);
-								connectedRooms.Add(newCell.room);
+								//get connectors and attach to new room
+								Cell newCell = ConnectHallsToRooms(neighbor.room);
+								if(newCell != null)
+								{
+									if(rooms.Contains(newCell.room))
+									{
+										Debug.Log("Room Exists!");
+									}
+									rooms.Remove(newCell.room);
+									Debug.Log("Removing Room! " + rooms.Count);
+									CreateDoorInWall(door, neighbor, direction);
+									neighbor.room.MergeInto(connectedRegion);
+									newCell.room.MergeInto(connectedRegion);
+									connectedRooms.Add(newCell.room);
+								}
 							}
-						}
-						//if it is a room add to connected rooms
-						else
-						{
-							connectedRooms.Add(neighbor.room);
+							//if it is a room add to connected rooms
+							else
+							{
+								if(rooms.Contains(neighbor.room))
+								{
+									Debug.Log("Room Exists!");
+								}
+								rooms.Remove(neighbor.room);
+								Debug.Log("Removing Room! " + rooms.Count);
+								CreateDoorInWall(door, neighbor, direction);
+								connectedRooms.Add(neighbor.room);
+								neighbor.room.MergeInto(connectedRegion);
+							}
 						}
 					}
 				}
 			}
-		}
 
+		}
+		if(rooms.Contains(room))
+		{
+			Debug.Log("Room Exists!");
+		}
+		rooms.Remove(room);
+		Debug.Log("Removing starting room! " + rooms.Count);
+		rooms.Add(connectedRegion);
 		activeCells.Clear();
 	}
 
-	private Cell ConnectHallToRoom(MapRoom room)
+	//takes all connectors in the hall and connects them to all rooms
+	private Cell ConnectHallsToRooms(MapRoom room)
 	{
 		List<Cell> active = new List<Cell> ();
 		GetConnectors (room, active);
 		bool done = false;
 		Cell neighbor = null;
-		Cell door = active[Random.Range (0, active.Count - 1)];
 
-		while (!CanCreateDoor(door) && !done) 
+		foreach(Cell door in active)
 		{
-			//remove current failure
-			active.Remove(door);
-			//randomize from remaining
-			if (active.Count == 0)
+			for(int i = 0; i < 4; i++)
 			{
-				done = true;
-			}
-			else
-			{
-				door = active[Random.Range (0, active.Count - 1)];
-			}
-		}
-		for(int i = 0; i < 4; i++)
-		{
-			MapDirection direction = (MapDirection)i;
-			if(door.GetEdge(direction).GetType() == typeof(Wall))
-			{
-				IntVector2 coordinates = door.coordinates + direction.ToIntVector2();
-				//if neighbor exists then...
-				if(coordinates.x < size.x  && coordinates.z < size.z && coordinates.x > 0 && coordinates.z > 0)
+				MapDirection direction = (MapDirection)i;
+				if(door.GetEdge(direction).GetType() == typeof(Wall))
 				{
-					neighbor = GetCell(coordinates);
-					if(neighbor.room != connectedRegion && rooms.Contains (neighbor.room))
+					IntVector2 coordinates = door.coordinates + direction.ToIntVector2();
+					//if neighbor exists then...
+					if(coordinates.x < size.x  && coordinates.z < size.z && coordinates.x > 0 && coordinates.z > 0)
 					{
-						Destroy(door.GetEdge(direction).gameObject);
-						Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
-						CreateDoor(door, neighbor, direction);
-						return neighbor;
+						neighbor = GetCell(coordinates);
+						//if the neighbor cell has a room, and is not connected
+						if(neighbor.room != connectedRegion && rooms.Contains (neighbor.room))
+						{
+							CreateDoorInWall(door, neighbor, direction);
+							return neighbor;
+						}
 					}
 				}
 			}
 		}
+
 		return null;
 	}
 
+	private void CreateDoorInWall(Cell door, Cell neighbor, MapDirection direction)
+	{
+		Destroy(door.GetEdge(direction).gameObject);
+		Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
+		CreateDoor(door, neighbor, direction);
+
+	}
 
 	private bool CanCreateDoor(Cell door)
 	{
@@ -393,6 +404,7 @@ public class Map : MonoBehaviour {
 		}
 		return false;
 	}
+
 	private void CreateCell (IntVector2 coordinates) 
 	{
 		Cell newCell = Instantiate (cellPrefab) as Cell;
