@@ -5,7 +5,10 @@ public class LobbyManager : MonoBehaviour {
 
 	private UIInput playerNameHolder;
 	private UIInput joinNameHolder;
+	private UIInput joinNameHolderListed;
 	private UIInput createNameHolder;
+
+	private GameObject RoomObject;
 
 	// Use this for initialization
 	void Start () 
@@ -23,6 +26,7 @@ public class LobbyManager : MonoBehaviour {
 		playerNameHolder = GameObject.Find ("PlayerNameInput").GetComponent <UIInput>();
 		joinNameHolder = GameObject.Find ("JoinRoomInput").GetComponent <UIInput>();
 		createNameHolder = GameObject.Find ("CreateRoomInput").GetComponent <UIInput>();
+		RoomObject = (GameObject)Resources.Load ("Lobby Prefab/BrowserRoom");
 
 		//Load name from PlayerPrefs
         PhotonNetwork.playerName = PlayerPrefs.GetString("playerName", "Guest" + Random.Range(1, 9999));
@@ -30,10 +34,15 @@ public class LobbyManager : MonoBehaviour {
 
 	void OnJoinedLobby()
 	{
-		/*foreach (RoomInfo game in PhotonNetwork.GetRoomList())
-            {
-			// fill in lobby list
-            }*/
+		foreach (RoomInfo game in PhotonNetwork.GetRoomList())
+        {
+			GameObject browseRoom = Instantiate (RoomObject) as GameObject;
+			browseRoom.transform.parent = GameObject.Find ("List").transform;
+			// name
+			browseRoom.transform.FindChild("RoomName").GetComponent <UILabel>().text = game.name;
+			// size
+			browseRoom.transform.FindChild("RoomName").GetComponent <UILabel>().text = game.playerCount +"/"+ game.maxPlayers;
+        }
 	}
 
 	// Randomly joins a room out of available rooms, if space is available or room exists
@@ -54,6 +63,12 @@ public class LobbyManager : MonoBehaviour {
 	public void JoinSpecRoom()
 	{
 		PhotonNetwork.JoinRoom (joinNameHolder.value);
+	}
+
+	public void JoinRoomListed()
+	{
+		joinNameHolderListed = GameObject.Find ("RoomName").GetComponent <UIInput>();
+		PhotonNetwork.JoinRoom (joinNameHolderListed.value);
 	}
 	
 	public void CreateSpecRoom()
