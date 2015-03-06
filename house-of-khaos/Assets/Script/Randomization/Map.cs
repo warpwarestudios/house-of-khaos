@@ -5,14 +5,13 @@ using System.Collections.Generic;
 public class Map : MonoBehaviour {
 
 	public IntVector2 size;
-	public int scale;
+	public float scale;
 	public int numRooms;
 	public Cell cellPrefab;
 	public MapRoom roomPrefab;
 	public Passage passagePrefab;
 	public Wall wallPrefab;
 	public Door doorPrefab;
-	public float generationStepDelay;
 	public float doorProbability;
 	public MapRoomSettings[] roomSettings;
 	public IntVector2 minRoomSize;
@@ -32,8 +31,12 @@ public class Map : MonoBehaviour {
 
 	private List<Cell> connectors = new List<Cell>();
 
-	public IEnumerator Generate () {
-		WaitForSeconds delay = new WaitForSeconds(generationStepDelay);
+	private void Start () {
+		this.transform.localScale = new Vector3 (scale, scale, scale);
+	}
+
+	public void Generate () {
+
 		cells = new Cell[size.x, size.z];
 		//create active cell list
 		List<Cell> activeCells = new List<Cell> ();
@@ -69,10 +72,7 @@ public class Map : MonoBehaviour {
 
 		while (rooms.Count != 1)
 		{
-			yield return delay;
-			Debug.Log ("Rooms: " + rooms.Count);
 			DoNextConnectionStep(connectedRooms,activeCells);
-			Debug.Log ("Rooms: " + rooms.Count);
 
 		}
 
@@ -81,7 +81,7 @@ public class Map : MonoBehaviour {
 		GameObject netMan = GameObject.Find("NetworkManager");
 		if(netMan != null)
 		{
-			netMan.transform.position = new Vector3(randPosition.transform.position.x,1, randPosition.transform.position.z);
+			netMan.transform.position = new Vector3(randPosition.transform.position.x,1 * scale, randPosition.transform.position.z);
 		}
 
 	}
@@ -296,12 +296,7 @@ public class Map : MonoBehaviour {
 								Cell newCell = ConnectHallsToRooms(neighbor.room);
 								if(newCell != null)
 								{
-									if(rooms.Contains(newCell.room))
-									{
-										Debug.Log("Room Exists!");
-									}
 									rooms.Remove(newCell.room);
-									Debug.Log("Removing Room! " + rooms.Count);
 									CreateDoorInWall(door, neighbor, direction);
 									neighbor.room.MergeInto(connectedRegion);
 									newCell.room.MergeInto(connectedRegion);
@@ -311,12 +306,8 @@ public class Map : MonoBehaviour {
 							//if it is a room add to connected rooms
 							else
 							{
-								if(rooms.Contains(neighbor.room))
-								{
-									Debug.Log("Room Exists!");
-								}
+
 								rooms.Remove(neighbor.room);
-								Debug.Log("Removing Room! " + rooms.Count);
 								CreateDoorInWall(door, neighbor, direction);
 								connectedRooms.Add(neighbor.room);
 								neighbor.room.MergeInto(connectedRegion);
@@ -327,12 +318,7 @@ public class Map : MonoBehaviour {
 			}
 
 		}
-		if(rooms.Contains(room))
-		{
-			Debug.Log("Room Exists!");
-		}
 		rooms.Remove(room);
-		Debug.Log("Removing starting room! " + rooms.Count);
 		rooms.Add(connectedRegion);
 		activeCells.Clear();
 	}
@@ -414,10 +400,8 @@ public class Map : MonoBehaviour {
 		newCell.name = "Cell " + coordinates.x + ", " + coordinates.z;
 		newCell.transform.parent = transform;
 		newCell.room = null;
-		int offset = scale/2;
 		newCell.transform.localPosition =
-			new Vector3 (coordinates.x - size.x * offset + offset, 0f, coordinates.z - size.z * offset + offset);
-		newCell.transform.localScale = new Vector3(scale,1,scale);
+			new Vector3 (coordinates.x - size.x * 0.5f + 0.5f,  0f, coordinates.z - size.z * 0.5f + 0.5f);
 
 	}
 
@@ -430,10 +414,11 @@ public class Map : MonoBehaviour {
 
 	private void CreateDoor (Cell cell, Cell otherCell, MapDirection direction) {
 		Passage passage = Instantiate(doorPrefab) as Passage;
-		passage.transform.localScale = new Vector3(scale,1,1);
 		passage.Initialize(cell, otherCell, direction);
+		passage.transform.localScale = new Vector3 (1, 1, 1);
 		passage = Instantiate(doorPrefab) as Passage;
 		passage.Initialize(otherCell, cell, direction.GetOpposite());
+		passage.transform.localScale = new Vector3 (1, 1, 1);
 	}
 
 	private void CreatePassageInSameRoom (Cell cell, Cell otherCell, MapDirection direction) {
@@ -445,11 +430,9 @@ public class Map : MonoBehaviour {
 
 	private void CreateWall (Cell cell, Cell otherCell, MapDirection direction) {
 		Wall wall = Instantiate(wallPrefab) as Wall;
-		wall.transform.localScale = new Vector3(scale,1,1);
 		wall.Initialize(cell, otherCell, direction);
 		if (otherCell != null) {
 			wall = Instantiate(wallPrefab) as Wall;
-			wall.transform.localScale = new Vector3(scale,1,1);
 			wall.Initialize(otherCell, cell, direction.GetOpposite());
 		}
 	}

@@ -20,8 +20,7 @@ public class GameManager : MonoBehaviour {
 
 	private void BeginGame () {
 		mapInstance = Instantiate(mapPrefab) as Map;
-	    StartCoroutine(mapInstance.Generate ());
-		//mapInstance.Generate ();
+	    mapInstance.Generate ();
 	}
 	
 	private void RestartGame () {
