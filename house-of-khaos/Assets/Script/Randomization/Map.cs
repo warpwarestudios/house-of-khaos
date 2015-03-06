@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Map : MonoBehaviour {
 
 	public IntVector2 size;
+	public int scale;
 	public int numRooms;
 	public Cell cellPrefab;
 	public MapRoom roomPrefab;
@@ -413,8 +414,11 @@ public class Map : MonoBehaviour {
 		newCell.name = "Cell " + coordinates.x + ", " + coordinates.z;
 		newCell.transform.parent = transform;
 		newCell.room = null;
+		int offset = scale/2;
 		newCell.transform.localPosition =
-			new Vector3 (coordinates.x - size.x * 0.5f + 0.5f, 0f, coordinates.z - size.z * 0.5f + 0.5f);
+			new Vector3 (coordinates.x - size.x * offset + offset, 0f, coordinates.z - size.z * offset + offset);
+		newCell.transform.localScale = new Vector3(scale,1,scale);
+
 	}
 
 	private void CreatePassage (Cell cell, Cell otherCell, MapDirection direction) {
@@ -426,6 +430,7 @@ public class Map : MonoBehaviour {
 
 	private void CreateDoor (Cell cell, Cell otherCell, MapDirection direction) {
 		Passage passage = Instantiate(doorPrefab) as Passage;
+		passage.transform.localScale = new Vector3(scale,1,1);
 		passage.Initialize(cell, otherCell, direction);
 		passage = Instantiate(doorPrefab) as Passage;
 		passage.Initialize(otherCell, cell, direction.GetOpposite());
@@ -440,9 +445,11 @@ public class Map : MonoBehaviour {
 
 	private void CreateWall (Cell cell, Cell otherCell, MapDirection direction) {
 		Wall wall = Instantiate(wallPrefab) as Wall;
+		wall.transform.localScale = new Vector3(scale,1,1);
 		wall.Initialize(cell, otherCell, direction);
 		if (otherCell != null) {
 			wall = Instantiate(wallPrefab) as Wall;
+			wall.transform.localScale = new Vector3(scale,1,1);
 			wall.Initialize(otherCell, cell, direction.GetOpposite());
 		}
 	}

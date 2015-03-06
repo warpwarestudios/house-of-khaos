@@ -90,7 +90,7 @@ public class LobbyManager : MonoBehaviour {
 
 	void OnJoinedRoom()
 	{
-		Application.LoadLevel ("GameScreen");
+		Application.LoadLevel ("MazeTutorial");
 	}
 	
 	void OnDisconnectedFromPhoton()
