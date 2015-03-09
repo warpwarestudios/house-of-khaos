@@ -8,7 +8,7 @@ public class Crosshair : MonoBehaviour {
 	void Start () {
 
 		
-		Screen.showCursor = false;
+		Cursor.visible = false;
 		Screen.lockCursor = true;
 	}
 	

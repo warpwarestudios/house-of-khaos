@@ -12,7 +12,7 @@ public class Shoot : MonoBehaviour {
 		if(Input.GetButtonUp("Fire1"))
 		{
 			Rigidbody shot = Instantiate(projectile, this.transform.position, this.transform.parent.rotation) as Rigidbody;
-			shot.rigidbody.AddForce(shot.transform.forward * shotForce);
+			shot.GetComponent<Rigidbody>().AddForce(shot.transform.forward * shotForce);
 		}
 	}
 }

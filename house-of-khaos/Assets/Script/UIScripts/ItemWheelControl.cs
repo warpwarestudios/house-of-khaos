@@ -116,8 +116,8 @@ public class ItemWheelControl : MonoBehaviour {
 			Vector3 spawnPos = playerPos + playerDirection*spawnDistance;
 			//items[itemNumber].transform.parent = player.transform;
 			items[itemNumber].transform.position = spawnPos;
-			items[itemNumber].rigidbody.AddForce(player.transform.up * 1000);
-			items[itemNumber].rigidbody.AddForce(player.transform.forward * 1000);
+			items[itemNumber].GetComponent<Rigidbody>().AddForce(player.transform.up * 1000);
+			items[itemNumber].GetComponent<Rigidbody>().AddForce(player.transform.forward * 1000);
 			items[itemNumber] = empty;
 			itemization = items[itemNumber].GetComponent<Itemization>();
 			uiSprite.spriteName = itemization.SpriteIconName;
