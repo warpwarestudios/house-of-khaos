@@ -3,10 +3,10 @@ using System.Collections;
 
 public class LobbyManager : MonoBehaviour {
 
-	private UIInput playerNameHolder;
-	private UIInput joinNameHolder;
-	private UIInput joinNameHolderListed;
-	private UIInput createNameHolder;
+	public GameObject playerNameHolder;
+	public GameObject joinNameHolder;
+	public GameObject createNameHolder;
+	public GameObject joinNameHolderListed;
 
 	private GameObject RoomObject;
 
@@ -16,6 +16,7 @@ public class LobbyManager : MonoBehaviour {
 		if (!PhotonNetwork.connected) 
 		{
 			PhotonNetwork.ConnectUsingSettings("0.01");
+			Debug.Log("Succesfully Connected to Photon");
 		}
 			
 		// loading screen exit
@@ -23,13 +24,21 @@ public class LobbyManager : MonoBehaviour {
 
 		// start up
 		PhotonNetwork.logLevel = PhotonLogLevel.Full;
-		playerNameHolder = GameObject.Find ("PlayerNameInput").GetComponent <UIInput>();
-		joinNameHolder = GameObject.Find ("JoinRoomInput").GetComponent <UIInput>();
-		createNameHolder = GameObject.Find ("CreateRoomInput").GetComponent <UIInput>();
+
+		//dafuq
+		string tempName = PlayerPrefs.GetString ("playerName", "Guest" + Random.Range (1, 9999));
+		//Load name from PlayerPrefs
+		PhotonNetwork.playerName = tempName;
+
+
+		//playerNameHolder = GameObject.Find ("PlayerNameInput").GetComponent <UIInput>();
+		//joinNameHolder = GameObject.Find ("JoinRoomInput").GetComponent <UIInput>();
+		//createNameHolder = GameObject.Find ("CreateRoomInput").GetComponent <UIInput>();
+		//RoomObject = (GameObject)Resources.Load ("Lobby Prefab/BrowserRoom");
 		RoomObject = (GameObject)Resources.Load ("Lobby Prefab/BrowserRoom");
 
-		//Load name from PlayerPrefs
-        PhotonNetwork.playerName = PlayerPrefs.GetString("playerName", "Guest" + Random.Range(1, 9999));
+		playerNameHolder.GetComponent <UIInput>().value = PhotonNetwork.playerName;
+
 	}
 
 	void OnJoinedLobby()
@@ -53,7 +62,7 @@ public class LobbyManager : MonoBehaviour {
 	
 	public void NamePlayer()
 	{
-		PhotonNetwork.playerName = playerNameHolder.value;
+		PhotonNetwork.playerName = playerNameHolder.GetComponent <UIInput>().value;
 		// possible name save
 		PlayerPrefs.SetString("playerName", PhotonNetwork.playerName);
 		
@@ -62,19 +71,19 @@ public class LobbyManager : MonoBehaviour {
 	
 	public void JoinSpecRoom()
 	{
-		PhotonNetwork.JoinRoom (joinNameHolder.value);
+		PhotonNetwork.JoinRoom (joinNameHolder.GetComponent <UIInput>().value);
 	}
 
 	public void JoinRoomListed()
 	{
-		joinNameHolderListed = GameObject.Find ("RoomName").GetComponent <UIInput>();
-		PhotonNetwork.JoinRoom (joinNameHolderListed.value);
+		//joinNameHolderListed = GameObject.Find ("RoomName").GetComponent <UIInput>();
+		PhotonNetwork.JoinRoom (joinNameHolderListed.GetComponent <UIInput>().value);
 	}
 	
 	public void CreateSpecRoom()
 	{
 		// using null as TypedLobby parameter will also use the default lobby
-		PhotonNetwork.CreateRoom(createNameHolder.value, new RoomOptions() { maxPlayers = 6 }, TypedLobby.Default);
+		PhotonNetwork.CreateRoom(createNameHolder.GetComponent <UIInput>().value, new RoomOptions() { maxPlayers = 6 }, TypedLobby.Default);
 	}
 
 	// call back for failed to join
@@ -85,12 +94,12 @@ public class LobbyManager : MonoBehaviour {
 		// *TESTING*
 		Debug.Log(PhotonNetworkingMessage.OnPhotonRandomJoinFailed.ToString());
 		string roomName = ("Room" + Random.Range (1, 9999));
-		PhotonNetwork.CreateRoom(createNameHolder.value, new RoomOptions() { maxPlayers = 6 }, TypedLobby.Default);;
+		PhotonNetwork.CreateRoom(createNameHolder.GetComponent <UIInput>().value, new RoomOptions() { maxPlayers = 6 }, TypedLobby.Default);;
 	}
 
 	void OnJoinedRoom()
 	{
-		Application.LoadLevel ("MazeTutorial");
+		Application.LoadLevel ("GameScreen");
 	}
 	
 	void OnDisconnectedFromPhoton()
