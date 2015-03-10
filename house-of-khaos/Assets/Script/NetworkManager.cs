@@ -26,7 +26,7 @@ public class NetworkManager : MonoBehaviour {
 		
 		// sync the room for the player
 		// *TESTING*
-		//PhotonNetwork.automaticallySyncScene = true;
+		PhotonNetwork.automaticallySyncScene = true;
 		
 		// debugging purpose: determination of master client for which all updates pass through
 		// *TESTING*
