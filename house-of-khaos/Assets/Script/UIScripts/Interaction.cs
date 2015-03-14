@@ -15,7 +15,7 @@ public class Interaction : MonoBehaviour {
 	public enum TestEnum{Item, Door};
 	private string uiText = "";
 	
-	private ItemWheelControl itemControl;
+	private HotbarManager itemControl;
 	private GameObject itemWheel;
 	
 	//This is what you need to show in the inspector.
@@ -68,7 +68,6 @@ public class Interaction : MonoBehaviour {
 				if (Input.GetKeyDown(KeyCode.E))
 				{
 					itemControl.SetItem(this.gameObject);
-					this.gameObject.transform.position = new Vector3 (0, -1000, 0);		
 				}
 			}
 		}

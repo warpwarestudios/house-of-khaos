@@ -32,35 +32,7 @@ public class ItemWheelControl : MonoBehaviour {
 	
 	void Update ()
 	{
-			if(Input.GetAxis("Mouse ScrollWheel") > 0)
-			{
-				rotatorNumber = (rotatorNumber + 1);
-				if (rotatorNumber > items.Length - 1)
-				{
-					rotatorNumber = (items.Length - items.Length);
-				}
-				
-				itemNumber = rotatorNumber;
-				transform.Rotate (Vector3.forward * -45);
-				itemization = items[itemNumber].GetComponent<Itemization>();
-				uiSprite.spriteName = itemization.SpriteIconName;
-
-			}
-			if(Input.GetAxis("Mouse ScrollWheel") < 0)
-			{
-				rotatorNumber = (rotatorNumber - 1);
-				
-				if (rotatorNumber < (items.Length - items.Length))
-				{
-					rotatorNumber = items.Length - 1;
-				}
-				
-				itemNumber = rotatorNumber;
-				transform.Rotate (Vector3.forward * 45);
-				itemization = items[itemNumber].GetComponent<Itemization>();
-				uiSprite.spriteName = itemization.SpriteIconName;
-				
-			}
+			
 	
 		if (Input.GetKeyDown(KeyCode.F))
 		{
@@ -94,15 +66,7 @@ public class ItemWheelControl : MonoBehaviour {
 	{
 		if(!items[itemNumber].Equals(empty))
 		{
-			Vector3 playerPos = player.transform.position;
-			Vector3 playerDirection = player.transform.forward;
-			float spawnDistance = -2;	
-			Vector3 spawnPos = playerPos + playerDirection*spawnDistance;
 			
-			items[itemNumber].transform.position = spawnPos;
-			items[itemNumber] = empty;
-			itemization = items[itemNumber].GetComponent<Itemization>();
-			uiSprite.spriteName = itemization.SpriteIconName;
 		}
 	}
 	
