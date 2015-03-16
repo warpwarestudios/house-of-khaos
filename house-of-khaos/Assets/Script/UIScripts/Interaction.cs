@@ -16,7 +16,7 @@ public class Interaction : MonoBehaviour {
 	private string uiText = "";
 	
 	private HotbarManager itemControl;
-	private GameObject itemWheel;
+	private GameObject hotBar;
 	
 	//This is what you need to show in the inspector.
 	public TestEnum interactionType;
@@ -26,14 +26,14 @@ public class Interaction : MonoBehaviour {
 
 		uiRoot = GameObject.Find("UI Root");
 		interactLabel = uiRoot.transform.FindChild("InteractLabel").gameObject;
-		doorOpenLabel = interactLabel.transform.FindChild("DoorOpenInteractLabel").gameObject;
-		doorCloseLabel = interactLabel.transform.FindChild("DoorCloseInteractLabel").gameObject;
-		itemLabel = interactLabel.transform.FindChild("ItemInteractLabel").gameObject;
-		itemWheel = uiRoot.transform.FindChild ("ItemWheel").gameObject;
-		itemControl = itemWheel.GetComponent<ItemWheelControl>();
-		doorOpenLabelDisplay = doorOpenLabel.GetComponent<UILabel>();
-		doorCloseLabelDisplay = doorCloseLabel.GetComponent<UILabel>();
-		itemLabelDisplay = itemLabel.GetComponent<UILabel>();
+//		doorOpenLabel = interactLabel.transform.FindChild("DoorOpenInteractLabel").gameObject;
+//		doorCloseLabel = interactLabel.transform.FindChild("DoorCloseInteractLabel").gameObject;
+//		itemLabel = interactLabel.transform.FindChild("ItemInteractLabel").gameObject;
+		hotBar = GameObject.Find("HotBarManager");
+		itemControl = hotBar.GetComponent<HotbarManager>();
+//		doorOpenLabelDisplay = doorOpenLabel.GetComponent<UILabel>();
+//		doorCloseLabelDisplay = doorCloseLabel.GetComponent<UILabel>();
+//		itemLabelDisplay = itemLabel.GetComponent<UILabel>();
 	}
 	
 	// Update is called once per frame
@@ -48,7 +48,7 @@ public class Interaction : MonoBehaviour {
 			if (selected == true)
 			{
 				//If door is open
-				NGUITools.SetActive(doorOpenLabel, true);
+				interactLabel.GetComponent<UILabel>().text = "'E' to open door";
 				
 				if (Input.GetKeyDown(KeyCode.E))
 				{
@@ -56,14 +56,14 @@ public class Interaction : MonoBehaviour {
 				}
 				
 				//if door is closed
-				
+				interactLabel.GetComponent<UILabel>().text = "'E' to close door";
 			}
 		}
 		if(interactionType == TestEnum.Item)
 		{
 			if (selected == true)
 			{
-				NGUITools.SetActive(itemLabel, true);
+				interactLabel.GetComponent<UILabel>().text = "'E' to pickup item";
 				
 				if (Input.GetKeyDown(KeyCode.E))
 				{
@@ -74,9 +74,7 @@ public class Interaction : MonoBehaviour {
 
 		if (!selected) 
 		{
-			NGUITools.SetActive(doorOpenLabel, false);
-			NGUITools.SetActive(doorCloseLabel, false);
-			NGUITools.SetActive(itemLabel, false);
+			interactLabel.GetComponent<UILabel>().text = "";
 		}
 		selected = false;
 	}
