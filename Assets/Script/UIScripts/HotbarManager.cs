@@ -17,7 +17,7 @@ public class HotbarManager : MonoBehaviour {
 	
 	void Start()
 	{
-		player = GameObject.Find("Player");
+		player = GameObject.FindWithTag("Player");
 		empty = GameObject.Find("EmptySlot");
 		
 		for (int i = 0; i < items.Length; i++ )

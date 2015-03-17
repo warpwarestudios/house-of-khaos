@@ -99,7 +99,7 @@ public class LobbyManager : MonoBehaviour {
 
 	void OnJoinedRoom()
 	{
-		if (joinNameHolder.GetComponent <UIInput>().value.Equals("debug".ToLower()))
+		if (PhotonNetwork.playerName.ToLower() == "debug")
 		{
 			PhotonNetwork.LoadLevel ("MultiTest");
 		}
