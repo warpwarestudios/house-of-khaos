@@ -1,13 +1,8 @@
 fileFormatVersion: 2
 guid: 5b32c94bc6552c44087acbc901075484
-timeCreated: 1426543507
-licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - projectile: {fileID: 5466476, guid: 2550f80fa5c66924ba555e30b0b34085, type: 2}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
-  assetBundleName: 
-  assetBundleVariant: 

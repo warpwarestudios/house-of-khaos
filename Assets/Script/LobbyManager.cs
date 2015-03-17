@@ -29,27 +29,30 @@ public class LobbyManager : MonoBehaviour {
 		string tempName = PlayerPrefs.GetString ("playerName", "Guest" + Random.Range (1, 9999));
 		//Load name from PlayerPrefs
 		PhotonNetwork.playerName = tempName;
+
+
+		//playerNameHolder = GameObject.Find ("PlayerNameInput").GetComponent <UIInput>();
+		//joinNameHolder = GameObject.Find ("JoinRoomInput").GetComponent <UIInput>();
+		//createNameHolder = GameObject.Find ("CreateRoomInput").GetComponent <UIInput>();
+		//RoomObject = (GameObject)Resources.Load ("Lobby Prefab/BrowserRoom");
 		RoomObject = (GameObject)Resources.Load ("Lobby Prefab/BrowserRoom");
+
 		playerNameHolder.GetComponent <UIInput>().value = PhotonNetwork.playerName;
 
 	}
 
-	void Update()
+	void OnJoinedLobby()
 	{
-		// works sorta
-		/*
 		foreach (RoomInfo game in PhotonNetwork.GetRoomList())
-		{
+        {
 			GameObject browseRoom = Instantiate (RoomObject) as GameObject;
 			browseRoom.transform.parent = GameObject.Find ("List").transform;
 			// name
 			browseRoom.transform.FindChild("RoomName").GetComponent <UILabel>().text = game.name;
 			// size
 			browseRoom.transform.FindChild("RoomName").GetComponent <UILabel>().text = game.playerCount +"/"+ game.maxPlayers;
-		}
-		*/
+        }
 	}
-
 
 	// Randomly joins a room out of available rooms, if space is available or room exists
 	public void JoinRand()
@@ -91,7 +94,7 @@ public class LobbyManager : MonoBehaviour {
 		// *TESTING*
 		Debug.Log(PhotonNetworkingMessage.OnPhotonRandomJoinFailed.ToString());
 		string roomName = ("Room" + Random.Range (1, 9999));
-		PhotonNetwork.CreateRoom(roomName, new RoomOptions() { maxPlayers = 6 }, TypedLobby.Default);;
+		PhotonNetwork.CreateRoom(createNameHolder.GetComponent <UIInput>().value, new RoomOptions() { maxPlayers = 6 }, TypedLobby.Default);;
 	}
 
 	void OnJoinedRoom()
@@ -116,19 +119,4 @@ public class LobbyManager : MonoBehaviour {
 
     }*/
 
-	void OnGUI()
-	{
-		GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
-		if (PhotonNetwork.GetRoomList ().Length <= 0) 
-		{
-			GUILayout.Label("No Rooms Active");
-		} 
-		else 
-		{
-			foreach (RoomInfo game in PhotonNetwork.GetRoomList()) 
-			{
-				GUILayout.Label(game.name + game.playerCount + "/" + game.maxPlayers);
-			}
-		}
-	}
 }
