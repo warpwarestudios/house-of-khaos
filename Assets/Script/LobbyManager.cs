@@ -99,7 +99,15 @@ public class LobbyManager : MonoBehaviour {
 
 	void OnJoinedRoom()
 	{
-		PhotonNetwork.LoadLevel ("GameScreen");
+		if (joinNameHolder.GetComponent <UIInput>().value.Equals("debug".ToLower()))
+		{
+			PhotonNetwork.LoadLevel ("MultiTest");
+		}
+		else
+		{
+			PhotonNetwork.LoadLevel ("GameScreen");
+		}
+		
 	}
 	
 	void OnDisconnectedFromPhoton()
