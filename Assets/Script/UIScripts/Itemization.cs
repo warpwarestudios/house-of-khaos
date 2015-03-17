@@ -9,7 +9,7 @@ public class Itemization : MonoBehaviour {
 	
 	public string ItemName{
 		get{return itemName;} 
-		set{ItemName = itemName;}}
+			set{ItemName = itemName;}}
 	
 	public string SpriteIconName{
 		get{return spriteIconName;} 
