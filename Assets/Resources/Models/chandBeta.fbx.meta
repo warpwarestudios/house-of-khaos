@@ -1,0 +1,181 @@
+fileFormatVersion: 2
+guid: 680853c84b0c28543b552c896187dbce
+timeCreated: 1426621122
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: A_chn_PLY
+    100002: A_gls_PLY
+    100004: B_chn_PLY
+    100006: B_gls_PLY
+    100008: C_gls_PLY
+    100010: chan_head_PLY
+    100012: //RootNode
+    100014: chn_PLY
+    100016: chnBtm_PLY
+    100018: chndBeta_PLY
+    100020: D_gls_PLY
+    100022: E_gls_PLY
+    100024: F_gls_PLY
+    100026: flt_PLY
+    100028: G_gls_PLY
+    100030: group
+    100032: H_gls_PLY
+    100034: I_gls_PLY
+    100036: J_gls_PLY
+    100038: K_gls_PLY
+    100040: L_gls_PLY
+    100042: M_gls_PLY
+    100044: pasted__group
+    100046: pasted__pasted__A_scn_PLY1
+    100048: pasted__pasted__polySurface1
+    100050: pasted__pasted__polySurface2
+    100052: pasted__pasted__polySurface3
+    100054: pasted__pasted__polySurface4
+    100056: pasted__pasted__transform4
+    100058: pasted__pasted__transform5
+    100060: pasted__pasted__transform6
+    100062: pasted__pasted__transform7
+    100064: pasted__pasted__transform8
+    100066: pl_PLY
+    100068: polySurface1
+    100070: transform1
+    100072: transform10
+    100074: transform11
+    100076: transform12
+    100078: transform13
+    100080: transform14
+    100082: transform15
+    100084: transform16
+    100086: transform17
+    100088: transform18
+    100090: transform19
+    100092: transform2
+    100094: transform22
+    100096: transform23
+    100098: transform3
+    100100: transform4
+    100102: transform5
+    100104: transform6
+    100106: transform7
+    100108: transform8
+    100110: transform9
+    400000: A_chn_PLY
+    400002: A_gls_PLY
+    400004: B_chn_PLY
+    400006: B_gls_PLY
+    400008: C_gls_PLY
+    400010: chan_head_PLY
+    400012: //RootNode
+    400014: chn_PLY
+    400016: chnBtm_PLY
+    400018: chndBeta_PLY
+    400020: D_gls_PLY
+    400022: E_gls_PLY
+    400024: F_gls_PLY
+    400026: flt_PLY
+    400028: G_gls_PLY
+    400030: group
+    400032: H_gls_PLY
+    400034: I_gls_PLY
+    400036: J_gls_PLY
+    400038: K_gls_PLY
+    400040: L_gls_PLY
+    400042: M_gls_PLY
+    400044: pasted__group
+    400046: pasted__pasted__A_scn_PLY1
+    400048: pasted__pasted__polySurface1
+    400050: pasted__pasted__polySurface2
+    400052: pasted__pasted__polySurface3
+    400054: pasted__pasted__polySurface4
+    400056: pasted__pasted__transform4
+    400058: pasted__pasted__transform5
+    400060: pasted__pasted__transform6
+    400062: pasted__pasted__transform7
+    400064: pasted__pasted__transform8
+    400066: pl_PLY
+    400068: polySurface1
+    400070: transform1
+    400072: transform10
+    400074: transform11
+    400076: transform12
+    400078: transform13
+    400080: transform14
+    400082: transform15
+    400084: transform16
+    400086: transform17
+    400088: transform18
+    400090: transform19
+    400092: transform2
+    400094: transform22
+    400096: transform23
+    400098: transform3
+    400100: transform4
+    400102: transform5
+    400104: transform6
+    400106: transform7
+    400108: transform8
+    400110: transform9
+    2300000: chndBeta_PLY
+    3300000: chndBeta_PLY
+    4300000: chndBeta_PLY
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 50
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
