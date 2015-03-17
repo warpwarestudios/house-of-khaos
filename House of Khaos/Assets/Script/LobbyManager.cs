@@ -119,4 +119,19 @@ public class LobbyManager : MonoBehaviour {
 
     }*/
 
+	void OnGUI()
+	{
+		GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
+		if (PhotonNetwork.GetRoomList ().Length <= 0) 
+		{
+			GUILayout.Label("No Rooms Active");
+		} 
+		else 
+		{
+			foreach (RoomInfo game in PhotonNetwork.GetRoomList()) 
+			{
+				GUILayout.Label(game.name + game.playerCount + "/" + game.maxPlayers);
+			}
+		}
+	}
 }
