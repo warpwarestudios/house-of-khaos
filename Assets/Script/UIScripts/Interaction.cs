@@ -29,7 +29,7 @@ public class Interaction : MonoBehaviour {
 //		doorOpenLabel = interactLabel.transform.FindChild("DoorOpenInteractLabel").gameObject;
 //		doorCloseLabel = interactLabel.transform.FindChild("DoorCloseInteractLabel").gameObject;
 //		itemLabel = interactLabel.transform.FindChild("ItemInteractLabel").gameObject;
-		hotBar = GameObject.Find("HotBarManager");
+		hotBar = GameObject.Find("HotbarManager");
 		itemControl = hotBar.GetComponent<HotbarManager>();
 //		doorOpenLabelDisplay = doorOpenLabel.GetComponent<UILabel>();
 //		doorCloseLabelDisplay = doorCloseLabel.GetComponent<UILabel>();
