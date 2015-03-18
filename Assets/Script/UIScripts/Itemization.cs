@@ -3,21 +3,31 @@ using System.Collections;
 
 public class Itemization : MonoBehaviour {
 	
-	public string itemName;
-	public string spriteIconName;
-	public string skillName = "None";
+//	public string iName;
+	//public string sIconName;
+	//public string sName = "None";
 	
 	public string ItemName{
-		get{return itemName;} 
-			set{ItemName = itemName;}}
+		get; 
+	    set;}
 	
 	public string SpriteIconName{
-		get{return spriteIconName;} 
-		set{SpriteIconName = spriteIconName;}}
+		get;
+		set;}
 		
 	public string SkillName{
-		get{return skillName;} 
-		set{SkillName = skillName;}}
+		get;
+		set;}
 	
-	
+	public Vector3 Position{
+		get;
+		set;}
+		
+	public Quaternion Rotation{
+		get;
+		set;}
+		
+	public Vector3 Scale{
+		get;
+		set;}
 }

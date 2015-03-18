@@ -86,9 +86,9 @@ public class HotbarManager : MonoBehaviour {
 		items[hotbarNumber] = item;
 		hotbars[hotbarNumber].GetComponent<UISprite>().spriteName = items[hotbarNumber].GetComponent<Itemization>().SpriteIconName;
 		items[hotbarNumber].transform.parent = player.transform.FindChild("Main Camera").transform;
-		items[hotbarNumber].transform.localPosition = new Vector3(0.4f,-0.4f,1.2f);
-		items[hotbarNumber].transform.localRotation = Quaternion.Euler(0.0f,82,0);
-		items[hotbarNumber].transform.localScale = new Vector3(0.32f,0.27f,0.27f);
+		items[hotbarNumber].transform.localPosition = items[hotbarNumber].GetComponent<Itemization>().Position;
+		items[hotbarNumber].transform.localRotation = items[hotbarNumber].GetComponent<Itemization>().Rotation;
+		items[hotbarNumber].transform.localScale = items[hotbarNumber].GetComponent<Itemization>().Scale;
 		items[hotbarNumber].GetComponent<Rigidbody>().useGravity = false;
 		items[hotbarNumber].GetComponent<BoxCollider>().enabled = false;
 		
