@@ -23,6 +23,8 @@ public class NetworkManager : MonoBehaviour {
 				playerCam.gameObject.active = true;
 			}
 		}
+
+
 		
 		// sync the room for the player
 		// *TESTING*
