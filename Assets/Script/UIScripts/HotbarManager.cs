@@ -13,12 +13,14 @@ public class HotbarManager : MonoBehaviour {
 	
 	public GameObject player;
 	
+	public GameObject status;
 
 	
 	void Start()
 	{
 		player = GameObject.FindWithTag("Player");
 		empty = GameObject.Find("EmptySlot");
+		status = GameObject.Find ("Status");
 		
 		for (int i = 0; i < items.Length; i++ )
 		{
@@ -124,6 +126,7 @@ public class HotbarManager : MonoBehaviour {
 			hotbars[hotbarNumber].GetComponent<UIButton>().SetState(UIButtonColor.State.Normal, true); //hovers hot barto false
 			items[hotbarNumber].GetComponent<ItemVisible>().HideChildren();
 			currentItem = hotbars[hotbarNumber];
+			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().ItemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo + "/" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo;
 			hotbarNumber++;
 			
 			
@@ -135,6 +138,8 @@ public class HotbarManager : MonoBehaviour {
 			hotbars[hotbarNumber].GetComponent<UIButton>().SetState(UIButtonColor.State.Hover, true); //hovers on hotbar to true
 			items[hotbarNumber].GetComponent<ItemVisible>().ShowChildren();
 			currentItem = hotbars[hotbarNumber];
+			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().ItemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo + "/" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo;
+			
 			
 		}
 		if(Input.GetAxis("Mouse ScrollWheel") < 0)
@@ -142,6 +147,7 @@ public class HotbarManager : MonoBehaviour {
 			hotbars[hotbarNumber].GetComponent<UIButton>().SetState(UIButtonColor.State.Normal, true); //hovers hot barto false
 			items[hotbarNumber].GetComponent<ItemVisible>().HideChildren();
 			currentItem = hotbars[hotbarNumber];
+			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().ItemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo + "/" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo;			
 			hotbarNumber--;
 			
 			if (hotbarNumber < (items.Length - items.Length))
@@ -152,7 +158,7 @@ public class HotbarManager : MonoBehaviour {
 			hotbars[hotbarNumber].GetComponent<UIButton>().SetState(UIButtonColor.State.Hover, true); //hovers on hotbar to true
 			items[hotbarNumber].GetComponent<ItemVisible>().ShowChildren();
 			currentItem = hotbars[hotbarNumber];
-			
+			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().ItemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo + "/" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo;
 		}
 	}
 	

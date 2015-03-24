@@ -18,6 +18,18 @@ public class Itemization : MonoBehaviour {
 	public string SkillName{
 		get;
 		set;}
+		
+	public float DuraSaniAmmo{
+		get;
+		set;}
+		
+	public float Damage{
+		get;
+		set;}
+		
+	public float Heal{
+		get;
+		set;}
 	
 	public Vector3 Position{
 		get;
