@@ -11,8 +11,11 @@ public class Map : MonoBehaviour {
 	public MapRoom roomPrefab;
 	public Passage passagePrefab;
 	public Wall wallPrefab;
+	public Wall wallWindowPrefab;
+	public Wall wallLampPrefab;
 	public Door doorPrefab;
-	public float doorProbability;
+	public float lampProbability;
+	public float windowProbability;
 	public MapRoomSettings[] roomSettings;
 	public IntVector2 minRoomSize;
 	public IntVector2 maxRoomSize;
@@ -76,8 +79,41 @@ public class Map : MonoBehaviour {
 
 		}
 
+		//remove unconnected halls
+		foreach (MapRoom hall in halls) 
+		{
+			Destroy(hall.gameObject);
+		}
+
+		//remove dead ends
+
+		//randomly add windows
+		//step 1: get all edges that open to the outside
+		activeCells = rooms[0].returnOutsideWallsList(this);
+
+
+		//step 2: randomly create windows on that list of edges
+		foreach(Cell cell in activeCells)
+		{
+			for(int i = 0; i < 4; i++)
+			{
+				MapDirection direction = (MapDirection)i;
+				if(cell.GetEdge(direction).GetType() == typeof(Wall))
+				{
+					IntVector2 coordinates = cell.coordinates + direction.ToIntVector2();
+					//if neighbor exists then...
+					if(coordinates.x < size.x  && coordinates.z < size.z && coordinates.x > 0 && coordinates.z > 0)
+					{
+						Cell neighbor = GetCell(coordinates);
+						CreateWindow(cell,neighbor, direction);
+					}
+				}
+				
+			}
+		}
+
 		//put player in random room
-		Cell randPosition = rooms[0].GetRandomPosition();
+		Cell randPosition = connectedRooms[0].GetRandomPosition();
 		GameObject netMan = GameObject.Find("NetworkManager");
 		if(netMan != null)
 		{
@@ -362,7 +398,15 @@ public class Map : MonoBehaviour {
 		Destroy(door.GetEdge(direction).gameObject);
 		Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
 		CreateDoor(door, neighbor, direction);
+		
+	}
 
+	private void CreateWindowInWall(Cell window, Cell neighbor, MapDirection direction)
+	{
+		Destroy(window.GetEdge(direction).gameObject);
+		Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
+		CreateWindow(window, neighbor, direction);
+		
 	}
 
 	private bool CanCreateDoor(Cell door)
@@ -429,12 +473,33 @@ public class Map : MonoBehaviour {
 	}
 
 	private void CreateWall (Cell cell, Cell otherCell, MapDirection direction) {
-		Wall wall = Instantiate(wallPrefab) as Wall;
+		Wall wall;
+		
+		//random chance to create wall with lamp
+		if (Random.value <= lampProbability) 
+		{
+			//create lamp
+			wall = Instantiate (wallLampPrefab) as Wall;
+		} else 
+		{
+			wall = Instantiate(wallPrefab) as Wall;
+		}
 		wall.Initialize(cell, otherCell, direction);
 		if (otherCell != null) {
-			wall = Instantiate(wallPrefab) as Wall;
+			if (Random.value <= lampProbability) 
+			{
+				//create lamp
+				wall = Instantiate (wallLampPrefab) as Wall;
+			} else 
+			{
+				wall = Instantiate(wallPrefab) as Wall;
+			}
 			wall.Initialize(otherCell, cell, direction.GetOpposite());
 		}
+	}
+	private void CreateWindow (Cell cell, Cell otherCell, MapDirection direction) {
+		Wall wall = Instantiate (wallWindowPrefab) as Wall;
+		wall.Initialize(cell, otherCell, direction);
 	}
 
 	private void CreateRoom () {
