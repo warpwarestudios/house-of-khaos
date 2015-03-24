@@ -103,6 +103,10 @@ public class LobbyManager : MonoBehaviour {
 		{
 			PhotonNetwork.LoadLevel ("MultiTest");
 		}
+		else if (PhotonNetwork.playerName.ToLower() == "debug2")
+		{
+			PhotonNetwork.LoadLevel ("EnemiesTest");
+		}
 		else
 		{
 			PhotonNetwork.LoadLevel ("GameScreen");
