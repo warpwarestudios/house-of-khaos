@@ -92,8 +92,8 @@ public class HotbarManager : MonoBehaviour {
 		items[hotbarNumber].transform.localRotation = items[hotbarNumber].GetComponent<Itemization>().Rotation;
 		items[hotbarNumber].transform.localScale = items[hotbarNumber].GetComponent<Itemization>().Scale;
 		items[hotbarNumber].GetComponent<Rigidbody>().useGravity = false;
-		items[hotbarNumber].GetComponent<BoxCollider>().enabled = false;
-		
+		items[hotbarNumber].GetComponent<MeshCollider>().enabled = false;
+
 	}
 	
 	void DropItem()
