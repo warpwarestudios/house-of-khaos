@@ -117,7 +117,7 @@ public class Map : MonoBehaviour {
 		GameObject netMan = GameObject.Find("NetworkManager");
 		if(netMan != null)
 		{
-			netMan.transform.position = new Vector3(randPosition.transform.position.x,1 * scale, randPosition.transform.position.z);
+			netMan.transform.position = new Vector3(randPosition.transform.position.x,1.001f * scale, randPosition.transform.position.z);
 		}
 
 	}
