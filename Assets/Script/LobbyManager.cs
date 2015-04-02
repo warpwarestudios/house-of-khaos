@@ -10,6 +10,8 @@ public class LobbyManager : MonoBehaviour {
 
 	private GameObject RoomObject;
 
+	private bool lobbyScreen = false;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -41,17 +43,34 @@ public class LobbyManager : MonoBehaviour {
 
 	}
 
-	void OnJoinedLobby()
+	void Update()
 	{
-		foreach (RoomInfo game in PhotonNetwork.GetRoomList())
-        {
-			GameObject browseRoom = Instantiate (RoomObject) as GameObject;
-			browseRoom.transform.parent = GameObject.Find ("List").transform;
-			// name
-			browseRoom.transform.FindChild("RoomName").GetComponent <UILabel>().text = game.name;
-			// size
-			browseRoom.transform.FindChild("RoomName").GetComponent <UILabel>().text = game.playerCount +"/"+ game.maxPlayers;
-        }
+		if (lobbyScreen == true) 
+		{
+			foreach (RoomInfo game in PhotonNetwork.GetRoomList()) 
+			{
+				GameObject browseRoom = Instantiate (RoomObject) as GameObject;
+				browseRoom.transform.parent = GameObject.Find ("List").transform;
+				// name
+				browseRoom.transform.FindChild ("RoomName").GetComponent <UILabel> ().text = game.name;
+				// size
+				browseRoom.transform.FindChild ("RoomName").GetComponent <UILabel> ().text = game.playerCount + "/" + game.maxPlayers;
+			}
+			lobbyScreen = false;
+		}
+	}
+
+	public void LobbyEntered()
+	{
+		lobbyScreen = true;
+	}
+
+	public void LobbyExited()
+	{
+		if (lobbyScreen = true) 
+		{
+			lobbyScreen = false;
+		}
 	}
 
 	// Randomly joins a room out of available rooms, if space is available or room exists
