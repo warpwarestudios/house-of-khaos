@@ -36,7 +36,7 @@ public class MapRoom : MonoBehaviour {
 			cell.Initialize(room);
 		}
 	}
-	public void ChangeColor(MapRoomSettings newSettings)
+	public void ChangeSettings(MapRoomSettings newSettings)
 	{
 		settings = newSettings;
 
@@ -44,6 +44,40 @@ public class MapRoom : MonoBehaviour {
 		{
 			cell.ChangeColor();
 		}
+	}
+
+	public List<Cell> returnOutsideWallsList(Map map)
+	{
+		List<Cell> activeCells = new List<Cell> ();
+		foreach (Cell cell in cells) 
+		{
+			Debug.Log (cell.name);
+			//check if it borders the outside
+			//check each direction
+			for(int i = 0; i < 4; i++)
+			{
+				MapDirection direction = (MapDirection)i;
+				if(cell.GetEdge(direction).GetType() == typeof(Wall))
+				{
+					IntVector2 coordinates = cell.coordinates + direction.ToIntVector2();
+					//if neighbor exists then...
+					if(coordinates.x < size.x  && coordinates.z < size.z && coordinates.x > 0 && coordinates.z > 0)
+					{
+						Cell neighbor = map.GetCell(coordinates);
+
+						//if neighbor does not exist in grid
+						if (neighbor == null)
+						{
+							//add to active cells
+							activeCells.Add(cell);
+						}
+					}
+				}
+				
+			}
+			//add to active cells
+		}
+		return activeCells;
 	}
 
 	public Cell GetRandomPosition()

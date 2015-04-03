@@ -12,7 +12,7 @@ public class Cell : MonoBehaviour {
 	
 	public bool IsFullyInitialized {
 		get {
-			return initializedEdgeCount == MazeDirections.Count;
+			return initializedEdgeCount == MapDirections.Count;
 		}
 	}
 

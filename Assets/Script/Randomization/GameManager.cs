@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class GameManager : MonoBehaviour {
@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour {
 	
 	private void Update () {
 		if (Input.GetKeyDown(KeyCode.Space)) {
-			RestartGame();
+			//RestartGame();
 		}
 	}
 	

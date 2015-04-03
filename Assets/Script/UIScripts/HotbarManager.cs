@@ -13,10 +13,21 @@ public class HotbarManager : MonoBehaviour {
 	
 	public GameObject player;
 	
+	public GameObject status;
 
 	
 	void Start()
 	{
+		player = GameObject.FindWithTag("Player");
+		empty = GameObject.Find("EmptySlot");
+		status = GameObject.Find ("Status");
+		
+		for (int i = 0; i < items.Length; i++ )
+		{
+			hotbars[i] = GameObject.Find("Hotbar " + (i + 1));
+		}
+		
+		
 		for (int i = 0; i < items.Length; i++ )
 		{
 			items[i] = empty;
@@ -77,12 +88,12 @@ public class HotbarManager : MonoBehaviour {
 		items[hotbarNumber] = item;
 		hotbars[hotbarNumber].GetComponent<UISprite>().spriteName = items[hotbarNumber].GetComponent<Itemization>().SpriteIconName;
 		items[hotbarNumber].transform.parent = player.transform.FindChild("Main Camera").transform;
-		items[hotbarNumber].transform.localPosition = new Vector3(0.4f,-0.4f,1.2f);
-		items[hotbarNumber].transform.localRotation = Quaternion.Euler(0.0f,82,0);
-		items[hotbarNumber].transform.localScale = new Vector3(0.32f,0.27f,0.27f);
+		items[hotbarNumber].transform.localPosition = items[hotbarNumber].GetComponent<Itemization>().Position;
+		items[hotbarNumber].transform.localRotation = items[hotbarNumber].GetComponent<Itemization>().Rotation;
+		items[hotbarNumber].transform.localScale = items[hotbarNumber].GetComponent<Itemization>().Scale;
 		items[hotbarNumber].GetComponent<Rigidbody>().useGravity = false;
-		items[hotbarNumber].GetComponent<BoxCollider>().enabled = false;
-		
+		items[hotbarNumber].GetComponent<MeshCollider>().enabled = false;
+
 	}
 	
 	void DropItem()
@@ -115,6 +126,7 @@ public class HotbarManager : MonoBehaviour {
 			hotbars[hotbarNumber].GetComponent<UIButton>().SetState(UIButtonColor.State.Normal, true); //hovers hot barto false
 			items[hotbarNumber].GetComponent<ItemVisible>().HideChildren();
 			currentItem = hotbars[hotbarNumber];
+			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().ItemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo + "/" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo;
 			hotbarNumber++;
 			
 			
@@ -126,6 +138,8 @@ public class HotbarManager : MonoBehaviour {
 			hotbars[hotbarNumber].GetComponent<UIButton>().SetState(UIButtonColor.State.Hover, true); //hovers on hotbar to true
 			items[hotbarNumber].GetComponent<ItemVisible>().ShowChildren();
 			currentItem = hotbars[hotbarNumber];
+			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().ItemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo + "/" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo;
+			
 			
 		}
 		if(Input.GetAxis("Mouse ScrollWheel") < 0)
@@ -133,6 +147,7 @@ public class HotbarManager : MonoBehaviour {
 			hotbars[hotbarNumber].GetComponent<UIButton>().SetState(UIButtonColor.State.Normal, true); //hovers hot barto false
 			items[hotbarNumber].GetComponent<ItemVisible>().HideChildren();
 			currentItem = hotbars[hotbarNumber];
+			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().ItemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo + "/" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo;			
 			hotbarNumber--;
 			
 			if (hotbarNumber < (items.Length - items.Length))
@@ -143,7 +158,7 @@ public class HotbarManager : MonoBehaviour {
 			hotbars[hotbarNumber].GetComponent<UIButton>().SetState(UIButtonColor.State.Hover, true); //hovers on hotbar to true
 			items[hotbarNumber].GetComponent<ItemVisible>().ShowChildren();
 			currentItem = hotbars[hotbarNumber];
-			
+			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().ItemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo + "/" + items[hotbarNumber].GetComponent<Itemization>().DuraSaniAmmo;
 		}
 	}
 	
