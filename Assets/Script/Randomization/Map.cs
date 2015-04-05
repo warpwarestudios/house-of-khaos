@@ -28,7 +28,7 @@ public class Map : MonoBehaviour {
 		}
 	}
 
-	private Cell[,] cells;
+	public Cell[,] cells;
 	public List<MapRoom> rooms = new List<MapRoom>();
 	public List<MapRoom> halls = new List<MapRoom>();
 
@@ -38,11 +38,13 @@ public class Map : MonoBehaviour {
 		this.transform.localScale = new Vector3 (scale, scale, scale);
 	}
 
+	public List<Cell> activeCells = new List<Cell> ();
+
 	public void Generate () {
 
 		cells = new Cell[size.x, size.z];
 		//create active cell list
-		List<Cell> activeCells = new List<Cell> ();
+
 		//create all cells
 		for (int x = 0; x < size.x; x++) {
 			for (int z = 0; z < size.z; z++) {
@@ -89,6 +91,21 @@ public class Map : MonoBehaviour {
 
 		//randomly add windows
 		//step 1: get all edges that open to the outside
+		//step 1a: clear out cells in map that do not exist
+		Cell removedCell;
+
+		for (int x = 0; x < size.x; x++) {
+			for (int z = 0; z < size.z; z++) {
+				removedCell = GetCell(new IntVector2(x,z));
+				//if the cell does not exist in the map anymore, set it to null
+				if(!rooms[0].InRoom(removedCell))
+				{
+					cells[x,z] = null;
+				}
+			}
+		}
+
+		//step 1b: call function to return all outside walls
 		activeCells = rooms[0].returnOutsideWallsList(this);
 
 
@@ -105,7 +122,7 @@ public class Map : MonoBehaviour {
 					if(coordinates.x < size.x  && coordinates.z < size.z && coordinates.x > 0 && coordinates.z > 0)
 					{
 						Cell neighbor = GetCell(coordinates);
-						CreateWindow(cell,neighbor, direction);
+						CreateWindowInWall(cell,neighbor, direction);
 					}
 				}
 				
@@ -403,9 +420,13 @@ public class Map : MonoBehaviour {
 
 	private void CreateWindowInWall(Cell window, Cell neighbor, MapDirection direction)
 	{
-		Destroy(window.GetEdge(direction).gameObject);
-		Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
-		CreateWindow(window, neighbor, direction);
+		if (Random.value <= windowProbability) 
+		{
+			//create window
+			Destroy(window.GetEdge(direction).gameObject);
+			//Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
+			CreateWindow(window, neighbor, direction);
+		}
 		
 	}
 
