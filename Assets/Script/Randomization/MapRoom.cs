@@ -33,7 +33,8 @@ public class MapRoom : MonoBehaviour {
 		//merges this room into the given room
 		foreach (Cell cell in cells.ToArray()) 
 		{
-			cell.Initialize(room);
+			room.Add(cell);
+			cell.transform.parent = room.transform;
 		}
 	}
 	public void ChangeSettings(MapRoomSettings newSettings)

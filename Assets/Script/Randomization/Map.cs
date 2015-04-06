@@ -252,7 +252,7 @@ public class Map : MonoBehaviour {
 				//generate hallway
 				MapRoom newHallway = Instantiate (roomPrefab) as MapRoom;
 				newHallway.size = new IntVector2 (0,0);
-				newHallway.settingsIndex = 2;
+				newHallway.settingsIndex = 0;
 				newHallway.settings = roomSettings[newHallway.settingsIndex];
 				newHallway.name = "Hallway " + count;
 				newHallway.transform.parent = transform;
@@ -308,7 +308,7 @@ public class Map : MonoBehaviour {
 		//create region
 		connectedRegion = Instantiate (roomPrefab) as MapRoom;
 		connectedRegion.size = new IntVector2 (0,0);
-		connectedRegion.settingsIndex = 1;
+		connectedRegion.settingsIndex = 0;
 		connectedRegion.settings = roomSettings[connectedRegion.settingsIndex];
 		connectedRegion.name = "Connected Region";
 		connectedRegion.transform.parent = transform;
@@ -529,7 +529,7 @@ public class Map : MonoBehaviour {
 		newRoom.size = new IntVector2 (Random.Range(minRoomSize.z,maxRoomSize.x), Random.Range(minRoomSize.z, maxRoomSize.z));
 		bool overlap = false;
 		//TODO: add randomization elements
-		newRoom.settingsIndex = 0;
+		newRoom.settingsIndex = Random.Range(1, roomSettings.Length -1);
 		newRoom.settings = roomSettings[newRoom.settingsIndex];
 		newRoom.name = "Room " + newRoom.size.x + " x " + newRoom.size.z;
 		newRoom.transform.parent = transform;
