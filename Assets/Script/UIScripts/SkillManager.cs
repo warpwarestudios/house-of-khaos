@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class SkillManager : MonoBehaviour {
@@ -12,6 +12,6 @@ public class SkillManager : MonoBehaviour {
 	
 	void Shoot()
 	{
-		player.transform.FindChild("Main Camera").transform.FindChild("Gun").GetComponent<Shoot>().Fire();
+//		player.transform.FindChild("Main Camera").transform.FindChild("Pistol").GetComponent<Shoot>().Fire();
 	}
 }
