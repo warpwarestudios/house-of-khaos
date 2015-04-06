@@ -11,7 +11,7 @@ public class Crosshair : MonoBehaviour {
 		interactLabel = GameObject.Find("InteractLabel");
 		
 		Cursor.visible = false;
-		Screen.lockCursor = true;
+		Cursor.lockState = CursorLockMode.Locked;
 	}
 	
 	// Update is called once per frame
