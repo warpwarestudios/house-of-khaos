@@ -15,9 +15,10 @@ public class Shoot : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		if(Input.GetButtonUp("Fire1"))
-		{
-			StartCoroutine("Fire");
+		if (transform.parent != null) {
+			if (transform.parent.parent.tag == "Player" && Input.GetButtonUp ("Fire1")) {
+				StartCoroutine ("Fire");
+			}
 		}
 	}
 

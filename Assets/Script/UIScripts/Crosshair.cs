@@ -44,5 +44,19 @@ public class Crosshair : MonoBehaviour {
 		{
 			interactLabel.GetComponent<UILabel>().text = "";
 		}
+
+		// cursor influence
+		if (Input.GetKeyDown (KeyCode.Escape)) 
+		{
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+		}
+
+		// cursor influence
+		if (Input.GetButtonDown ("Fire1")) 
+		{
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = false;
+		}
 	}	
 }
