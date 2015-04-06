@@ -3,18 +3,27 @@ using System.Collections;
 
 public class Shoot : MonoBehaviour {
 
-	public Rigidbody projectile;
-	public float shotForce = 1000f;
+	public AudioSource audio;
+	public GameObject bulletHolePrefab;
+	public ParticleSystem muzzleFlash;
+
+	void Start()
+	{
+
+	}
 
 	// Update is called once per frame
 	void Update () 
 	{
-		
+		if (Input.GetButton ("Fire1")) 
+		{
+			Debug.Log ("Firing gun!");
+			muzzleFlash.Play();
+		}
 	}
 	
 	public void Fire()
 	{
-		Rigidbody shot = Instantiate(projectile, this.transform.position, this.transform.parent.rotation) as Rigidbody;
-		shot.GetComponent<Rigidbody>().AddForce(shot.transform.forward * shotForce);
+
 	}
 }
