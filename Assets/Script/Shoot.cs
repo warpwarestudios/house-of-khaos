@@ -16,7 +16,7 @@ public class Shoot : MonoBehaviour {
 	void Update () 
 	{
 		if (transform.parent != null) {
-			if (transform.parent.parent.tag == "Player" && transform.parent.parent.GetComponent<PhotonView>().isMine && Input.GetButtonUp ("Fire1")) {
+			if (transform.parent.tag == "MainCamera" && transform.parent.parent.GetComponent<PhotonView>().isMine && Input.GetButtonUp ("Fire1")) {
 				StartCoroutine ("Fire");
 			}
 		}
@@ -32,6 +32,11 @@ public class Shoot : MonoBehaviour {
 		{
 			var hitRotation = Quaternion.FromToRotation(Vector3.forward, rayHit.normal);
 			Instantiate(bulletHolePrefab, rayHit.point, hitRotation);
+
+			if(rayHit.rigidbody != null)
+			{
+				rayHit.rigidbody.AddForceAtPosition(Vector3.forward * 10, rayHit.point);
+			}
 		}
 
 
