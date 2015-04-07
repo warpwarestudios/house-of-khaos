@@ -70,7 +70,7 @@ public class MapRoom : MonoBehaviour {
 		List<Cell> activeCells = new List<Cell> ();
 		foreach (Cell cell in cells) 
 		{
-			Debug.Log("Checking " + cell.name);
+
 			//Debug.Log (cell.name);
 			//check if it borders the outside
 			//check each direction
@@ -83,14 +83,14 @@ public class MapRoom : MonoBehaviour {
 					//if neighbor exists then...
 					if(coordinates.x < map.size.x  && coordinates.z < map.size.z && coordinates.x > 0 && coordinates.z > 0)
 					{
-						Debug.Log("Neighbor is within map!");
+
 
 						Cell neighbor = map.GetCell(coordinates);
 
 						//if neighbor does not exist in grid
 						if (neighbor == null)
 						{
-							Debug.Log("Adding Wall to Outside Walls List!");
+
 							//add to active cells
 							activeCells.Add(cell);
 						}

@@ -14,6 +14,7 @@ public class Map : MonoBehaviour {
 	public Wall wallWindowPrefab;
 	public Wall wallLampPrefab;
 	public Door doorPrefab;
+	public GameObject player;
 	public float lampProbability;
 	public float windowProbability;
 	public MapRoomSettings[] roomSettings;
@@ -128,21 +129,34 @@ public class Map : MonoBehaviour {
 				
 			}
 		}
-		Debug.Log (connectedRooms.Count);
+	
 
 		foreach(MapRoom room in connectedRooms)
 		{
 			room.InitializeTextures();
 		}
 
-		//put player in random room
-		Cell randPosition = connectedRooms[0].GetRandomPosition();
-		GameObject netMan = GameObject.Find("NetworkManager");
-		if(netMan != null)
+		//put player in random room1
+		List<GameObject> spawnPoints = new List<GameObject>();
+		foreach(GameObject spawn in GameObject.FindGameObjectsWithTag("Spawn Point"))
 		{
-			netMan.transform.position = new Vector3(randPosition.transform.position.x,1.001f * scale, randPosition.transform.position.z);
+			if(spawn.GetComponent<PlayerSpawn>().canSpawn)
+			{
+				spawnPoints.Add(spawn);
+			}
 		}
-
+		player = PhotonNetwork.Instantiate("Player", spawnPoints[Random.Range(0,spawnPoints.Count - 1)].transform.position , Quaternion.identity,0);
+		PhotonView pv = player.GetComponent<PhotonView>();
+		if (pv.isMine) {
+			MouseLook mouselook  = player.GetComponent<MouseLook>();
+			mouselook.enabled = true;
+			FPSInputController controller  = player.GetComponent<FPSInputController>();
+			controller.enabled = true;
+			CharacterMotor charactermotor = player.GetComponent<CharacterMotor>();
+			charactermotor.enabled = true;
+			Transform playerCam = player.transform.Find ("Main Camera");
+			playerCam.gameObject.active = true;
+		}
 	}
 
 	private void DoFirstGenerationStep (List<Cell> activeCells) {
