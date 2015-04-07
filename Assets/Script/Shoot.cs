@@ -15,15 +15,31 @@ public class Shoot : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		if (Input.GetButton ("Fire1")) 
-		{
-			Debug.Log ("Firing gun!");
-			muzzleFlash.Play();
+		if (transform.parent != null) {
+			if (transform.parent.parent.tag == "Player" && transform.parent.parent.GetComponent<PhotonView>().isMine && Input.GetButtonUp ("Fire1")) {
+				StartCoroutine ("Fire");
+			}
 		}
 	}
-	
-	public void Fire()
-	{
 
+
+	IEnumerator Fire() 
+	{
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit rayHit;
+		
+		if (Physics.Raycast(ray, out rayHit, 100f))
+		{
+			var hitRotation = Quaternion.FromToRotation(Vector3.forward, rayHit.normal);
+			Instantiate(bulletHolePrefab, rayHit.point, hitRotation);
+		}
+
+
+		muzzleFlash.Play();
+		audio.Play ();
+		Debug.Log ("Firing gun!");
+
+		yield return new WaitForSeconds(0.06f);
 	}
+
 }
