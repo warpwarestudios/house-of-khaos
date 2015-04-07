@@ -18,7 +18,7 @@ public class HotbarManager : MonoBehaviour {
 	
 	void Start()
 	{
-		player = GameObject.FindWithTag("Player");
+		
 		empty = GameObject.Find("EmptySlot");
 		status = GameObject.Find ("Status");
 		
@@ -41,6 +41,10 @@ public class HotbarManager : MonoBehaviour {
 	
 	void Update()
 	{	
+		if(player == null)
+			player = GameObject.FindWithTag("Player");
+	
+	
 		ScrollWheeling();
 		for (int i = 0; i < items.Length; i++ )
 		{

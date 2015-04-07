@@ -18,7 +18,7 @@ public class Interaction : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		hotBar = GameObject.Find("HotbarManager");
+		hotBar = GameObject.Find("HotBarManager");
 		itemControl = hotBar.GetComponent<HotbarManager>();
 	}
 	

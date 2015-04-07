@@ -5,9 +5,10 @@ public class SkillManager : MonoBehaviour {
 
 	public GameObject player;
 	
-	void Start()
+	void Update()
 	{
-		player = GameObject.FindWithTag("Player");
+		if(player == null)
+			player = GameObject.FindWithTag("Player");
 	}
 	
 	void Shoot()
