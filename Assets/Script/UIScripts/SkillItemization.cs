@@ -4,7 +4,7 @@ using System.Collections;
 public class SkillItemization : MonoBehaviour {
 
 	// Use this for initialization
-	void Start () 
+	void Update () 
 	{
 		//    GAMEOBJECT			NAME			ICONNAME			SKILLNAME			DURABILITY/SANITY/AMMO			DAMAGE					HEAL							POSITION							ROTATION							SCALE                 
 		Skill("EmptySlot",			"Empty",		"WhiteBackground",	"None",				0,								0,						0,								new Vector3(0f,0f,0f),				Quaternion.Euler(0,0,0),			new Vector3(0,0,0));
@@ -16,18 +16,21 @@ public class SkillItemization : MonoBehaviour {
 	//This is the placeholder for empty skills on hotbar
 	void Skill(string gameObject, string name, string icon, string skill, float duraSaniAmmo, float damage, float heal, Vector3 pos, Quaternion rot, Vector3 sca)
 	{
-		GameObject item = GameObject.Find(gameObject);
-		Itemization id = item.GetComponent<Itemization>();
+		if (gameObject == null)
+		{
+			GameObject item = GameObject.Find(gameObject);
+			Itemization id = item.GetComponent<Itemization>();
 		
-		id.ItemName = name;
-		id.SpriteIconName = icon;
-		id.SkillName = skill;
-		id.DuraSaniAmmo = duraSaniAmmo;
-		id.Damage = damage;
-		id.Heal = heal;
-		id.Position = pos;
-		id.Rotation = rot;
-		id.Scale = sca;
+			id.ItemName = name;
+			id.SpriteIconName = icon;
+			id.SkillName = skill;
+			id.DuraSaniAmmo = duraSaniAmmo;
+			id.Damage = damage;
+			id.Heal = heal;
+			id.Position = pos;
+			id.Rotation = rot;
+			id.Scale = sca;
+		}
 
 	}
 	

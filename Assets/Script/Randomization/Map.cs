@@ -156,6 +156,7 @@ public class Map : MonoBehaviour {
 			charactermotor.enabled = true;
 			Transform playerCam = player.transform.Find ("Main Camera");
 			playerCam.gameObject.active = true;
+			GameObject.Find("UI Root").transform.FindChild("Camera").GetComponent<Camera>().enabled = true;
 		}
 	}
 
