@@ -6,8 +6,9 @@ public class Itemization : MonoBehaviour {
 	public string itemName;
 	public string skillIconName;
 	public string skillName = "None";
-	public string duraSaniAmmo;
-	public string damage;
+	public float duraSaniAmmo;
+	public float damage;
+	public float heal;
 	public Vector3 position;
 	public Quaternion rotation;
 	public Vector3 scale;
