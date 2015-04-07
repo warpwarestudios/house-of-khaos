@@ -30,12 +30,13 @@ public class Shoot : MonoBehaviour {
 		
 		if (Physics.Raycast(ray, out rayHit, 100f))
 		{
-			var hitRotation = Quaternion.FromToRotation(Vector3.up, rayHit.normal);
+			var hitRotation = Quaternion.FromToRotation(Vector3.forward, rayHit.normal);
 			Instantiate(bulletHolePrefab, rayHit.point, hitRotation);
 		}
 
 
 		muzzleFlash.Play();
+		audio.Play ();
 		Debug.Log ("Firing gun!");
 
 		yield return new WaitForSeconds(0.06f);
