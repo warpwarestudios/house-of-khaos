@@ -16,7 +16,7 @@ public class Shoot : MonoBehaviour {
 	void Update () 
 	{
 		if (transform.parent != null) {
-			if (transform.parent.parent.tag == "Player" && Input.GetButtonUp ("Fire1")) {
+			if (transform.parent.parent.tag == "Player" && transform.parent.parent.GetComponent<PhotonView>().isMine && Input.GetButtonUp ("Fire1")) {
 				StartCoroutine ("Fire");
 			}
 		}
