@@ -47,6 +47,24 @@ public class MapRoom : MonoBehaviour {
 		}
 	}
 
+	public void InitializeTextures()
+	{
+		foreach(Cell cell in cells.ToArray())
+		{
+			foreach(Transform child in cell.transform)
+			{
+				if(child.name == "Floor")
+				{
+					child.GetComponent<Renderer>().material = settings.floorMaterial;
+				}
+				if(child.name == "Wall(Clone)")
+				{
+					child.GetChild(0).GetComponent<Renderer>().material = settings.wallMaterial;
+				}
+			}
+		}
+	}
+
 	public List<Cell> returnOutsideWallsList(Map map)
 	{
 		List<Cell> activeCells = new List<Cell> ();

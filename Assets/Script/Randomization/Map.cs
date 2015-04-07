@@ -128,6 +128,12 @@ public class Map : MonoBehaviour {
 				
 			}
 		}
+		Debug.Log (connectedRooms.Count);
+
+		foreach(MapRoom room in connectedRooms)
+		{
+			room.InitializeTextures();
+		}
 
 		//put player in random room
 		Cell randPosition = connectedRooms[0].GetRandomPosition();
