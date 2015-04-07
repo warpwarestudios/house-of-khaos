@@ -23,7 +23,7 @@ public class Cell : MonoBehaviour {
 	}
 
 	public void ChangeColor()
-	{
+	{	
 		transform.GetChild(0).GetComponent<Renderer>().material = room.settings.floorMaterial;
 	}
 

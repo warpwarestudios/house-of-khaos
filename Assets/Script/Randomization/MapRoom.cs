@@ -33,7 +33,8 @@ public class MapRoom : MonoBehaviour {
 		//merges this room into the given room
 		foreach (Cell cell in cells.ToArray()) 
 		{
-			cell.Initialize(room);
+			room.Add(cell);
+			cell.transform.parent = room.transform;
 		}
 	}
 	public void ChangeSettings(MapRoomSettings newSettings)
@@ -46,12 +47,30 @@ public class MapRoom : MonoBehaviour {
 		}
 	}
 
+	public void InitializeTextures()
+	{
+		foreach(Cell cell in cells.ToArray())
+		{
+			foreach(Transform child in cell.transform)
+			{
+				if(child.name == "Floor")
+				{
+					child.GetComponent<Renderer>().material = settings.floorMaterial;
+				}
+				if(child.name == "Wall(Clone)")
+				{
+					child.GetChild(0).GetComponent<Renderer>().material = settings.wallMaterial;
+				}
+			}
+		}
+	}
+
 	public List<Cell> returnOutsideWallsList(Map map)
 	{
 		List<Cell> activeCells = new List<Cell> ();
 		foreach (Cell cell in cells) 
 		{
-			Debug.Log("Checking " + cell.name);
+
 			//Debug.Log (cell.name);
 			//check if it borders the outside
 			//check each direction
@@ -64,14 +83,14 @@ public class MapRoom : MonoBehaviour {
 					//if neighbor exists then...
 					if(coordinates.x < map.size.x  && coordinates.z < map.size.z && coordinates.x > 0 && coordinates.z > 0)
 					{
-						Debug.Log("Neighbor is within map!");
+
 
 						Cell neighbor = map.GetCell(coordinates);
 
 						//if neighbor does not exist in grid
 						if (neighbor == null)
 						{
-							Debug.Log("Adding Wall to Outside Walls List!");
+
 							//add to active cells
 							activeCells.Add(cell);
 						}

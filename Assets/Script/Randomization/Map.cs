@@ -14,6 +14,7 @@ public class Map : MonoBehaviour {
 	public Wall wallWindowPrefab;
 	public Wall wallLampPrefab;
 	public Door doorPrefab;
+	public GameObject player;
 	public float lampProbability;
 	public float windowProbability;
 	public MapRoomSettings[] roomSettings;
@@ -128,15 +129,34 @@ public class Map : MonoBehaviour {
 				
 			}
 		}
+	
 
-		//put player in random room
-		Cell randPosition = connectedRooms[0].GetRandomPosition();
-		GameObject netMan = GameObject.Find("NetworkManager");
-		if(netMan != null)
+		foreach(MapRoom room in connectedRooms)
 		{
-			netMan.transform.position = new Vector3(randPosition.transform.position.x,1.001f * scale, randPosition.transform.position.z);
+			room.InitializeTextures();
 		}
 
+		//put player in random room1
+		List<GameObject> spawnPoints = new List<GameObject>();
+		foreach(GameObject spawn in GameObject.FindGameObjectsWithTag("Spawn Point"))
+		{
+			if(spawn.GetComponent<PlayerSpawn>().canSpawn)
+			{
+				spawnPoints.Add(spawn);
+			}
+		}
+		player = PhotonNetwork.Instantiate("Player", spawnPoints[Random.Range(0,spawnPoints.Count - 1)].transform.position , Quaternion.identity,0);
+		PhotonView pv = player.GetComponent<PhotonView>();
+		if (pv.isMine) {
+			MouseLook mouselook  = player.GetComponent<MouseLook>();
+			mouselook.enabled = true;
+			FPSInputController controller  = player.GetComponent<FPSInputController>();
+			controller.enabled = true;
+			CharacterMotor charactermotor = player.GetComponent<CharacterMotor>();
+			charactermotor.enabled = true;
+			Transform playerCam = player.transform.Find ("Main Camera");
+			playerCam.gameObject.active = true;
+		}
 	}
 
 	private void DoFirstGenerationStep (List<Cell> activeCells) {
@@ -252,7 +272,7 @@ public class Map : MonoBehaviour {
 				//generate hallway
 				MapRoom newHallway = Instantiate (roomPrefab) as MapRoom;
 				newHallway.size = new IntVector2 (0,0);
-				newHallway.settingsIndex = 2;
+				newHallway.settingsIndex = 0;
 				newHallway.settings = roomSettings[newHallway.settingsIndex];
 				newHallway.name = "Hallway " + count;
 				newHallway.transform.parent = transform;
@@ -308,7 +328,7 @@ public class Map : MonoBehaviour {
 		//create region
 		connectedRegion = Instantiate (roomPrefab) as MapRoom;
 		connectedRegion.size = new IntVector2 (0,0);
-		connectedRegion.settingsIndex = 1;
+		connectedRegion.settingsIndex = 0;
 		connectedRegion.settings = roomSettings[connectedRegion.settingsIndex];
 		connectedRegion.name = "Connected Region";
 		connectedRegion.transform.parent = transform;
@@ -529,7 +549,7 @@ public class Map : MonoBehaviour {
 		newRoom.size = new IntVector2 (Random.Range(minRoomSize.z,maxRoomSize.x), Random.Range(minRoomSize.z, maxRoomSize.z));
 		bool overlap = false;
 		//TODO: add randomization elements
-		newRoom.settingsIndex = 0;
+		newRoom.settingsIndex = Random.Range(1, roomSettings.Length -1);
 		newRoom.settings = roomSettings[newRoom.settingsIndex];
 		newRoom.name = "Room " + newRoom.size.x + " x " + newRoom.size.z;
 		newRoom.transform.parent = transform;

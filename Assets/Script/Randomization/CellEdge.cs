@@ -6,7 +6,7 @@ public abstract class CellEdge : MonoBehaviour {
 	public Cell cell, otherCell;
 	public MapDirection direction;
 
-	public void Initialize (Cell cell, Cell otherCell, MapDirection direction) {
+	public virtual void Initialize (Cell cell, Cell otherCell, MapDirection direction) {
 		this.cell = cell;
 		this.otherCell = otherCell;
 		this.direction = direction;

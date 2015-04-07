@@ -3,7 +3,7 @@ using System.Collections;
 
 public class NetworkManager : MonoBehaviour {
 
-	private bool createPlayer = true;
+	private bool createPlayer = false;
 
 	// Use this for initialization
 	void Start()
