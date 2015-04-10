@@ -1,0 +1,359 @@
+{
+  "name": "FPS Full Graph",
+  "root_path": "mixamorig:Hips",
+  "clips": [
+    {
+      "name": "idle",
+      "anim_name": "rifle_aiming_idle",
+      "type": "normal",
+      "root_motion_translation": ""
+    },
+    {
+      "name": "walk",
+      "anim_name": "walking",
+      "type": "normal",
+      "root_motion_translation": "z"
+    },
+    {
+      "name": "run",
+      "anim_name": "rifle_run",
+      "type": "normal",
+      "root_motion_translation": "z"
+    },
+    {
+      "name": "run_backwards",
+      "anim_name": "run_backwards",
+      "type": "normal",
+      "root_motion_translation": "z"
+    },
+    {
+      "name": "walk_backwards",
+      "anim_name": "walking_backwards",
+      "type": "normal",
+      "root_motion_translation": "z"
+    },
+    {
+      "name": "jump",
+      "anim_name": "rifle_jump",
+      "type": "normal",
+      "root_motion_translation": ""
+    },
+    {
+      "name": "strafe_left",
+      "anim_name": "strafe",
+      "type": "normal",
+      "root_motion_translation": "x"
+    },
+    {
+      "name": "strafe_right",
+      "anim_name": "strafe_2",
+      "type": "normal",
+      "root_motion_translation": "x"
+    },
+    {
+      "name": "walk_strafe_right",
+      "anim_name": "strafe_right",
+      "type": "normal",
+      "root_motion_translation": "x"
+    },
+    {
+      "name": "walk_strafe_left",
+      "anim_name": "strafe_left",
+      "type": "normal",
+      "root_motion_translation": "x"
+    },
+    {
+      "name": "turn_left",
+      "anim_name": "turn_left",
+      "type": "normal",
+      "root_motion_translation": ""
+    },
+    {
+      "name": "turn_right",
+      "anim_name": "turning_right_45_degrees",
+      "type": "normal",
+      "root_motion_translation": ""
+    },
+    {
+      "name": "reload",
+      "anim_name": "reloading",
+      "type": "normal",
+      "root_motion_translation": "",
+      "layer": "1",
+      "mixing_transform": "mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2"
+    },
+    {
+      "name": "fire",
+      "anim_name": "firing_rifle",
+      "type": "normal",
+      "root_motion_translation": "",
+      "layer": "1",
+      "mixing_transform": "mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2"
+    },
+    {
+      "name": "granade",
+      "anim_name": "toss_grenade",
+      "type": "normal",
+      "root_motion_translation": "",
+      "layer": "1",
+      "mixing_transform": "mixamorig:Hips/mixamorig:Spine"
+    },
+    {
+      "name": "hitreaction",
+      "anim_name": "hit_reaction",
+      "type": "normal",
+      "root_motion_translation": "",
+      "layer": "2",
+      "mixing_transform": "mixamorig:Hips/mixamorig:Spine"
+    }
+  ],
+  "layers": [
+    {
+      "name": "full body",
+      "priority": 1,
+      "states": [
+        {
+          "name": "idle",
+          "tree": {
+            "type": "clip",
+            "name": "idle"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        },
+        {
+          "name": "move",
+          "tree": {
+            "type": "blend2d",
+            "control": "ctrl_move",
+            "blend1": {
+              "type": "clip",
+              "name": "walk"
+            },
+            "blend2": {
+              "type": "clip",
+              "name": "run"
+            }
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.2
+            }
+          ]
+        },
+        {
+          "name": "walk_backwards",
+          "tree": {
+            "type": "clip",
+            "name": "walk_backwards"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        },
+        {
+          "name": "run_backwards",
+          "tree": {
+            "type": "clip",
+            "name": "run_backwards"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        },
+        {
+          "name": "jump",
+          "is_looping": false,
+          "tree": {
+            "type": "clip",
+            "name": "jump"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        },
+        {
+          "name": "strafe_left",
+          "tree": {
+            "type": "clip",
+            "name": "strafe_left"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        },
+        {
+          "name": "strafe_right",
+          "tree": {
+            "type": "clip",
+            "name": "strafe_right"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        },
+        {
+          "name": "walk_strafe_left",
+          "tree": {
+            "type": "clip",
+            "name": "walk_strafe_left"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        },
+        {
+          "name": "walk_strafe_right",
+          "tree": {
+            "type": "clip",
+            "name": "walk_strafe_right"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        },
+        {
+          "name": "turn_left",
+          "tree": {
+            "type": "clip",
+            "name": "turn_left"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        },
+        {
+          "name": "turn_right",
+          "tree": {
+            "type": "clip",
+            "name": "turn_right"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "upperbody",
+      "priority": 2,
+      "states": [
+        {
+          "name": "nothing",
+          "tree": {
+            "type": "blank"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        },
+        {
+          "name": "reload",
+          "is_looping": false,
+          "tree": {
+            "type": "clip",
+            "name": "reload"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        },
+        {
+          "name": "fire",
+          "tree": {
+            "type": "clip",
+            "name": "fire"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        },
+        {
+          "name": "granade",
+          "is_looping": false,
+          "tree": {
+            "type": "clip",
+            "name": "granade"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        },
+        {
+          "name": "hitreaction",
+          "is_looping": false,
+          "tree": {
+            "type": "clip",
+            "name": "hitreaction"
+          },
+          "transitions": [
+            {
+              "destination": "*",
+              "type": "crossfade",
+              "duration": 0.3
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
