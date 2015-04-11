@@ -12,9 +12,6 @@ public class EnemyMovement : MonoBehaviour
 	private float chaseTimer;// A timer for the chaseWaitTime.
 	public Vector3 personalLastSighting = new Vector3(1000f, 1000f, 1000f);// The last global sighting of the player.
 	public Vector3 resetPosition = new Vector3(1000f, 1000f, 1000f);// The default position if the player is not in sight.
-
-	//private Vector3 previousPosition;
-	//public float curSpeed;
 	
 	void Awake ()
 	{
@@ -61,14 +58,6 @@ public class EnemyMovement : MonoBehaviour
 		else
 			// If not near the last sighting personal sighting of the player, reset the timer.
 			chaseTimer = 0f;
-
-
-
-
-		//Vector3 curMove = transform.position - previousPosition;
-		//curSpeed = curMove.magnitude / Time.deltaTime;
-		//previousPosition = transform.position;
-		//animController.SetFloat ("Speed", curSpeed);
 	} 
 
 	void OnAnimatorMove ()
@@ -77,7 +66,7 @@ public class EnemyMovement : MonoBehaviour
 		if (navAgent.hasPath)
 		{
 			//set the navAgent's velocity to the velocity of the animation clip currently playing
-			//navAgent.velocity = animController.deltaPosition / Time.deltaTime;
+			navAgent.velocity = animController.deltaPosition / Time.deltaTime;
 			
 			//smoothly rotate the character in the desired direction of motion
 			Quaternion lookRotation = Quaternion.LookRotation(navAgent.desiredVelocity);
