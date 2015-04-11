@@ -16,7 +16,7 @@ public class Shoot : MonoBehaviour {
 	void Update () 
 	{
 		if (transform.parent != null) {
-			if (transform.parent.tag == "MainCamera" && transform.parent.parent.GetComponent<PhotonView>().isMine && Input.GetButtonUp ("Fire1")) {
+			if (transform.parent.tag == "MainCamera" && Input.GetButtonUp ("Fire1")) {
 				StartCoroutine ("Fire");
 			}
 		}

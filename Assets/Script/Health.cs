@@ -14,10 +14,17 @@ public class Health: MonoBehaviour {
 	{
 		currentHealth += (int) health;
 		Debug.Log ("Health: " + currentHealth + "/"  + maxHealth);
-		
+
+		if (currentHealth > maxHealth) {
+			currentHealth = maxHealth;
+		}
+
+		if (currentHealth <= 0) {
+			Destroy(this.gameObject);
+		}
+
 		modifyHealth();
-		
-		
+
 	}
 	
 	
