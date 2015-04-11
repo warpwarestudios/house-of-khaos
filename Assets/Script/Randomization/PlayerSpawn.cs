@@ -3,11 +3,14 @@ using System.Collections;
 
 public class PlayerSpawn : MonoBehaviour {
 
-	public bool canSpawn = true;
+	public float probability;
 
 	// Use this for initialization
 	void Start () {
-		//TODO: Randomize value of canSpawn
+		if(Random.value < probability)
+		{
+			Destroy(this.gameObject);
+		}
 	}
 	
 	// Update is called once per frame

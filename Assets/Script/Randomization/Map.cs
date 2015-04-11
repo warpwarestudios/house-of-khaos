@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Map : MonoBehaviour {
 
+	public float wayPointProbability;
+
 	public IntVector2 size;
 	public float scale;
 	public int numRooms;
@@ -20,7 +22,7 @@ public class Map : MonoBehaviour {
 	public MapRoomSettings[] roomSettings;
 	public IntVector2 minRoomSize;
 	public IntVector2 maxRoomSize;
-	public MapRoom connectedRegion;
+	private MapRoom connectedRegion;
 
 
 	public IntVector2 RandomCoordinates {
@@ -137,26 +139,36 @@ public class Map : MonoBehaviour {
 		}
 
 		//put player in random room1
-		List<GameObject> spawnPoints = new List<GameObject>();
-		foreach(GameObject spawn in GameObject.FindGameObjectsWithTag("Spawn Point"))
-		{
-			if(spawn.GetComponent<PlayerSpawn>().canSpawn)
-			{
-				spawnPoints.Add(spawn);
-			}
-		}
-		player = PhotonNetwork.Instantiate("Player", spawnPoints[Random.Range(0,spawnPoints.Count - 1)].transform.position , Quaternion.identity,0);
+		GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
+		
+		player = PhotonNetwork.Instantiate("Player", spawnPoints[Random.Range(0,spawnPoints.Length - 1)].transform.position , Quaternion.identity,0);
 		PhotonView pv = player.GetComponent<PhotonView>();
 		if (pv.isMine) {
 			MouseLook mouselook  = player.GetComponent<MouseLook>();
 			mouselook.enabled = true;
 			FPSInputController controller  = player.GetComponent<FPSInputController>();
 			controller.enabled = true;
-			CharacterMotor charactermotor = player.GetComponent<CharacterMotor>();
+			CharacterMotor charactermotor = player.GetComponent<CharacterMotor>(); 
 			charactermotor.enabled = true;
 			Transform playerCam = player.transform.Find ("Main Camera");
 			playerCam.gameObject.active = true;
 			GameObject.Find("UI Root").transform.FindChild("Camera").GetComponent<Camera>().enabled = true;
+		}
+		//destroy all player spawn points
+		foreach(GameObject spawn in spawnPoints)
+		{
+			Destroy(spawn);
+		}
+
+		//Waypoint cleanup
+		GameObject[] wayPoints = GameObject.FindGameObjectsWithTag("Waypoint");
+		//destroy all player spawn points
+		foreach(GameObject waypoint in wayPoints)
+		{
+			if(Random.value < wayPointProbability)
+			{
+
+			}
 		}
 	}
 

@@ -15,7 +15,6 @@ public class ItemSpawn : MonoBehaviour {
 		{
 			item = Instantiate(items[0].gameObject, transform.position , Quaternion.identity) as GameObject;
 			item.name = "Pistol";
-			playerSpawnPoint.GetComponent<PlayerSpawn>().canSpawn = false;
 			hasSpawned = true;
 		}
 	}
