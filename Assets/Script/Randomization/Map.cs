@@ -384,9 +384,10 @@ public class Map : MonoBehaviour {
 								{
 									rooms.Remove(newCell.room);
 									CreateDoorInWall(door, neighbor, direction);
+									connectedRooms.Add(newCell.room);
 									neighbor.room.MergeInto(connectedRegion);
 									newCell.room.MergeInto(connectedRegion);
-									connectedRooms.Add(newCell.room);
+
 								}
 							}
 							//if it is a room add to connected rooms

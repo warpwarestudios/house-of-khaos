@@ -30,17 +30,19 @@ public class Shoot : MonoBehaviour {
 		
 		if (Physics.Raycast(ray, out rayHit, 100f))
 		{
+			Debug.Log ("Enemy or wall to be hit!");
 			if (rayHit.collider.tag == "Enemy")
 			{
+				Debug.Log("Enemy Hit!");
 				Health health = rayHit.collider.GetComponent<Health>();
 				health.updateHealth(-transform.GetComponent<Itemization>().damage);
 				
 			}
-			else //bullet holes for enviroment
+			else //bullet holes for environment
 			{			
 				var hitRotation = Quaternion.FromToRotation(Vector3.forward, rayHit.normal);
 				Instantiate(bulletHolePrefab, rayHit.point, hitRotation);
-				
+				Debug.Log ("Bullet Hole made!");
 				if(rayHit.rigidbody != null)
 				{
 					rayHit.rigidbody.AddForceAtPosition(Vector3.forward * 10, rayHit.point);

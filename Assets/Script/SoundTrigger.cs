@@ -25,7 +25,6 @@ public class SoundTrigger : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other)
 	{
-		Debug.Log ("Collision triggered!");
 		if (other.gameObject.CompareTag ("Player")) 
 		{
 			sound = other.transform.FindChild(name);
@@ -41,7 +40,6 @@ public class SoundTrigger : MonoBehaviour {
 
 	void OnTriggerExit(Collider other)
 	{
-		Debug.Log ("Collision exited!");
 		if (other.gameObject.CompareTag ("Player")) 
 		{
 			sound = other.transform.FindChild(name);

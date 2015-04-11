@@ -49,6 +49,7 @@ public class MapRoom : MonoBehaviour {
 
 	public void InitializeTextures()
 	{
+		Debug.Log (this.name);
 		foreach(Cell cell in cells.ToArray())
 		{
 			foreach(Transform child in cell.transform)
@@ -59,7 +60,32 @@ public class MapRoom : MonoBehaviour {
 				}
 				if(child.name == "Wall(Clone)")
 				{
-					child.GetChild(0).GetComponent<Renderer>().material = settings.wallMaterial;
+					child.transform.Find ("Wall").GetComponent<Renderer>().material = settings.wallMaterial;
+				}
+				
+				if(child.name == "Roof")
+				{
+					child.transform.GetComponent<Renderer>().material = settings.wallMaterial;
+				}
+				
+				if(child.name == "Wall_Lamp(Clone)")
+				{
+					child.transform.Find ("Wall").GetComponent<Renderer>().material = settings.wallMaterial;
+				}
+				
+				if(child.name == "Wall_Window(Clone)")
+				{
+					child.transform.Find ("Left").GetComponent<Renderer>().material = settings.wallMaterial;
+					child.transform.Find ("Top").GetComponent<Renderer>().material = settings.wallMaterial;
+					child.transform.Find ("Right").GetComponent<Renderer>().material = settings.wallMaterial;
+					child.transform.Find ("Bottom").GetComponent<Renderer>().material = settings.wallMaterial;
+				}
+				
+				if(child.name == "Door(Clone)")
+				{
+					child.transform.Find ("Left").GetComponent<Renderer>().material = settings.wallMaterial;
+					child.transform.Find ("Top").GetComponent<Renderer>().material = settings.wallMaterial;
+					child.transform.Find ("Right").GetComponent<Renderer>().material = settings.wallMaterial;
 				}
 			}
 		}
