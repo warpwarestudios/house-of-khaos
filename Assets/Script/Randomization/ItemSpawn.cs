@@ -4,7 +4,6 @@ using System.Collections;
 public class ItemSpawn : MonoBehaviour {
 
 	public GameObject[] items;
-	public GameObject playerSpawnPoint;
 	public float itemSpawnProbability;
 	public GameObject item;
 	public bool hasSpawned = false;
