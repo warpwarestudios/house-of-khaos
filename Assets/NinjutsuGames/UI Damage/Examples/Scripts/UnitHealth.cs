@@ -160,7 +160,8 @@ public class UnitHealth : MonoBehaviour {
 					health += regenerateSpeed;
 
 					// Modify the minimun alpha of the screen overlay if the health is above 40%
-					if (health > (maxHealth * 0.4f)) UIDamage.SetMinScreenAlpha(1 - (health / maxHealth));
+					if (health > (maxHealth * 0.4f)) 
+						UIDamage.SetMinScreenAlpha(1 - (health / maxHealth));
 
 					if (health >= maxHealth)
 					{

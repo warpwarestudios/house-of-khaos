@@ -21,7 +21,7 @@ public class Shoot : MonoBehaviour {
 			}
 		}
 	}
-
+ 
 
 	IEnumerator Fire() 
 	{
@@ -30,13 +30,24 @@ public class Shoot : MonoBehaviour {
 		
 		if (Physics.Raycast(ray, out rayHit, 100f))
 		{
-			var hitRotation = Quaternion.FromToRotation(Vector3.forward, rayHit.normal);
-			Instantiate(bulletHolePrefab, rayHit.point, hitRotation);
-
-			if(rayHit.rigidbody != null)
+			if (rayHit.collider.tag == "Enemy")
 			{
-				rayHit.rigidbody.AddForceAtPosition(Vector3.forward * 10, rayHit.point);
+				Health health = rayHit.collider.GetComponent<Health>();
+				health.updateHealth(-transform.GetComponent<Itemization>().damage);
+				
 			}
+			else //bullet holes for enviroment
+			{			
+				var hitRotation = Quaternion.FromToRotation(Vector3.forward, rayHit.normal);
+				Instantiate(bulletHolePrefab, rayHit.point, hitRotation);
+				
+				if(rayHit.rigidbody != null)
+				{
+					rayHit.rigidbody.AddForceAtPosition(Vector3.forward * 10, rayHit.point);
+				}
+			}
+			
+			
 		}
 
 
