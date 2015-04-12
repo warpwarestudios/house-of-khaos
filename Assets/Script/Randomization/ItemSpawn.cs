@@ -12,8 +12,9 @@ public class ItemSpawn : MonoBehaviour {
 	void Start () {
 		if( Random.value <= itemSpawnProbability)
 		{
-			item = Instantiate(items[0].gameObject, transform.position , Quaternion.identity) as GameObject;
-			item.name = "Pistol";
+			GameObject chosen = items[Random.Range (0,items.Length - 1)].gameObject; 
+			item = Instantiate(chosen, transform.position , Quaternion.identity) as GameObject;
+			item.name = chosen.name;
 			hasSpawned = true;
 		}
 	}

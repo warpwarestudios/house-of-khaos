@@ -6,7 +6,7 @@ labels:
 - wood
 - plastic
 - glass
-timeCreated: 1428744348
+timeCreated: 1428799138
 licenseType: Free
 SubstanceImporter:
   serializedVersion: 5
@@ -14,8 +14,8 @@ SubstanceImporter:
   - serializedVersion: 15
     name: Window_01
     prototypeName: Window_01
-    shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-    shaderKeywords: _ALPHATEST_ON _METALLICGLOSSMAP _NORMALMAP _PARALLAXMAP
+    shader: {fileID: 45, guid: 0000000000000000f000000000000000, type: 0}
+    shaderKeywords: _ALPHATEST_ON _NORMALMAP _PARALLAXMAP _SPECGLOSSMAP
     renderQueue: 2450
     inputs:
     - name: $normalformat
@@ -219,7 +219,7 @@ SubstanceImporter:
             offset: {x: 0, y: 0}
         data:
           first:
-            name: _MetallicGlossMap
+            name: _SpecGlossMap
           second:
             texture: {instanceID: 0}
             scale: {x: 1, y: 1}
@@ -228,7 +228,7 @@ SubstanceImporter:
         data:
           first:
             name: _Cutoff
-          second: .0500000007
+          second: .307000011
         data:
           first:
             name: _Shininess
@@ -313,7 +313,7 @@ SubstanceImporter:
       aniso: 1
       wrapMode: 0
     - name: Window_01_Specular
-      alphaSource: 0
+      alphaSource: 5
       filterMode: 1
       aniso: 1
       wrapMode: 0
@@ -356,9 +356,9 @@ SubstanceImporter:
       material: {instanceID: 0}
       baseUID: 1734776971
     - shaderProp:
-        name: _MetallicGlossMap
+        name: _SpecGlossMap
       material: {instanceID: 0}
-      baseUID: 1734776971
+      baseUID: 1734776989
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
