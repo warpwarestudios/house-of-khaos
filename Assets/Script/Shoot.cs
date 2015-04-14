@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Shoot : MonoBehaviour {
 
-	public AudioSource audio;
+	public AudioSource gunSound;
 	public GameObject bulletHolePrefab;
 	public ParticleSystem muzzleFlash;
 
@@ -54,7 +54,7 @@ public class Shoot : MonoBehaviour {
 
 
 		muzzleFlash.Play();
-		audio.Play ();
+		gunSound.Play ();
 		Debug.Log ("Firing gun!");
 
 		yield return new WaitForSeconds(0.06f);
