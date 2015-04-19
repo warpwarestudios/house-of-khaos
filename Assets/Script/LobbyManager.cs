@@ -103,6 +103,8 @@ public class LobbyManager : MonoBehaviour {
 	{
 		// using null as TypedLobby parameter will also use the default lobby
 		PhotonNetwork.CreateRoom(createNameHolder.GetComponent <UIInput>().value, new RoomOptions() { maxPlayers = 6 }, TypedLobby.Default);
+
+		// TODO: Insert playerhub switch here
 	}
 
 	// call back for failed to join
@@ -118,6 +120,9 @@ public class LobbyManager : MonoBehaviour {
 
 	void OnJoinedRoom()
 	{
+
+		// TODO: populate player list in lobby screen
+		// TODO: remove load level, shift to game start
 		if (PhotonNetwork.playerName.ToLower() == "debug")
 		{
 			PhotonNetwork.LoadLevel ("MultiTest");
@@ -131,6 +136,20 @@ public class LobbyManager : MonoBehaviour {
 			PhotonNetwork.LoadLevel ("GameScreen");
 		}
 		
+	}
+
+	// start the game
+	public void GameStart ()
+	{
+		if (PhotonNetwork.isMasterClient) 
+		{
+			PhotonNetwork.LoadLevel ("GameScreen");
+		} 
+		else 
+		{
+			//TODO: set player to ready state
+		}
+
 	}
 	
 	void OnDisconnectedFromPhoton()
