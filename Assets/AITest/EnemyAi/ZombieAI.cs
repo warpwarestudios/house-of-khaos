@@ -28,45 +28,61 @@ public class ZombieAI : MonoBehaviour {
 		{
 			player = GameObject.FindGameObjectWithTag ("Player");
 		}
-		else
+		else if(!navAgent.hasPath)
 		{
 			navAgent.speed = wanderSpeed;
 			IdleAnim();
 		}
 
 		// If the player has been sighted and isn't dead...
-		if(player != null)
+		/*if(player != null)
 		{
 			if (player.GetComponent<Health> ().currentHealth > 0f) 
 			{
 				// ... chase.
 				Chasing();
 			}
-		}
+		}*/
 
-		// If the player is in sight, in range and is alive...
-		if (navAgent.hasPath && navAgent.remainingDistance <= navAgent.stoppingDistance && player.GetComponent<Health> ().currentHealth > 0f) 
+		if (player != null) 
 		{
-			// ... attack.
-			Attacking ();
-		}
+			if(animController.GetBool ("Attack"))
+			{
+				navAgent.SetDestination(player.transform.position);
+				animController.SetBool ("Attack", false);
+			}
 
-		//set animation speed based on navAgent 'Speed' var
-		// causes issues
-		//animController.speed = navAgent.speed;
+
+			// If the player is in sight, in range and is alive...
+			if (navAgent.hasPath && navAgent.remainingDistance <= navAgent.stoppingDistance+0.7f && player.GetComponent<Health> ().currentHealth > 0f) 
+			{
+				// ... attack.
+				Attacking ();
+			}
+
+			// If the player has been sighted and isn't dead...
+			if (player.GetComponent<Health> ().currentHealth > 0f && !animController.GetBool("Attack")) 
+			{
+				// ... chase.
+				Chasing();
+			}
+		}
 	}
 
 	private void Attacking ()
 	{
 		// Stop the enemy where it is.
 		navAgent.Stop ();
-		animController.SetTrigger ("Attack");
+		IdleAnim ();
+		animController.SetBool ("Attack", true);
+
 	}
 
 	private void Chasing()
 	{
 		// set the destination for the NavMeshAgent to the last personal sighting of the player.
 		navAgent.SetDestination (player.transform.position);
+		navAgent.Resume ();
 		
 		// Set the appropriate speed for the NavMeshAgent.
 		if (player != null) 
@@ -76,46 +92,39 @@ public class ZombieAI : MonoBehaviour {
 		
 		// state machine AI control
 		// chaseSpeed confirms player is targeted
-		if(navAgent.hasPath && (navAgent.speed == chaseSpeed))
+		if(navAgent.hasPath && navAgent.speed == chaseSpeed)
 		{
 			ChaseAnim();
 		}
-		
-		// If near the last personal sighting...
-		if(navAgent.remainingDistance < navAgent.stoppingDistance)
-		{
-			// ... increment the timer.
-			chaseTimer += Time.deltaTime;
-			
-			// If the timer exceeds the wait time...
-			if(chaseTimer >= chaseWaitTime)
-			{
-				// ... reset last global sighting, the last personal sighting and the timer.
-				player = null;
-				chaseTimer = 0f;
-				navAgent.speed = wanderSpeed;
-				IdleAnim();
-			}
-		}
-		else
-			// If not near the last sighting personal sighting of the player, reset the timer.
-			chaseTimer = 0f;
 	}
 
 	// keep model turned right way
 	void OnAnimatorMove ()
 	{
+		Quaternion lookRotation;
+
 		//only perform if walking
-		if (navAgent.hasPath)
-		{
-			//set the navAgent's velocity to the velocity of the animation clip currently playing
-			navAgent.velocity = animController.deltaPosition / Time.deltaTime;
-			
-			//smoothly rotate the character in the desired direction of motion
-			Quaternion lookRotation = Quaternion.LookRotation(navAgent.desiredVelocity);
-			transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, navAgent.angularSpeed * Time.deltaTime);
+		if (navAgent.hasPath) {
+
+			if(animController.GetBool ("Attack") && player != null)
+			{
+				Vector3 direction = player.transform.position - transform.position;
+				//float angle = Vector3.Angle(direction, transform.forward);
+				lookRotation = Quaternion.LookRotation(direction);
+				transform.rotation = Quaternion.RotateTowards (transform.rotation, lookRotation, navAgent.angularSpeed * Time.deltaTime);
+			}
+			else if (navAgent.desiredVelocity != Vector3.zero)
+			{
+				//set the navAgent's velocity to the velocity of the animation clip currently playing
+				navAgent.velocity = animController.deltaPosition / Time.deltaTime;
+				
+				//smoothly rotate the character in the desired direction of motion
+				lookRotation = Quaternion.LookRotation (navAgent.desiredVelocity);
+				transform.rotation = Quaternion.RotateTowards (transform.rotation, lookRotation, navAgent.angularSpeed * Time.deltaTime);
+			}
 		}
 	}
+
 
 	private void IdleAnim()
 	{
