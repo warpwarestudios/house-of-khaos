@@ -9,7 +9,6 @@ using UnityEngine;
 public class ChatInput : MonoBehaviour
 {
 	public UITextList textList;
-	public bool fillWithDummyData = false;
 
 	UIInput mInput;
 
@@ -21,15 +20,6 @@ public class ChatInput : MonoBehaviour
 	{
 		mInput = GetComponent<UIInput>();
 		mInput.label.maxLineCount = 1;
-
-		if (fillWithDummyData && textList != null)
-		{
-			for (int i = 0; i < 30; ++i)
-			{
-				textList.Add(((i % 2 == 0) ? "[FFFFFF]" : "[AAAAAA]") +
-					"This is an example paragraph for the text list, testing line " + i + "[-]");
-			}
-		}
 	}
 
 	/// <summary>
@@ -51,4 +41,5 @@ public class ChatInput : MonoBehaviour
 			}
 		}
 	}
+
 }
