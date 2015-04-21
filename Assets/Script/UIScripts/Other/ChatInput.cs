@@ -9,6 +9,7 @@ using UnityEngine;
 public class ChatInput : MonoBehaviour
 {
 	public UITextList textList;
+	public GameObject chatArea; // to notifty photon
 
 	UIInput mInput;
 
@@ -35,11 +36,19 @@ public class ChatInput : MonoBehaviour
 
 			if (!string.IsNullOrEmpty(text))
 			{
-				textList.Add(text);
+				//textList.Add(text);
+				NotifyPhoton(text);
 				mInput.value = "";
 				mInput.isSelected = false;
+
 			}
 		}
+	}
+
+	public void NotifyPhoton(string text)
+	{
+		chatArea.GetComponent<PhotonChat> ().message = text;
+		chatArea.GetPhotonView ().RPC ("Chat", PhotonTargets.All, text);
 	}
 
 }

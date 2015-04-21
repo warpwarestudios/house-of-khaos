@@ -56,10 +56,24 @@ public class UITitleManager : MonoBehaviour {
 		soundTab.SetActive(true);
 	}
 
+	public void SwitchLobbyToMainScreen()
+	{
+		lobbyCamera.SetActive (false);
+		titleCamera.SetActive(true);
+	}
+
 	public void SwitchToGameLobby()
 	{
 		lobbyCamera.SetActive (false);
 		gameLobbyCamera.SetActive(true);
+	}
+
+
+
+	public void LeaveGameLobby()
+	{
+		lobbyCamera.SetActive (true);
+		gameLobbyCamera.SetActive(false);
 	}
 	
 	public void QuitGame()

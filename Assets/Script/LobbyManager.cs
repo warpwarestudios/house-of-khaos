@@ -27,7 +27,7 @@ public class LobbyManager : MonoBehaviour {
 		// start up
 		PhotonNetwork.logLevel = PhotonLogLevel.Full;
 
-		//dafuq
+		// Hold player name
 		string tempName = PlayerPrefs.GetString ("playerName", "Guest" + Random.Range (1, 9999));
 		//Load name from PlayerPrefs
 		PhotonNetwork.playerName = tempName;
@@ -112,6 +112,7 @@ public class LobbyManager : MonoBehaviour {
 		// should relay why the join failed, either too many players in room or no rooms available
 		// *TESTING*
 		Debug.Log(PhotonNetworkingMessage.OnPhotonRandomJoinFailed.ToString());
+		Debug.Log("Attempting to Create Room");
 		string roomName = ("Room" + Random.Range (1, 9999));
 		PhotonNetwork.CreateRoom(createNameHolder.GetComponent <UIInput>().value, new RoomOptions() { maxPlayers = 6 }, TypedLobby.Default);;
 	}
@@ -119,38 +120,47 @@ public class LobbyManager : MonoBehaviour {
 	void OnJoinedRoom()
 	{
 		// precondition: player has been properly switched to game lobby screen
+
+		if (PhotonNetwork.playerName.ToLower() == "debug") 
+		{
+			PhotonNetwork.LoadLevel ("GameScreen");
+		}
+
 		// TODO: populate player list in lobby screen
 		// TODO: remove load level, shift to game start
 		GameObject lobbyPlayer;
+		PhotonPlayer[] playerList = PhotonNetwork.playerList;
 
-
-		for(int i = 1; i<=6; i++)
+		for(int i = 1; i<= playerList.Length; i++)
 		{
 			lobbyPlayer = GameObject.Find("LobbyPlayer "+i);
 			if(i == 1)
 			{
+				foreach(PhotonPlayer player in playerList)
+				{	// place master client at position one
+					if(player.isMasterClient)
+					{
+						lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
+					}
+				}
+			}// place all other players in positions 2-6
+			lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = playerList[i-1].name;
+		}
+		// clean up unused slots
+		for(int j = 1; j<= 6; j++)
+		{
+			lobbyPlayer = GameObject.Find("LobbyPlayer "+j);
+			if(lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text == "Player")
+			{
+				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = "Open";
 			}
-			lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = PhotonNetwork.playerName;
 		}
 
-
-		if (PhotonNetwork.playerName.ToLower() == "debug")
-		{
-			PhotonNetwork.LoadLevel ("MultiTest");
-		}
-		else if (PhotonNetwork.playerName.ToLower() == "debug2")
-		{
-			PhotonNetwork.LoadLevel ("EnemiesTest");
-		}
-		else
-		{
-			PhotonNetwork.LoadLevel ("GameScreen");
-		}
-		
 	}
 
+
 	// start the game
-	public void GameStart ()
+	private void GameStart ()
 	{
 		if (PhotonNetwork.isMasterClient) 
 		{
@@ -161,6 +171,11 @@ public class LobbyManager : MonoBehaviour {
 			//TODO: set player to ready state
 		}
 
+	}
+
+	public void DisconnectFromGame()
+	{
+		PhotonNetwork.LeaveRoom ();
 	}
 	
 	void OnDisconnectedFromPhoton()

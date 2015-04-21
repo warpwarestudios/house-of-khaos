@@ -6,12 +6,12 @@ using System.Collections;
 public class PhotonChat : Photon.MonoBehaviour 
 {
 	public List<string> messages = new List<string>();
-	private string inputLine = "";
-	
 	public static readonly string ChatRPC = "Chat";
+	public string message;
 	
 	public void Start()
 	{}
+
 	
 	[RPC]
 	public void Chat(string newLine, PhotonMessageInfo mi)
@@ -29,7 +29,8 @@ public class PhotonChat : Photon.MonoBehaviour
 				senderName = "player " + mi.sender.ID;
 			}
 		}
-		
+
 		this.messages.Add(senderName +": " + newLine);
+		this.GetComponent<UITextList>().Add(newLine);
 	}
 }
