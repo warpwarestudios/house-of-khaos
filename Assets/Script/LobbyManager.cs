@@ -6,7 +6,7 @@ public class LobbyManager : MonoBehaviour {
 	public GameObject playerNameHolder;
 	public GameObject joinNameHolder;
 	public GameObject createNameHolder;
-	public GameObject joinNameHolderListed;
+	private GameObject joinNameHolderListed;
 
 	private GameObject RoomObject;
 
