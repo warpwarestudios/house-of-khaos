@@ -24,6 +24,16 @@ public class ZombieAI : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		if(this.GetComponent<Health>().currentHealth <= 0)
+		{
+			if(animController.GetBool("Dead"))
+			{
+				return;
+			}
+
+			Dead ();
+		}
+
 		if (player == null) 
 		{
 			player = GameObject.FindGameObjectWithTag ("Player");
@@ -33,6 +43,7 @@ public class ZombieAI : MonoBehaviour {
 			navAgent.speed = wanderSpeed;
 			IdleAnim();
 		}
+
 
 		// If the player has been sighted and isn't dead...
 		/*if(player != null)
@@ -97,6 +108,35 @@ public class ZombieAI : MonoBehaviour {
 			ChaseAnim();
 		}
 	}
+
+	private void Dead ()
+	{
+		// Stop the enemy where it is.
+		navAgent.velocity = new Vector3(0,0,0);
+		navAgent.Stop();
+
+		float rand;
+
+		if(Random.value > 0.5f)
+		{
+			rand = 1f;
+		}
+		else
+		{
+			rand = 0f;
+		}
+
+		animController.SetFloat ("RandomDeath", rand);
+		animController.SetBool ("Dead", true);
+
+		animController.SetBool("Idle", false);
+		animController.SetBool("Chase", false);
+		animController.SetBool("Wander", false);
+		
+	}
+
+
+
 
 	// keep model turned right way
 	void OnAnimatorMove ()
