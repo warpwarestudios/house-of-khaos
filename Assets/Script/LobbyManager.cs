@@ -11,6 +11,8 @@ public class LobbyManager : MonoBehaviour {
 	private GameObject RoomObject;
 
 	private bool lobbyScreen = false;
+	
+	
 
 	// Use this for initialization
 	void Start () 
@@ -140,7 +142,7 @@ public class LobbyManager : MonoBehaviour {
 				{	// place master client at position one
 					if(player.isMasterClient)
 					{
-						lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
+ 						lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
 					}
 				}
 			}// place all other players in positions 2-6
@@ -164,7 +166,8 @@ public class LobbyManager : MonoBehaviour {
 	{
 		if (PhotonNetwork.isMasterClient) 
 		{
-			PhotonNetwork.LoadLevel ("GameScreen");
+			
+			
 		} 
 		else 
 		{
