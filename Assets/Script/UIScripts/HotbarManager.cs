@@ -66,7 +66,7 @@ public class HotbarManager : MonoBehaviour {
 	
 	void DropButton()
 	{
-		if(Input.GetKey(KeyCode.R))
+		if(Input.GetKey(KeyCode.C))
 		{
 			DropItem();
 		}
@@ -89,6 +89,14 @@ public class HotbarManager : MonoBehaviour {
 	
 	void EquipItem(GameObject item)
 	{
+		if(item.GetComponent<Itemization>().itemName == items[hotbarNumber].GetComponent<Itemization>().itemName && item.GetComponent<Itemization>().usesAmmo == true)
+		{
+			
+			items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmo =+ item.GetComponent<Itemization>().duraSaniAmmoRemaining;
+			Destroy(item);
+		}
+		else
+		{
 			items[hotbarNumber] = item;
 			hotbars[hotbarNumber].GetComponent<UISprite>().spriteName = items[hotbarNumber].GetComponent<Itemization>().skillIconName;
 			items[hotbarNumber].transform.parent = player.transform.FindChild("Main Camera").transform;
@@ -97,6 +105,7 @@ public class HotbarManager : MonoBehaviour {
 			items[hotbarNumber].transform.localScale = items[hotbarNumber].GetComponent<Itemization>().scale;
 			items[hotbarNumber].GetComponent<Rigidbody>().useGravity = false;
 			items[hotbarNumber].GetComponent<MeshCollider>().enabled = false;
+		}
 
 	}
 	

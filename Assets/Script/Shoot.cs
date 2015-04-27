@@ -31,9 +31,26 @@ public class Shoot : MonoBehaviour {
 				
 			}
 		}
+		if (transform.parent.tag == "MainCamera" && Input.GetKeyDown(KeyCode.R)) 
+		{
+			Reload();
+		}
 	}
  
-
+	void Reload()
+	{
+		float missingAmmo = this.gameObject.GetComponent<Itemization>().maxAmmo - this.gameObject.GetComponent<Itemization>().duraSaniAmmo;;
+		
+		if (this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining >= missingAmmo)
+		{
+			this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining -= missingAmmo;
+			this.gameObject.GetComponent<Itemization>().duraSaniAmmo = this.gameObject.GetComponent<Itemization>().maxAmmo;
+		}
+		else
+		{
+			this.gameObject.GetComponent<Itemization>().duraSaniAmmo += this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining;
+		}
+	}
 	IEnumerator Fire() 
 	{
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

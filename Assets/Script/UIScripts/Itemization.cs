@@ -14,6 +14,7 @@ public class Itemization : MonoBehaviour {
 	public Vector3 scale;
 	public float duraSaniAmmoRemaining;
 	public bool usesAmmo;
+	public float maxAmmo;
 	
 	
 	void Start()
