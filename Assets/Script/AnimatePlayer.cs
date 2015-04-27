@@ -14,6 +14,23 @@ public class AnimatePlayer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
+		if (this.transform.GetComponent<Health> ().currentHealth <= 0) 
+		{
+			if(anim.GetBool("DeadF") || anim.GetBool("DeadB"))
+			{
+				return;
+			}
+			if(Random.value < 0.5f)
+			{
+				anim.SetBool("DeadF", true);
+			}
+			else
+			{
+				anim.SetBool("DeadF", true);
+			}
+
+			return;
+		}
 		// Player locomotion, no weapon
 
 		// run behavior

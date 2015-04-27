@@ -20,11 +20,17 @@ public class Health: MonoBehaviour {
 		}
 
 		if (currentHealth <= 0) {
-			Destroy(this.gameObject);
+			StartCoroutine("TimeDisappear");
 		}
 
 		modifyHealth();
 
+	}
+
+	IEnumerator TimeDisappear() 
+	{
+		yield return new WaitForSeconds(10);
+		Destroy(this.gameObject);
 	}
 	
 	
