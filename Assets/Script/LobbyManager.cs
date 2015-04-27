@@ -154,6 +154,9 @@ public class LobbyManager : MonoBehaviour {
 		playerList = PhotonNetwork.playerList;
 
 		// clear out list
+		listedPlayers.Clear();
+
+		//reset UI to "Open"
 		int i=1;
 		foreach(PhotonPlayer player in listedPlayers)
 		{
