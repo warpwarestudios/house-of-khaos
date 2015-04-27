@@ -148,23 +148,35 @@ public class LobbyManager : MonoBehaviour {
 	{
 		GameObject lobbyPlayer;
 		playerList = PhotonNetwork.playerList;
-		
-		for(int i = 1; i<= playerList.Length; i++)
+		ArrayList listedPlayers = new ArrayList();
+
+		// copy over player list
+		foreach(PhotonPlayer player in playerList)
+		{
+			listedPlayers.Add(player);
+		}
+
+		//  place master client first
+		foreach(PhotonPlayer player in listedPlayers)
+		{
+			if(player.isMasterClient)
+			{
+				lobbyPlayer = GameObject.Find("LobbyPlayer 1");
+				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
+				listedPlayers.Remove(player);
+			}
+		}
+
+		// place remaining players
+		int i=2;
+		foreach(PhotonPlayer player in listedPlayers)
 		{
 			lobbyPlayer = GameObject.Find("LobbyPlayer "+i);
-			if(i == 1)
-			{
-				foreach(PhotonPlayer player in playerList)
-				{	// place master client at position one
-					if(player.isMasterClient)
-					{
-						lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
-						Debug.Log ("Master Client is: " + player.name);
-					}
-				}
-			}// place all other players in positions 2-6
-			lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = playerList[i-1].name;
+			lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
+			i++;
+
 		}
+			
 		// clean up unused slots
 		for(int j = 1; j<= 6; j++)
 		{
