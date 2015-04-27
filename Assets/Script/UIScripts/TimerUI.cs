@@ -18,6 +18,12 @@ public class TimerUI : Photon.MonoBehaviour
 	
 	void Update() 
 	{
+		this.photonView.RPC("UpdateTime", PhotonTargets.All);
+	}
+	
+	[RPC]
+	public void UpdateTime(PhotonMessageInfo mi)
+	{
 		theTimer -= Time.deltaTime;
 		
 		if (theTimer < 10) 
@@ -31,16 +37,10 @@ public class TimerUI : Photon.MonoBehaviour
 			theTimer = 0;
 		}
 		
-		this.photonView.RPC("UpdateTime", PhotonTargets.All);
-	}
-	
-	[RPC]
-	public void UpdateTime(PhotonMessageInfo mi)
-	{
 		minutes = (int) (theTimer / 60.0 );
-		seconds = (int) (theTimer % 60.0 );
+		seconds = Mathf.RoundToInt((int) (theTimer % 60.0 ));
 		
-		this.GetComponent<UILabel>().text = string.Format( "{0:00}:{1:00}", minutes.ToString() , seconds.ToString()); 	
+		this.GetComponent<UILabel>().text = string.Format( "{0:00}:{1:00}", minutes.ToString("00"), seconds.ToString("00")); 	
 	}
 	
 			

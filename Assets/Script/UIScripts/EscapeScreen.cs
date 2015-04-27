@@ -3,31 +3,34 @@ using System.Collections;
 
 public class EscapeScreen : MonoBehaviour {
 	
-	
+	private bool isMenu = false;
 	// Use this for initialization
 	void Start () {
-		this.gameObject.SetActive(false);
+		GameObject.Find("UI Root").transform.FindChild("EscapeScreen").gameObject.SetActive(false);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
-		if(Input.GetKey(KeyCode.Escape))
+		if(Input.GetKeyDown(KeyCode.Escape))
 		{
-			GameObject.Find("EscapeScreen").gameObject.SetActive(true);
-			Cursor.visible = true;
-			Cursor.lockState = CursorLockMode.None;
-		
-		}
-		else
-		{
-			GameObject.Find("EscapeScreen").gameObject.SetActive(true);
-			Cursor.visible = false;
-			Cursor.lockState = CursorLockMode.Locked;
+			isMenu = !isMenu;
+			if(isMenu)
+			{
+				GameObject.Find("UI Root").transform.FindChild("EscapeScreen").gameObject.SetActive(true);
+				Cursor.visible = true;
+				Cursor.lockState = CursorLockMode.None;
+			}
+			else
+			{
+				GameObject.Find("UI Root").transform.FindChild("EscapeScreen").gameObject.SetActive(false);
+				Cursor.visible = false;
+				Cursor.lockState = CursorLockMode.Locked;
+			}
 		}
 	}
 	
-    public void LeaveGame()
+    public void LeaveRoom()
     {
     	PhotonNetwork.LeaveRoom();
     	Application.LoadLevel("LobbyScreen");
