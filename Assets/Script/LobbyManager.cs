@@ -9,7 +9,9 @@ public class LobbyManager : MonoBehaviour {
 
 	private GameObject joinNameHolderListed;
 	private GameObject RoomObject;
+
 	private PhotonPlayer[] playerList;
+	private ArrayList listedPlayers = new ArrayList();
 	private bool lobbyScreen = false;
 	private bool inPlayerHub = false;
 	
@@ -43,6 +45,8 @@ public class LobbyManager : MonoBehaviour {
 		RoomObject = (GameObject)Resources.Load ("Lobby Prefab/BrowserRoom");
 
 		playerNameHolder.GetComponent <UIInput>().value = PhotonNetwork.playerName;
+
+		listedPlayers = new ArrayList();
 
 	}
 
@@ -148,7 +152,6 @@ public class LobbyManager : MonoBehaviour {
 	{
 		GameObject lobbyPlayer;
 		playerList = PhotonNetwork.playerList;
-		ArrayList listedPlayers = new ArrayList();
 
 		// copy over player list
 		foreach(PhotonPlayer player in playerList)
@@ -164,6 +167,7 @@ public class LobbyManager : MonoBehaviour {
 				lobbyPlayer = GameObject.Find("LobbyPlayer 1");
 				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
 				listedPlayers.Remove(player);
+				break;
 			}
 		}
 
@@ -175,16 +179,6 @@ public class LobbyManager : MonoBehaviour {
 			lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
 			i++;
 
-		}
-			
-		// clean up unused slots
-		for(int j = 1; j<= 6; j++)
-		{
-			lobbyPlayer = GameObject.Find("LobbyPlayer "+j);
-			if(lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text == "Player")
-			{
-				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = "Open";
-			}
 		}
 	}
 
