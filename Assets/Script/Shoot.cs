@@ -4,12 +4,14 @@ using System.Collections;
 public class Shoot : MonoBehaviour {
 
 	public AudioSource gunSound;
+	public AudioSource noAmmoSound;
 	public GameObject bulletHolePrefab;
 	public ParticleSystem muzzleFlash;
+	public float ammo;
 
 	void Start()
 	{
-
+		ammo = this.gameObject.GetComponent<Itemization>().duraSaniAmmo;
 	}
 
 	// Update is called once per frame
@@ -17,7 +19,16 @@ public class Shoot : MonoBehaviour {
 	{
 		if (transform.parent != null) {
 			if (transform.parent.tag == "MainCamera" && Input.GetButtonUp ("Fire1")) {
-				StartCoroutine ("Fire");
+				if(ammo > 1)
+				{
+					StartCoroutine ("Fire");
+					ammo--;
+				}
+				else
+				{
+					noAmmoSound.Play();
+				}
+				
 			}
 		}
 	}
@@ -26,8 +37,7 @@ public class Shoot : MonoBehaviour {
 	IEnumerator Fire() 
 	{
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit rayHit;
-		
+		RaycastHit rayHit;	
 		if (Physics.Raycast(ray, out rayHit, 100f))
 		{
 			Debug.Log ("Enemy or wall to be hit!");

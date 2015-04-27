@@ -30,7 +30,9 @@ public class Clock : MonoBehaviour {
 //-----------------------------------------------------------------------------------------------------------------------------------------
 void Start() 
 {
-    pointerSeconds = transform.Find("rotation_axis_pointer_seconds").gameObject;
+	clockSpeed = Random.Range (1, 200) * 0.01f;
+    
+	pointerSeconds = transform.Find("rotation_axis_pointer_seconds").gameObject;
     pointerMinutes = transform.Find("rotation_axis_pointer_minutes").gameObject;
     pointerHours   = transform.Find("rotation_axis_pointer_hour").gameObject;
 
