@@ -6,7 +6,9 @@ public class ZombieAI : MonoBehaviour {
 	public GameObject player;
 	public NavMeshAgent navAgent;
 	public Animator animController;
+	private GameObject AttackedObject; // Hit Detection for zombie attack
 
+	public int Damage = 10;// Damge dealt by melee attack
 	public float wanderSpeed = 3f;// The nav mesh agent's speed when chasing.
 	public float chaseSpeed = 5f;// The nav mesh agent's speed when chasing.
 	public float chaseWaitTime = 5f;// The amount of time to wait when the last sighting is reached.
@@ -37,6 +39,10 @@ public class ZombieAI : MonoBehaviour {
 		if (player == null) 
 		{
 			player = GameObject.FindGameObjectWithTag ("Player");
+			if(player == null)
+			{
+				animController.SetBool ("Attack", false);
+			}
 		}
 		else if(!navAgent.hasPath)
 		{
@@ -135,9 +141,6 @@ public class ZombieAI : MonoBehaviour {
 		
 	}
 
-
-
-
 	// keep model turned right way
 	void OnAnimatorMove ()
 	{
@@ -165,6 +168,25 @@ public class ZombieAI : MonoBehaviour {
 		}
 	}
 
+
+	public void ZombieDamage()
+	{
+		if (AttackedObject == null) {
+			Debug.Log("No Hit Detected");
+			return;
+		}
+
+		if (AttackedObject.tag == "Player")
+		{
+			Health health = AttackedObject.GetComponent<Health>();
+			health.updateHealth(-Damage);
+		}
+	}
+
+	public void OnTriggerEnter(Collider col)
+	{
+		AttackedObject = col.gameObject;
+	}
 
 	private void IdleAnim()
 	{
