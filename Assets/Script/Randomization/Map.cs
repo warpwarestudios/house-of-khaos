@@ -173,7 +173,7 @@ public class Map : MonoBehaviour {
 		//destroy all player spawn points
 		foreach(GameObject spawn in spawnPoints)
 		{
-			Destroy(spawn);
+			//Destroy(spawn);
 		}
 
 		//Waypoint cleanup
