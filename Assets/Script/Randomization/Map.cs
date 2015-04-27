@@ -16,6 +16,7 @@ public class Map : MonoBehaviour {
 	public Wall wallWindowPrefab;
 	public Wall wallLampPrefab;
 	public Door doorPrefab;
+	public Door doorFramePrefab;
 	public GameObject player;
 	public float lampProbability;
 	public float windowProbability;
@@ -530,7 +531,7 @@ public class Map : MonoBehaviour {
 		Passage passage = Instantiate(doorPrefab) as Passage;
 		passage.Initialize(cell, otherCell, direction);
 		passage.transform.localScale = new Vector3 (1, 1, 1);
-		passage = Instantiate(doorPrefab) as Passage;
+		passage = Instantiate(doorFramePrefab) as Passage;
 		passage.Initialize(otherCell, cell, direction.GetOpposite());
 		passage.transform.localScale = new Vector3 (1, 1, 1);
 	}
