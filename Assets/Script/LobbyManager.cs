@@ -153,6 +153,15 @@ public class LobbyManager : MonoBehaviour {
 		GameObject lobbyPlayer;
 		playerList = PhotonNetwork.playerList;
 
+		// clear out list
+		int i=1;
+		foreach(PhotonPlayer player in listedPlayers)
+		{
+			lobbyPlayer = GameObject.Find("LobbyPlayer "+i);
+			lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = "Open";
+			i++;
+		}
+
 		// copy over player list
 		foreach(PhotonPlayer player in playerList)
 		{
@@ -172,13 +181,12 @@ public class LobbyManager : MonoBehaviour {
 		}
 
 		// place remaining players
-		int i=2;
+		i=2;
 		foreach(PhotonPlayer player in listedPlayers)
 		{
 			lobbyPlayer = GameObject.Find("LobbyPlayer "+i);
 			lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
 			i++;
-
 		}
 	}
 
