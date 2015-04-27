@@ -6,11 +6,12 @@ public class LobbyManager : MonoBehaviour {
 	public GameObject playerNameHolder;
 	public GameObject joinNameHolder;
 	public GameObject createNameHolder;
+
 	private GameObject joinNameHolderListed;
-
 	private GameObject RoomObject;
-
+	private PhotonPlayer[] playerList;
 	private bool lobbyScreen = false;
+	private bool inPlayerHub = false;
 	
 	
 
@@ -60,6 +61,16 @@ public class LobbyManager : MonoBehaviour {
 			}
 			lobbyScreen = false;
 		}
+
+		if(inPlayerHub)
+		{
+			if(playerList.Length != PhotonNetwork.playerList.Length)
+			{
+				playerList = PhotonNetwork.playerList;
+				PopulateLobby();
+			}
+		}
+
 	}
 
 	public void LobbyEntered()
@@ -128,11 +139,16 @@ public class LobbyManager : MonoBehaviour {
 			PhotonNetwork.LoadLevel ("GameScreen");
 		}
 
-		// TODO: populate player list in lobby screen
-		// TODO: remove load level, shift to game start
-		GameObject lobbyPlayer;
-		PhotonPlayer[] playerList = PhotonNetwork.playerList;
+		inPlayerHub = true;
+		PopulateLobby();
 
+	}
+
+	private void PopulateLobby()
+	{
+		GameObject lobbyPlayer;
+		playerList = PhotonNetwork.playerList;
+		
 		for(int i = 1; i<= playerList.Length; i++)
 		{
 			lobbyPlayer = GameObject.Find("LobbyPlayer "+i);
@@ -142,7 +158,7 @@ public class LobbyManager : MonoBehaviour {
 				{	// place master client at position one
 					if(player.isMasterClient)
 					{
- 						lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
+						lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
 					}
 				}
 			}// place all other players in positions 2-6
@@ -157,7 +173,6 @@ public class LobbyManager : MonoBehaviour {
 				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = "Open";
 			}
 		}
-
 	}
 
 
