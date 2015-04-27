@@ -213,7 +213,7 @@ public class LobbyManager : MonoBehaviour {
 		PhotonNetwork.LeaveRoom ();
 	}
 
-	void OnPhotonPlayerConnected()
+	void OnPhotonPlayerDisconnected()
 	{
 		if(inPlayerHub)
 		{
