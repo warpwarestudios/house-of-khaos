@@ -15,12 +15,14 @@ public class ItemSpawn : MonoBehaviour {
 			GameObject chosen = items[Random.Range (0,items.Length - 1)].gameObject; 
 			item = Instantiate(chosen, transform.position , Quaternion.identity) as GameObject;
 			item.name = chosen.name;
+			item.transform.parent = this.transform;
+			item.transform.rotation = this.transform.rotation;
 			hasSpawned = true;
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+		transform.localScale = transform.localScale;
 	}
 }

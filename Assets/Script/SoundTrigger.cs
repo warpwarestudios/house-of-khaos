@@ -5,12 +5,10 @@ public class SoundTrigger : MonoBehaviour {
 
 	//triggers a certain sound when the collision box is entered
 
-	public AudioClip triggeredSound;
-	public AudioClip oldSound;
 	public string name; // name of gameobject to search for
 
 	private Transform sound;
-	private AudioSource source;
+	private FlipSound flipSound;
 
 
 	// Use this for initialization
@@ -28,13 +26,10 @@ public class SoundTrigger : MonoBehaviour {
 		if (other.gameObject.CompareTag ("Player")) 
 		{
 			sound = other.transform.FindChild(name);
-			source = sound.GetComponent<AudioSource>();
-			//save current sound
-			oldSound = source.clip;
-			//set sound to new sound
-			source.clip = triggeredSound;
-			source.loop = true;
-			source.Play();
+			flipSound = sound.GetComponent<FlipSound>();
+			flipSound.source.clip = flipSound.secondSound;
+			flipSound.source.loop = true;
+			flipSound.source.Play();
 		}
 	}
 
@@ -43,13 +38,11 @@ public class SoundTrigger : MonoBehaviour {
 		if (other.gameObject.CompareTag ("Player")) 
 		{
 			sound = other.transform.FindChild(name);
-			source = sound.GetComponent<AudioSource>();
-			//save current sound
-			triggeredSound = source.clip;
-			//set sound to new sound
-			source.clip = oldSound;
-			source.loop = true;
-			source.Play();
+			flipSound = sound.GetComponent<FlipSound>();
+			flipSound.source.clip = flipSound.firstSound;
+			flipSound.source.loop = true;
+			flipSound.source.Play();
+
 		}
 	}
 }

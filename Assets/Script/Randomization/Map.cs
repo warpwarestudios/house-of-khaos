@@ -90,7 +90,13 @@ public class Map : MonoBehaviour {
 			Destroy(hall.gameObject);
 		}
 
-		//remove dead ends
+		foreach (Cell cell in cells) 
+		{
+			if(cell != null)
+			{
+				RemoveDeadEnd(cell);
+			}
+		}
 
 		//randomly add windows
 		//step 1: get all edges that open to the outside
@@ -138,10 +144,19 @@ public class Map : MonoBehaviour {
 			room.InitializeTextures();
 		}
 
-		//put player in random room1
-		GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
+		//use list of outside walls to remove spawn points from edges
+		foreach (Cell cell in activeCells) 
+		{
+			GameObject spawnPoint = cell.transform.FindChild("Floor").transform.FindChild("Spawn Point").gameObject;
+			Destroy(spawnPoint);
+		}
 		
-		player = PhotonNetwork.Instantiate("Player", spawnPoints[Random.Range(0,spawnPoints.Length - 1)].transform.position , Quaternion.identity,0);
+
+
+		//put player in random room
+		GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
+
+		player = PhotonNetwork.Instantiate(player.name, spawnPoints[Random.Range(0,spawnPoints.Length - 1)].transform.position , Quaternion.identity,0);
 		PhotonView pv = player.GetComponent<PhotonView>();
 		if (pv.isMine) {
 			MouseLook mouselook  = player.GetComponent<MouseLook>();
@@ -619,6 +634,42 @@ public class Map : MonoBehaviour {
 
 	public Cell GetCell (IntVector2 coordinates) {
 		return cells[coordinates.x, coordinates.z];
+	}
+
+	private void RemoveDeadEnd(Cell cell)
+	{
+		int wallCount = 0;
+		MapDirection openDirection = new MapDirection ();
+		Cell newCell;
+		//check each direction
+		for(int i = 0; i < 4; i++)
+		{
+			MapDirection direction = (MapDirection)i;
+			if(cell.GetEdge(direction).GetType() == typeof(Wall))
+			{
+				wallCount++;
+			}
+			if(cell.GetEdge(direction).GetType() == typeof(Passage))
+			{
+				openDirection = direction;
+			}
+		}
+
+		//if wall count = 3, move through passage
+		if (wallCount == 3) 
+		{
+			newCell = cell.GetEdge(openDirection).otherCell;
+
+			//Create wall between new cell and old cell
+			CreateWall(newCell,cell,openDirection.GetOpposite());
+			//delete old cell
+			Destroy(cell.gameObject);
+
+			//continue with new cell
+			RemoveDeadEnd(newCell);
+		}
+
+		//stops when walls != 3
 	}
 
 }
