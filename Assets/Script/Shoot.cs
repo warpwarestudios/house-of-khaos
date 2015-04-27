@@ -30,11 +30,12 @@ public class Shoot : MonoBehaviour {
 				}
 				
 			}
+			if (transform.parent.tag == "MainCamera" && Input.GetKeyDown(KeyCode.R)) 
+			{
+				Reload();
+			}
 		}
-		if (transform.parent.tag == "MainCamera" && Input.GetKeyDown(KeyCode.R)) 
-		{
-			Reload();
-		}
+
 	}
  
 	void Reload()

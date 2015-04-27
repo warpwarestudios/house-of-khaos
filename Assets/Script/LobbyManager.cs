@@ -159,6 +159,7 @@ public class LobbyManager : MonoBehaviour {
 					if(player.isMasterClient)
 					{
 						lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
+						Debug.Log ("Master Client is: " + player.name);
 					}
 				}
 			}// place all other players in positions 2-6
