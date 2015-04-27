@@ -4,6 +4,7 @@ using System.Collections;
 public class Interaction : MonoBehaviour {
 	
 	public bool selected;
+	public Animator doorAnimation;
 	
 	private GameObject interactLabel;
 	private GameObject itemLabel;
@@ -35,6 +36,7 @@ public class Interaction : MonoBehaviour {
 	public void Door()
 	{
 		//Insert door animation here
+		doorAnimation.SetBool("Open", !doorAnimation.GetBool("Open"));
 	}
 	
 }

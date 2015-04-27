@@ -9,7 +9,7 @@ public class Wall : CellEdge {
 		{
 			Transform itemSpawn;
 			//50/50 chance of clock or bookshelf
-			if(Random.value < 0.1)
+			if(Random.value < 0.9)
 			{
 				Debug.Log("Spawning Shelves!");
 				itemSpawn = this.transform.FindChild("Item Spawn - Bookshelf");

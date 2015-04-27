@@ -32,12 +32,18 @@ public class Crosshair : MonoBehaviour {
 						hit.collider.GetComponent<Interaction>().Item();
 					}
 				}
-//				if(hit.collider.GetComponent<Interaction>().interactionType == Interaction.TestEnum.Door)
-//				{
-//					//if door open
-//					interactLabel.GetComponent<UILabel>().text = "'E' to openDoor";
-//					//if door closed
-//				}
+				if(hit.collider.GetComponent<Interaction>().interactionType == Interaction.TestEnum.Door)
+				{
+					//if door open
+					interactLabel.GetComponent<UILabel>().text = "'E' to interact.";
+					Debug.Log("'E' to open/close door");
+
+					//if door closed
+					if (Input.GetKeyDown(KeyCode.E))
+					{
+						hit.collider.GetComponent<Interaction>().Door();
+					}
+				}
 			}
 		}
 		else
