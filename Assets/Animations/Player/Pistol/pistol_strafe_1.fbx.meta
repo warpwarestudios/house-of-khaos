@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: da3c50d16566f0d41ae5d4dec3a825f7
-timeCreated: 1430098145
+guid: 56bddfad50fd5b14d8c6f97311848e67
+timeCreated: 1430098144
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
@@ -141,7 +141,7 @@ ModelImporter:
     400130: mixamorig:Spine1
     400132: mixamorig:Spine2
     400134: //RootNode
-    7400000: PistolRun
+    7400000: PistolStrafeRight
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -160,10 +160,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: PistolRun
+      name: PistolStrafeRight
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 22
+      lastFrame: 18
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
