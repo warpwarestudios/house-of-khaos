@@ -68,11 +68,8 @@ public class LobbyManager : MonoBehaviour {
 
 		if(inPlayerHub)
 		{
-			if(playerList.Length != PhotonNetwork.playerList.Length)
-			{
-				playerList = PhotonNetwork.playerList;
-				PopulateLobby();
-			}
+			playerList = PhotonNetwork.playerList;
+			PopulateLobby();
 		}
 
 	}
@@ -191,6 +188,8 @@ public class LobbyManager : MonoBehaviour {
 			lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
 			i++;
 		}
+
+		playerList = null;
 	}
 
 
