@@ -196,8 +196,7 @@ public class LobbyManager : MonoBehaviour {
 	{
 		if (PhotonNetwork.isMasterClient) 
 		{
-			
-			
+			PhotonNetwork.LoadLevel ("GameScreen");
 		} 
 		else 
 		{
@@ -210,7 +209,20 @@ public class LobbyManager : MonoBehaviour {
 	{
 		PhotonNetwork.LeaveRoom ();
 	}
-	
+
+	void OnPhotonPlayerConnected()
+	{
+		if(inPlayerHub)
+		{
+			PopulateLobby();
+		}
+	}
+
+	void onLeftRoom()
+	{
+		inPlayerHub = false;
+	}
+
 	void OnDisconnectedFromPhoton()
     {
         Debug.LogWarning("OnDisconnectedFromPhoton");
