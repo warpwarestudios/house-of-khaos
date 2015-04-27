@@ -24,7 +24,7 @@ public class Crosshair : MonoBehaviour {
 			{
 				if(hit.collider.GetComponent<Interaction>().interactionType == Interaction.TestEnum.Item)
 				{
-					interactLabel.GetComponent<UILabel>().text = "'E' to pickup Item";
+					interactLabel.GetComponent<UILabel>().text = "'E' to pickup " + hit.collider.name.ToLower();
 					Debug.Log("'E' to pick up Item");
 					
 					if (Input.GetKeyDown(KeyCode.E))
@@ -35,7 +35,7 @@ public class Crosshair : MonoBehaviour {
 				if(hit.collider.GetComponent<Interaction>().interactionType == Interaction.TestEnum.Door)
 				{
 					//if door open
-					interactLabel.GetComponent<UILabel>().text = "'E' to interact.";
+					interactLabel.GetComponent<UILabel>().text = "'E' to interact";
 					Debug.Log("'E' to open/close door");
 
 					//if door closed
