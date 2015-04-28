@@ -7,22 +7,16 @@ public class Shoot : MonoBehaviour {
 	public AudioSource noAmmoSound;
 	public GameObject bulletHolePrefab;
 	public ParticleSystem muzzleFlash;
-	public float ammo;
-
-	void Start()
-	{
-		ammo = this.gameObject.GetComponent<Itemization>().duraSaniAmmo;
-	}
 
 	// Update is called once per frame
 	void Update () 
 	{
 		if (transform.parent != null) {
 			if (transform.parent.tag == "MainCamera" && Input.GetButtonUp ("Fire1")) {
-				if(ammo > 1)
+				if(this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining > 1)
 				{
 					StartCoroutine ("Fire");
-					ammo--;
+					this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining--;
 				}
 				else
 				{

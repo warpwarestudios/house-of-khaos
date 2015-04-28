@@ -51,6 +51,15 @@ public class HotbarManager : MonoBehaviour {
 			hotbars[i].GetComponent<UISprite>().spriteName = items[i].GetComponent<Itemization>().skillIconName;
 		}
 		
+		if(items[hotbarNumber] == empty)
+		{
+			status.GetComponent<UILabel>().text = "None";
+		}
+		else
+		{
+			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().itemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmoRemaining + "/" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmo;
+		}
+		
 		
 		FireButton();
 		DropButton();	
