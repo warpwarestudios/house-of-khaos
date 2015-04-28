@@ -7,7 +7,6 @@ public class ItemSpawn : MonoBehaviour {
 	public float itemSpawnProbability;
 	public GameObject item;
 	public bool hasSpawned = false;
-
 	// Use this for initialization
 	void Start () {
 		if( Random.value <= itemSpawnProbability)
@@ -18,6 +17,7 @@ public class ItemSpawn : MonoBehaviour {
 			item.transform.parent = this.transform;
 			item.transform.rotation = this.transform.rotation;
 			hasSpawned = true;
+		
 		}
 	}
 	

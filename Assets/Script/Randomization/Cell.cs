@@ -7,6 +7,10 @@ public class Cell : MonoBehaviour {
 	public MapRoom room;
 	public Material defaultMat;
 
+	public GameObject playerSpawn;
+	public GameObject itemSpawn;
+	public GameObject waypoint;
+
 	private CellEdge[] edges = new CellEdge[MapDirections.Count];
 	private int initializedEdgeCount;
 	

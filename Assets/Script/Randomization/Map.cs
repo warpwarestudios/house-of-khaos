@@ -90,7 +90,7 @@ public class Map : MonoBehaviour {
 		{
 			Destroy(hall.gameObject);
 		}
-
+		//remove dead ends
 		foreach (Cell cell in cells) 
 		{
 			if(cell != null)
@@ -132,7 +132,11 @@ public class Map : MonoBehaviour {
 					if(coordinates.x < size.x  && coordinates.z < size.z && coordinates.x > 0 && coordinates.z > 0)
 					{
 						Cell neighbor = GetCell(coordinates);
-						CreateWindowInWall(cell,neighbor, direction);
+						//if neighbor is null
+						if(neighbor == null)
+						{
+							CreateWindowInWall(cell,neighbor, direction);
+						}
 					}
 				}
 				
@@ -145,11 +149,19 @@ public class Map : MonoBehaviour {
 			room.InitializeTextures();
 		}
 
-		//use list of outside walls to remove spawn points from edges
-		foreach (Cell cell in activeCells) 
+		foreach (MapRoom room in connectedRooms) 
 		{
-			GameObject spawnPoint = cell.transform.FindChild("Floor").transform.FindChild("Spawn Point").gameObject;
-			Destroy(spawnPoint);
+			//delete all spawn points and way points from item cells
+			room.UpdateSpawnAndWayPoints();
+		
+			//use list of outside walls to remove spawn points from edges
+			activeCells = room.returnOutsideWallsList(this);
+
+			foreach (Cell cell in activeCells) 
+			{
+				GameObject spawnPoint = cell.transform.FindChild ("Floor").transform.FindChild ("Spawn Point").gameObject;
+				Destroy (spawnPoint);
+			}
 		}
 		
 
@@ -173,7 +185,7 @@ public class Map : MonoBehaviour {
 		//destroy all player spawn points
 		foreach(GameObject spawn in spawnPoints)
 		{
-			Destroy(spawn);
+			//Destroy(spawn);
 		}
 
 		//Waypoint cleanup
