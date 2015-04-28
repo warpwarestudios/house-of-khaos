@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LobbyManager : MonoBehaviour {
+public class LobbyManager : Photon.MonoBehaviour {
 
 	public GameObject playerNameHolder;
 	public GameObject joinNameHolder;
@@ -25,9 +25,6 @@ public class LobbyManager : MonoBehaviour {
 			PhotonNetwork.ConnectUsingSettings("0.01");
 			Debug.Log("Succesfully Connected to Photon");
 		}
-			
-		// loading screen exit
-		//if (!PhotonNetwork.connected) {}
 
 		// start up
 		PhotonNetwork.logLevel = PhotonLogLevel.Full;
@@ -36,12 +33,7 @@ public class LobbyManager : MonoBehaviour {
 		string tempName = PlayerPrefs.GetString ("playerName", "Guest" + Random.Range (1, 9999));
 		//Load name from PlayerPrefs
 		PhotonNetwork.playerName = tempName;
-
-
-		//playerNameHolder = GameObject.Find ("PlayerNameInput").GetComponent <UIInput>();
-		//joinNameHolder = GameObject.Find ("JoinRoomInput").GetComponent <UIInput>();
-		//createNameHolder = GameObject.Find ("CreateRoomInput").GetComponent <UIInput>();
-		//RoomObject = (GameObject)Resources.Load ("Lobby Prefab/BrowserRoom");
+		
 		RoomObject = (GameObject)Resources.Load ("Lobby Prefab/BrowserRoom");
 
 		playerNameHolder.GetComponent <UIInput>().value = PhotonNetwork.playerName;
@@ -65,13 +57,6 @@ public class LobbyManager : MonoBehaviour {
 			}
 			lobbyScreen = false;
 		}
-
-		if(inPlayerHub)
-		{
-			playerList = PhotonNetwork.playerList;
-			PopulateLobby();
-		}
-
 	}
 
 	public void LobbyEntered()
@@ -198,7 +183,7 @@ public class LobbyManager : MonoBehaviour {
 	{
 		if (PhotonNetwork.isMasterClient) 
 		{
-			PhotonNetwork.LoadLevel ("GameScreen");
+			photonView.RPC ("PhotonChangeScenes", PhotonTargets.All);
 		} 
 		else 
 		{
@@ -207,39 +192,61 @@ public class LobbyManager : MonoBehaviour {
 
 	}
 
-	public void DisconnectFromGame()
+	// call to shift players to game screen
+	[RPC]
+	private void PhotonChangeScenes()
+	{
+		PhotonNetwork.LoadLevel ("GameScreen");
+	}
+
+	// called if player leaves photon room ?? not sure why this is here actually
+	void DisconnectFromGame()
 	{
 		PhotonNetwork.LeaveRoom ();
 	}
 
-	void OnPhotonPlayerDisconnected()
+	// called if player enter photon room in hub
+	void OnPhotonPlayerConnected ()
 	{
 		if(inPlayerHub)
 		{
+			playerList = PhotonNetwork.playerList;
 			PopulateLobby();
 		}
 	}
 
+	// called if player leaves photon room in hub
+	void OnPhotonPlayerDisconnected()
+	{
+		if(inPlayerHub)
+		{
+			playerList = PhotonNetwork.playerList;
+			PopulateLobby();
+		}
+	}
+
+	// called if player leaves photon room
 	void onLeftRoom()
 	{
 		inPlayerHub = false;
 	}
 
+	// called if fails to connect in the first place
+	void OnFailedToConnectToPhoton()
+	{
+		PhotonNetwork.offlineMode = true;
+	}
+
+	// called if connection is interupted
+	void OnConnectionFail ()
+	{
+		PhotonNetwork.offlineMode = true;
+	}
+
+	// called if disconnecting from photon
 	void OnDisconnectedFromPhoton()
     {
         Debug.LogWarning("OnDisconnectedFromPhoton");
     }
-
-	/*IEnumerator OnLeftRoom()
-    {
-        //Easy way to reset the level: Otherwise we'd manually reset the camera
-
-        //Wait untill Photon is properly disconnected (empty room, and connected back to main server)
-        while(PhotonNetwork.room!=null || PhotonNetwork.connected==false)
-            yield return 0;
-
-        Application.LoadLevel(Application.loadedLevel);
-
-    }*/
 
 }
