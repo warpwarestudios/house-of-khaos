@@ -170,7 +170,10 @@ public class LobbyManager : Photon.MonoBehaviour {
 		foreach(PhotonPlayer player in listedPlayers)
 		{
 			lobbyPlayer = GameObject.Find("LobbyPlayer "+i);
-			lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
+			if(lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text != player.name)
+			{
+				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
+			}
 			i++;
 		}
 
@@ -199,7 +202,7 @@ public class LobbyManager : Photon.MonoBehaviour {
 		PhotonNetwork.LoadLevel ("GameScreen");
 	}
 
-	// called if player leaves photon room ?? not sure why this is here actually
+	// called if player leaves photon room, governed by button
 	void DisconnectFromGame()
 	{
 		PhotonNetwork.LeaveRoom ();
@@ -216,12 +219,24 @@ public class LobbyManager : Photon.MonoBehaviour {
 	}
 
 	// called if player leaves photon room in hub
-	void OnPhotonPlayerDisconnected()
+	void OnPhotonPlayerDisconnected(PhotonPlayer otherPlayer)
 	{
 		if(inPlayerHub)
 		{
 			playerList = PhotonNetwork.playerList;
+			Debug.Log("Player: " + otherPlayer.name +" ID:"+otherPlayer.ID+" left");
 			PopulateLobby();
+		}
+
+		GameObject lobbyPlayer;
+		// remove player from list
+		for(int i=2; i<=6; i++)
+		{
+			lobbyPlayer = GameObject.Find("LobbyPlayer "+i);
+			if(lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text == otherPlayer.name)
+			{
+				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = "Open";
+			}
 		}
 	}
 
