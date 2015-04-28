@@ -59,7 +59,7 @@ public class Crosshair : MonoBehaviour {
 		}
 
 		// cursor influence
-		if (Input.GetButtonDown ("Fire1")) 
+		if (Input.GetButtonDown ("Fire2")) 
 		{
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;

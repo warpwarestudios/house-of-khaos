@@ -31,6 +31,6 @@ public class PhotonChat : Photon.MonoBehaviour
 		}
 
 		this.messages.Add(senderName +": " + newLine);
-		this.GetComponent<UITextList>().Add(newLine);
+		this.GetComponent<UITextList>().Add(senderName +": "+newLine);
 	}
 }

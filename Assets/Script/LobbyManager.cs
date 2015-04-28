@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LobbyManager : MonoBehaviour {
+public class LobbyManager : Photon.MonoBehaviour {
 
 	public GameObject playerNameHolder;
 	public GameObject joinNameHolder;
@@ -9,7 +9,9 @@ public class LobbyManager : MonoBehaviour {
 
 	private GameObject joinNameHolderListed;
 	private GameObject RoomObject;
+
 	private PhotonPlayer[] playerList;
+	private ArrayList listedPlayers = new ArrayList();
 	private bool lobbyScreen = false;
 	private bool inPlayerHub = false;
 	
@@ -23,9 +25,6 @@ public class LobbyManager : MonoBehaviour {
 			PhotonNetwork.ConnectUsingSettings("0.01");
 			Debug.Log("Succesfully Connected to Photon");
 		}
-			
-		// loading screen exit
-		//if (!PhotonNetwork.connected) {}
 
 		// start up
 		PhotonNetwork.logLevel = PhotonLogLevel.Full;
@@ -34,15 +33,12 @@ public class LobbyManager : MonoBehaviour {
 		string tempName = PlayerPrefs.GetString ("playerName", "Guest" + Random.Range (1, 9999));
 		//Load name from PlayerPrefs
 		PhotonNetwork.playerName = tempName;
-
-
-		//playerNameHolder = GameObject.Find ("PlayerNameInput").GetComponent <UIInput>();
-		//joinNameHolder = GameObject.Find ("JoinRoomInput").GetComponent <UIInput>();
-		//createNameHolder = GameObject.Find ("CreateRoomInput").GetComponent <UIInput>();
-		//RoomObject = (GameObject)Resources.Load ("Lobby Prefab/BrowserRoom");
+		
 		RoomObject = (GameObject)Resources.Load ("Lobby Prefab/BrowserRoom");
 
 		playerNameHolder.GetComponent <UIInput>().value = PhotonNetwork.playerName;
+
+		listedPlayers = new ArrayList();
 
 	}
 
@@ -61,16 +57,6 @@ public class LobbyManager : MonoBehaviour {
 			}
 			lobbyScreen = false;
 		}
-
-		if(inPlayerHub)
-		{
-			if(playerList.Length != PhotonNetwork.playerList.Length)
-			{
-				playerList = PhotonNetwork.playerList;
-				PopulateLobby();
-			}
-		}
-
 	}
 
 	public void LobbyEntered()
@@ -148,31 +134,50 @@ public class LobbyManager : MonoBehaviour {
 	{
 		GameObject lobbyPlayer;
 		playerList = PhotonNetwork.playerList;
-		
-		for(int i = 1; i<= playerList.Length; i++)
+
+		// clear out list
+		listedPlayers.Clear();
+
+		//reset UI to "Open"
+		int i=1;
+		foreach(PhotonPlayer player in listedPlayers)
 		{
 			lobbyPlayer = GameObject.Find("LobbyPlayer "+i);
-			if(i == 1)
-			{
-				foreach(PhotonPlayer player in playerList)
-				{	// place master client at position one
-					if(player.isMasterClient)
-					{
-						lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
-					}
-				}
-			}// place all other players in positions 2-6
-			lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = playerList[i-1].name;
+			lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = "Open";
+			i++;
 		}
-		// clean up unused slots
-		for(int j = 1; j<= 6; j++)
+
+		// copy over player list
+		foreach(PhotonPlayer player in playerList)
 		{
-			lobbyPlayer = GameObject.Find("LobbyPlayer "+j);
-			if(lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text == "Player")
+			listedPlayers.Add(player);
+		}
+
+		//  place master client first
+		foreach(PhotonPlayer player in listedPlayers)
+		{
+			if(player.isMasterClient)
 			{
-				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = "Open";
+				lobbyPlayer = GameObject.Find("LobbyPlayer 1");
+				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
+				listedPlayers.Remove(player);
+				break;
 			}
 		}
+
+		// place remaining players
+		i=2;
+		foreach(PhotonPlayer player in listedPlayers)
+		{
+			lobbyPlayer = GameObject.Find("LobbyPlayer "+i);
+			if(lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text != player.name)
+			{
+				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
+			}
+			i++;
+		}
+
+		playerList = null;
 	}
 
 
@@ -181,8 +186,7 @@ public class LobbyManager : MonoBehaviour {
 	{
 		if (PhotonNetwork.isMasterClient) 
 		{
-			
-			
+			photonView.RPC ("PhotonChangeScenes", PhotonTargets.All);
 		} 
 		else 
 		{
@@ -191,26 +195,73 @@ public class LobbyManager : MonoBehaviour {
 
 	}
 
-	public void DisconnectFromGame()
+	// call to shift players to game screen
+	[RPC]
+	private void PhotonChangeScenes()
+	{
+		PhotonNetwork.LoadLevel ("GameScreen");
+	}
+
+	// called if player leaves photon room, governed by button
+	void DisconnectFromGame()
 	{
 		PhotonNetwork.LeaveRoom ();
 	}
-	
+
+	// called if player enter photon room in hub
+	void OnPhotonPlayerConnected ()
+	{
+		if(inPlayerHub)
+		{
+			playerList = PhotonNetwork.playerList;
+			PopulateLobby();
+		}
+	}
+
+	// called if player leaves photon room in hub
+	void OnPhotonPlayerDisconnected(PhotonPlayer otherPlayer)
+	{
+		if(inPlayerHub)
+		{
+			playerList = PhotonNetwork.playerList;
+			Debug.Log("Player: " + otherPlayer.name +" ID:"+otherPlayer.ID+" left");
+			PopulateLobby();
+		}
+
+		GameObject lobbyPlayer;
+		// remove player from list
+		for(int i=2; i<=6; i++)
+		{
+			lobbyPlayer = GameObject.Find("LobbyPlayer "+i);
+			if(lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text == otherPlayer.name)
+			{
+				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = "Open";
+			}
+		}
+	}
+
+	// called if player leaves photon room
+	void onLeftRoom()
+	{
+		inPlayerHub = false;
+	}
+
+	// called if fails to connect in the first place
+	void OnFailedToConnectToPhoton()
+	{
+		PhotonNetwork.offlineMode = true;
+	}
+
+	// called if connection is interupted
+	void OnConnectionFail ()
+	{
+		PhotonNetwork.offlineMode = true;
+	}
+
+	// called if disconnecting from photon
 	void OnDisconnectedFromPhoton()
     {
         Debug.LogWarning("OnDisconnectedFromPhoton");
     }
-
-	/*IEnumerator OnLeftRoom()
-    {
-        //Easy way to reset the level: Otherwise we'd manually reset the camera
-
-        //Wait untill Photon is properly disconnected (empty room, and connected back to main server)
-        while(PhotonNetwork.room!=null || PhotonNetwork.connected==false)
-            yield return 0;
-
-        Application.LoadLevel(Application.loadedLevel);
-
-    }*/
 
 }
