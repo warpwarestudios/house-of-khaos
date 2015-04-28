@@ -50,6 +50,7 @@ public class LobbyManager : Photon.MonoBehaviour {
 			{
 				GameObject browseRoom = Instantiate (RoomObject) as GameObject;
 				browseRoom.transform.parent = GameObject.Find ("List").transform;
+				GameObject.Find ("List").gameObject.GetComponent<UIGrid>().enabled = true;
 				// name
 				browseRoom.transform.FindChild ("RoomName").GetComponent <UILabel> ().text = game.name;
 				// size
