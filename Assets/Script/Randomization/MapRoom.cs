@@ -114,11 +114,11 @@ public class MapRoom : MonoBehaviour {
 						Cell neighbor = map.GetCell(coordinates);
 
 						//if neighbor does not exist in grid
-						if (neighbor == null)
+						if (neighbor == null || neighbor.room != this)
 						{
-
 							//add to active cells
 							activeCells.Add(cell);
+							break;
 						}
 					}
 				}
@@ -141,5 +141,17 @@ public class MapRoom : MonoBehaviour {
 		};
 		//otherwise return false
 		return false;
+	}
+
+	public void UpdateSpawnAndWayPoints()
+	{
+		foreach (Cell cell in cells) 
+		{
+			if(cell.itemSpawn.GetComponent<ItemSpawn>().hasSpawned = true)
+			{
+				Destroy(cell.playerSpawn);
+				Destroy(cell.waypoint);
+			}
+		}
 	}
 }
