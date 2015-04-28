@@ -13,7 +13,7 @@ public class Shoot : MonoBehaviour {
 	{
 		if (transform.parent != null) {
 			if (transform.parent.tag == "MainCamera" && Input.GetButtonUp ("Fire1")) {
-				if(this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining > 1)
+				if(this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining > 0)
 				{
 					StartCoroutine ("Fire");
 					this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining--;

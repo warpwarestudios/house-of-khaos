@@ -101,7 +101,7 @@ public class HotbarManager : MonoBehaviour {
 		if(item.GetComponent<Itemization>().itemName == items[hotbarNumber].GetComponent<Itemization>().itemName && item.GetComponent<Itemization>().usesAmmo == true)
 		{
 			
-			items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmo =+ item.GetComponent<Itemization>().duraSaniAmmoRemaining;
+			items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmo += item.GetComponent<Itemization>().duraSaniAmmoRemaining;
 			Destroy(item);
 		}
 		else
