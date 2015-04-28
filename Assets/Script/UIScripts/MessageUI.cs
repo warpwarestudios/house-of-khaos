@@ -3,8 +3,7 @@ using System.Collections;
 
 public class MessageUI : MonoBehaviour {
 	
-	GameObject messageBox;
-	GameObject lobbyScreen;
+	public GameObject messageBox;
 	// Use this for initialization
 	void Start () {
 		
@@ -15,10 +14,18 @@ public class MessageUI : MonoBehaviour {
 		
 	}
 	
-	public void Message(string title, string body)
+	public void Message(string title, string message)
 	{
 		Instantiate(messageBox);
-		lobbyScreen.transform.parent = messageBox.transform;
+		this.transform.parent = messageBox.transform;
+		messageBox.gameObject.transform.FindChild("MessageLabel").GetComponent<UILabel>().text = title;
+		messageBox.gameObject.transform.FindChild("Message").GetComponent<UILabel>().text = message;
 		
 	}
+	
+	public void OkButton()
+	{
+		Destroy(messageBox);
+	}
+
 }
