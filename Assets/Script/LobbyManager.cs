@@ -191,6 +191,7 @@ public class LobbyManager : Photon.MonoBehaviour {
 		else 
 		{
 			//TODO: set player to ready state
+			//photonView.RPC ("ReadyUp", PhotonTargets.All);
 		}
 
 	}
@@ -200,6 +201,13 @@ public class LobbyManager : Photon.MonoBehaviour {
 	private void PhotonChangeScenes()
 	{
 		PhotonNetwork.LoadLevel ("GameScreen");
+	}
+
+	// call to apply ready up check
+	[RPC]
+	private void ReadyUp()
+	{
+
 	}
 
 	// called if player leaves photon room, governed by button
