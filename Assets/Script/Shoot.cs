@@ -61,10 +61,13 @@ public class Shoot : MonoBehaviour {
 				
 			}
 			else //bullet holes for environment
-			{			
-				var hitRotation = Quaternion.FromToRotation(Vector3.forward, rayHit.normal);
-				Instantiate(bulletHolePrefab, rayHit.point, hitRotation);
-				Debug.Log ("Bullet Hole made!");
+			{	
+				if(rayHit.collider.tag == "Enemy")
+				{
+					var hitRotation = Quaternion.FromToRotation(Vector3.forward, rayHit.normal);
+					Instantiate(bulletHolePrefab, rayHit.point, hitRotation);
+					Debug.Log ("Bullet Hole made!");
+				}
 				if(rayHit.rigidbody != null)
 				{
 					rayHit.rigidbody.AddForceAtPosition(Vector3.forward * 10, rayHit.point);
