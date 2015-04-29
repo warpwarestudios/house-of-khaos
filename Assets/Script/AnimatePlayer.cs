@@ -34,7 +34,7 @@ public class AnimatePlayer : MonoBehaviour {
 			return;
 		}
 
-		if(// stuff for me to tell that he has a pistol)
+		if(1 == 1)
 		{
 			heldItem = true;
 		}
