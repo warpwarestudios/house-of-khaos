@@ -30,10 +30,17 @@ public class EscapeScreen : MonoBehaviour {
 		}
 	}
 	
+	public void ResumeGame()
+	{
+		GameObject.Find("UI Root").transform.FindChild("EscapeScreen").gameObject.SetActive(false);
+		Cursor.visible = false;
+		Cursor.lockState = CursorLockMode.Locked;
+	}
+	
     public void LeaveRoom()
     {
     	PhotonNetwork.LeaveRoom();
-    	Application.LoadLevel("LobbyScreen");
+    	PhotonNetwork.LoadLevel("LobbyScreen");
     }
     
     public void ExitGame()
