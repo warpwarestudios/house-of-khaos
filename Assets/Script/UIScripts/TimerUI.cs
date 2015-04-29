@@ -19,8 +19,8 @@ public class TimerUI : Photon.MonoBehaviour
 	
 	void Update() 
 	{
-		if (this.photonView.owner.isMasterClient) 
-		{
+		//if (this.photonView.owner.isMasterClient) 
+		//{
 			theTimer -= Time.deltaTime;
 
 			minutes = (int)(theTimer / 60.0);
@@ -29,7 +29,7 @@ public class TimerUI : Photon.MonoBehaviour
 			time = string.Format ("{0:00}:{1:00}", minutes.ToString ("00"), seconds.ToString ("00"));
 
 			this.photonView.RPC ("UpdateTime", PhotonTargets.All);
-		}
+		//}
 	}
 	
 	[RPC]
