@@ -142,34 +142,35 @@ public class Map : MonoBehaviour {
 				
 			}
 		}
-	
-
-		foreach(MapRoom room in connectedRooms)
-		{
-			room.InitializeTextures();
-		}
 
 		foreach (MapRoom room in connectedRooms) 
 		{
+			room.InitializeTextures();
+
 			//delete all spawn points and way points from item cells
-			room.UpdateSpawnAndWayPoints();
+			room.UpdateSpawnPoints();
 		
-			//use list of outside walls to remove spawn points from edges
+			//use list of outside walls to remove spawn points and item spawns from edges
 			activeCells = room.returnOutsideWallsList(this);
 
 			foreach (Cell cell in activeCells) 
 			{
-				GameObject spawnPoint = cell.transform.FindChild ("Floor").transform.FindChild ("Spawn Point").gameObject;
+				GameObject spawnPoint = cell.transform.FindChild ("Spawn Point").gameObject;
+				GameObject itemSpawn = cell.transform.FindChild ("Item Spawn").gameObject;
+				Destroy (itemSpawn);
 				Destroy (spawnPoint);
 			}
 		}
 		
 
-
 		//put player in random room
 		GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
 
-		player = PhotonNetwork.Instantiate(player.name, spawnPoints[Random.Range(0,spawnPoints.Length - 1)].transform.position , Quaternion.identity,0);
+		GameObject playerSpawn = spawnPoints[Random.Range(0,spawnPoints.Length - 1)];
+
+		player = PhotonNetwork.Instantiate(player.name, playerSpawn.transform.position , Quaternion.identity,0);
+		//player.transform.parent = playerSpawn.transform;
+		//player.transform.localPosition = new Vector3(0,0,0);
 		PhotonView pv = player.GetComponent<PhotonView>();
 		if (pv.isMine) {
 			MouseLook mouselook  = player.GetComponent<MouseLook>();
@@ -185,6 +186,7 @@ public class Map : MonoBehaviour {
 		//destroy all player spawn points
 		foreach(GameObject spawn in spawnPoints)
 		{
+			//spawn.transform.DetachChildren();
 			//Destroy(spawn);
 		}
 
@@ -350,6 +352,8 @@ public class Map : MonoBehaviour {
 					if(next.room != hallway)
 					{
 						next.Initialize(hallway);
+						Destroy(next.itemSpawn);
+						Destroy(next.playerSpawn);
 					}
 					else
 					{

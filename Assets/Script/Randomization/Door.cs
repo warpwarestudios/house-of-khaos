@@ -8,11 +8,11 @@ public class Door : Passage {
 	public override void Initialize (Cell cell, Cell otherCell, MapDirection direction) {
 		base.Initialize(cell, otherCell, direction);
 		
-		GameObject itemSpawn = cell.transform.FindChild ("Floor").transform.FindChild ("Item Spawn").gameObject;
+		GameObject itemSpawn = cell.transform.FindChild("Item Spawn").gameObject;
 		
 		Destroy (itemSpawn);
 
-		GameObject otherItemSpawn = otherCell.transform.FindChild ("Floor").transform.FindChild ("Item Spawn").gameObject;
+		GameObject otherItemSpawn = otherCell.transform.FindChild ("Item Spawn").gameObject;
 
 		Destroy (otherItemSpawn);
 	}
