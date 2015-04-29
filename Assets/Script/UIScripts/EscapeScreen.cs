@@ -30,6 +30,7 @@ public class EscapeScreen : MonoBehaviour {
 		}
 	}
 	
+	
 	public void ResumeGame()
 	{
 		GameObject.Find("UI Root").transform.FindChild("EscapeScreen").gameObject.SetActive(false);

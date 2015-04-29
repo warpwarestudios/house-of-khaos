@@ -34,16 +34,14 @@ public class Shoot : MonoBehaviour {
  
 	void Reload()
 	{
-		float missingAmmo = this.gameObject.GetComponent<Itemization>().maxAmmo - this.gameObject.GetComponent<Itemization>().duraSaniAmmo;;
-		
-		if (this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining >= missingAmmo)
+		if(this.gameObject.GetComponent<Itemization>().duraSaniAmmo >= 1)
 		{
-			this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining -= missingAmmo;
-			this.gameObject.GetComponent<Itemization>().duraSaniAmmo = this.gameObject.GetComponent<Itemization>().maxAmmo;
-		}
-		else
-		{
-			this.gameObject.GetComponent<Itemization>().duraSaniAmmo += this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining;
+			if(this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining < this.gameObject.GetComponent<Itemization>().maxAmmo)
+			{
+				float missingAmmo = this.gameObject.GetComponent<Itemization>().maxAmmo - this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining;
+				this.gameObject.GetComponent<Itemization>().duraSaniAmmo -= missingAmmo;
+				this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining += missingAmmo;
+			}
 		}
 	}
 	IEnumerator Fire() 
