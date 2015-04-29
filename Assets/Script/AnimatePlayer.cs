@@ -4,6 +4,8 @@ using System.Collections;
 public class AnimatePlayer : MonoBehaviour {
 
 	Animator anim;
+	bool heldItem = false;
+	public GameObject hotTab;
 
 	// Use this for initialization
 	void Start () 
@@ -31,68 +33,32 @@ public class AnimatePlayer : MonoBehaviour {
 
 			return;
 		}
-		// Player locomotion, no weapon
 
-		// run behavior
-		// DO NOT USE
-		/*if (Input.GetKey (KeyCode.LeftShift)) 
+		if(// stuff for me to tell that he has a pistol)
 		{
-			if (Input.GetKey(KeyCode.W)) 
-			{
-				if (Input.GetKey(KeyCode.A)) 
-				{
-					anim.Play ("LeftStrafeRun");
-				}
-				else if (Input.GetKey(KeyCode.D)) 
-				{
-					anim.Play ("RightStrafeRun");
-				}
-				else
-				{
-					anim.Play ("Run");
-				}
-			}
-			else if (Input.GetKey(KeyCode.S)) 
-			{
-				anim.Play ("WalkBack");
-			}
-			else if (Input.GetKey(KeyCode.A)) 
-			{
-				anim.Play ("LeftStrafeRun");
-			}
-			else if (Input.GetKey(KeyCode.D)) 
-			{
-				anim.Play ("RightStrafeRun");
-			}
-			else 
-			{
-				anim.Play ("Idle");
-			}
+			heldItem = true;
 		}
 		else
-		{*/
+		{
+			heldItem = false;
+		}
 
+		if(heldItem)
+		{
+			PistolLocomotion();
+		}
+		else
+		{
+			NormalLocomotion();
+		}
+	}
+
+	void NormalLocomotion()
+	{
 		// normal walk behavior
-			if (Input.GetKey(KeyCode.W)) 
-			{
-				if (Input.GetKey(KeyCode.A)) 
-				{
-					anim.Play ("LeftStrafe");
-				}
-				else if (Input.GetKey(KeyCode.D)) 
-				{
-					anim.Play ("RightStrafe");
-				}
-				else
-				{
-					anim.Play ("Walk");
-				}
-			}
-			else if (Input.GetKey(KeyCode.S)) 
-			{
-				anim.Play ("WalkBack");
-			}
-			else if (Input.GetKey(KeyCode.A)) 
+		if (Input.GetKey(KeyCode.W)) 
+		{
+			if (Input.GetKey(KeyCode.A)) 
 			{
 				anim.Play ("LeftStrafe");
 			}
@@ -100,12 +66,63 @@ public class AnimatePlayer : MonoBehaviour {
 			{
 				anim.Play ("RightStrafe");
 			}
-			else 
+			else
 			{
-				anim.Play ("Idle");
+				anim.Play ("Walk");
 			}
-		/*}*/
-
-
+		}
+		else if (Input.GetKey(KeyCode.S)) 
+		{
+			anim.Play ("WalkBack");
+		}
+		else if (Input.GetKey(KeyCode.A)) 
+		{
+			anim.Play ("LeftStrafe");
+		}
+		else if (Input.GetKey(KeyCode.D)) 
+		{
+			anim.Play ("RightStrafe");
+		}
+		else 
+		{
+			anim.Play ("Idle");
+		}
 	}
+
+	void PistolLocomotion()
+	{
+		// normal walk behavior
+		if (Input.GetKey(KeyCode.W)) 
+		{
+			if (Input.GetKey(KeyCode.A)) 
+			{
+				anim.Play ("PistolLeftStrafe");
+			}
+			else if (Input.GetKey(KeyCode.D)) 
+			{
+				anim.Play ("PistolRightStrafe");
+			}
+			else
+			{
+				anim.Play ("PistolWalk");
+			}
+		}
+		else if (Input.GetKey(KeyCode.S)) 
+		{
+			anim.Play ("PistolWalkBack");
+		}
+		else if (Input.GetKey(KeyCode.A)) 
+		{
+			anim.Play ("PistolLeftStrafe");
+		}
+		else if (Input.GetKey(KeyCode.D)) 
+		{
+			anim.Play ("PistolRightStrafe");
+		}
+		else 
+		{
+			anim.Play ("PistolIdle");
+		}
+	}
+
 }
