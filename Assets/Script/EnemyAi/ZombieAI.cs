@@ -30,9 +30,11 @@ public class ZombieAI : MonoBehaviour {
 		{
 			if(animController.GetBool("Dead"))
 			{
+				animController.SetBool ("Attack", false);
 				return;
 			}
 
+			animController.SetBool ("Attack", false);
 			Dead ();
 		}
 
@@ -135,6 +137,7 @@ public class ZombieAI : MonoBehaviour {
 		animController.SetFloat ("RandomDeath", rand);
 		animController.SetBool ("Dead", true);
 
+		animController.SetBool ("Attack", false);
 		animController.SetBool("Idle", false);
 		animController.SetBool("Chase", false);
 		animController.SetBool("Wander", false);

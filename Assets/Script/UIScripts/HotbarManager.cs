@@ -60,7 +60,8 @@ public class HotbarManager : MonoBehaviour {
 			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().itemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmoRemaining + "/" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmo;
 		}
 		
-		
+		currentItem = items[hotbarNumber];
+		Debug.Log(currentItem);
 		FireButton();
 		DropButton();	
 	}
