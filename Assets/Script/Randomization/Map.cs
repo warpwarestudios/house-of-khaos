@@ -157,8 +157,8 @@ public class Map : MonoBehaviour {
 			{
 				GameObject spawnPoint = cell.transform.FindChild ("Spawn Point").gameObject;
 				GameObject itemSpawn = cell.transform.FindChild ("Item Spawn").gameObject;
-				Destroy (itemSpawn);
-				Destroy (spawnPoint);
+				DestroyImmediate (itemSpawn.gameObject);
+				DestroyImmediate (spawnPoint.gameObject);
 			}
 		}
 		
@@ -168,9 +168,15 @@ public class Map : MonoBehaviour {
 
 		GameObject playerSpawn = spawnPoints[Random.Range(0,spawnPoints.Length - 1)];
 
-		player = PhotonNetwork.Instantiate(player.name, playerSpawn.transform.position , Quaternion.identity,0);
+		player = PhotonNetwork.Instantiate("Mafioso", playerSpawn.transform.position, Quaternion.identity,0);
+
+		Debug.Log ("Player Spawn Parent: " + playerSpawn.transform.parent.name);
+		Debug.Log ("Player Spawn: X = " + playerSpawn.transform.position.x + " Z = " +  playerSpawn.transform.position.z);
+		Debug.Log ("Player: X = " + player.transform.position.x + " Z = " + player.transform.position.z);
+		Debug.Log ("Player Spawn Offset: X = " + (playerSpawn.transform.position.x - player.transform.position.x) + " Z = " +  (playerSpawn.transform.position.z - player.transform.position.z));
 		//player.transform.parent = playerSpawn.transform;
 		//player.transform.localPosition = new Vector3(0,0,0);
+		//player.transform.parent = null;
 		PhotonView pv = player.GetComponent<PhotonView>();
 		if (pv.isMine) {
 			MouseLook mouselook  = player.GetComponent<MouseLook>();
@@ -352,8 +358,8 @@ public class Map : MonoBehaviour {
 					if(next.room != hallway)
 					{
 						next.Initialize(hallway);
-						Destroy(next.itemSpawn);
-						Destroy(next.playerSpawn);
+						DestroyImmediate(next.itemSpawn.gameObject);
+						DestroyImmediate(next.playerSpawn.gameObject);
 					}
 					else
 					{

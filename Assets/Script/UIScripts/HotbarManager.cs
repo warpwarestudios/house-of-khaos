@@ -61,7 +61,7 @@ public class HotbarManager : MonoBehaviour {
 		}
 		
 		currentItem = items[hotbarNumber];
-		Debug.Log(currentItem);
+//		Debug.Log(currentItem);
 		FireButton();
 		DropButton();	
 	}

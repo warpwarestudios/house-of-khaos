@@ -49,7 +49,6 @@ public class MapRoom : MonoBehaviour {
 
 	public void InitializeTextures()
 	{
-		Debug.Log (this.name);
 		foreach(Cell cell in cells.ToArray())
 		{
 			foreach(Transform child in cell.transform)
