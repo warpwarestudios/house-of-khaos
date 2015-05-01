@@ -13,10 +13,11 @@ public class Shoot : MonoBehaviour {
 	{
 		if (transform.parent != null) {
 			if (transform.parent.tag == "MainCamera" && Input.GetButtonUp ("Fire1")) {
-				if(this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining > 0)
+				if(this.gameObject.GetComponent<Itemization>().resourceAmount > 0)
 				{
+					//fire gun, subtract from current ammo
 					StartCoroutine ("Fire");
-					this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining--;
+					this.gameObject.GetComponent<Itemization>().resourceAmount--;
 				}
 				else
 				{
@@ -24,8 +25,9 @@ public class Shoot : MonoBehaviour {
 				}
 				
 			}
-			if (transform.parent.tag == "MainCamera" && Input.GetKeyDown(KeyCode.R)) 
+			if (transform.parent.tag == "MainCamera" && Input.GetKeyUp(KeyCode.R)) 
 			{
+				Debug.Log ("Reloading!");
 				Reload();
 			}
 		}
@@ -34,15 +36,25 @@ public class Shoot : MonoBehaviour {
  
 	void Reload()
 	{
-		if(this.gameObject.GetComponent<Itemization>().duraSaniAmmo >= 1)
-		{
-			if(this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining < this.gameObject.GetComponent<Itemization>().maxAmmo)
-			{
-				float missingAmmo = this.gameObject.GetComponent<Itemization>().maxAmmo - this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining;
-				this.gameObject.GetComponent<Itemization>().duraSaniAmmo -= missingAmmo;
-				this.gameObject.GetComponent<Itemization>().duraSaniAmmoRemaining += missingAmmo;
-			}
+
+		// calculate the amount of missing ammo by doing maxAmmo - currentAmmo 
+		float missingAmmo = this.gameObject.GetComponent<Itemization>().maxAmmo - this.gameObject.GetComponent<Itemization>().resourceAmount;
+
+		//if the remaining ammo is greater than or equal to the missing ammo, reload
+		if (this.gameObject.GetComponent<Itemization> ().resourceRemaining >= missingAmmo) {
+			//subtract the amount of missing Ammo from the total number of bullets remaning
+			this.gameObject.GetComponent<Itemization> ().resourceRemaining -= missingAmmo;
+			//add the missing ammo to the current ammo
+			this.gameObject.GetComponent<Itemization> ().resourceAmount += missingAmmo;
 		}
+		//if there is less, add remaining ammo to missing ammo and set remaining to zero
+		else 
+		{
+			this.gameObject.GetComponent<Itemization> ().resourceAmount += this.gameObject.GetComponent<Itemization> ().resourceRemaining;
+			this.gameObject.GetComponent<Itemization> ().resourceRemaining = 0;
+
+		}
+
 	}
 	IEnumerator Fire() 
 	{
