@@ -3,40 +3,42 @@ using System.Collections;
 
 public class KillCountUI : MonoBehaviour {
 	
-	public int countTotalEnemy = 0;
 	public int enemyDeathCount = 0;
-	public int totalEnemies;
-	public int enemiesLeft;
+	public int totalEnemies = 0;
 	public bool gameFinished;
 	
 	void Update()
 	{
-		totalEnemies = countTotalEnemy;
-		enemiesLeft = (totalEnemies + enemyDeathCount);
+
 		UpdateKillCount();
 	}
 	
 	public void UpdateKillCount()
 	{
-		this.gameObject.GetComponent<UILabel>().text = (enemiesLeft + "/" + totalEnemies);
+		this.gameObject.GetComponent<UILabel>().text = (enemyDeathCount + "/" + totalEnemies);
 		
-		if(enemiesLeft <= 0)
+		if(totalEnemies >= 100)
 		{
+			foreach(GameObject waypoint in Waypoint.waypointList)
+			{
+				waypoint.GetComponent<Waypoint>().canSpawn = false;
+			}
 			gameFinished = true;
 		}
 		if(gameFinished == true)
 		{
-			GameObject.Find("UI Root").transform.FindChild("Message").GetComponent<UILabel>().text = "Escape the House of Khaos! Quickly";
+			GameObject.Find("UI Root").transform.FindChild("Message").GetComponent<UILabel>().text = "You've survived! This time...";
 		}
+
 	}
 	
-	public void countEnemy()
+	public void AddEnemy()
 	{
-		countTotalEnemy++;
+		totalEnemies++;
 	}
 	
-	public void EnemyDeathCount()
+	public void AddEnemyDeath()
 	{
-		enemyDeathCount--;
+		enemyDeathCount++;
 	}
 }

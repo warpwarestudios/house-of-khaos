@@ -18,7 +18,7 @@ public class ZombieAI : MonoBehaviour {
 	void Start () {
 
 		// Set up the references.
-		player = GameObject.FindGameObjectWithTag ("Player");
+		//player = GameObject.FindGameObjectWithTag ("Player");
 		navAgent = GetComponent <NavMeshAgent> ();
 		animController = GetComponent <Animator> ();
 	}
@@ -36,6 +36,9 @@ public class ZombieAI : MonoBehaviour {
 
 			animController.SetBool ("Attack", false);
 			Dead ();
+
+			Waypoint.CurrentNumberOFEnemies--;
+			Waypoint.killCounter.AddEnemyDeath();
 		}
 
 		if (player == null) 

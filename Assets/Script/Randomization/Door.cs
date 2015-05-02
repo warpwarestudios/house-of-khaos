@@ -7,13 +7,26 @@ public class Door : Passage {
 
 	public override void Initialize (Cell cell, Cell otherCell, MapDirection direction) {
 		base.Initialize(cell, otherCell, direction);
-		
-		//GameObject itemSpawn = cell.transform.FindChild("Item Spawn").gameObject;
-		
-		//Destroy (itemSpawn);
 
-		//GameObject otherItemSpawn = otherCell.transform.FindChild ("Item Spawn").gameObject;
 
-		//Destroy (otherItemSpawn);
+		foreach (Transform child in cell.transform) 
+		{
+			if(child.name == "Item Spawn")
+			{
+				GameObject itemSpawn = cell.transform.FindChild ("Item Spawn").gameObject;
+				Destroy (itemSpawn);
+			}
+		}
+
+
+		foreach (Transform child in otherCell.transform) 
+		{
+			if(child.name == "Item Spawn")
+			{
+				GameObject otherItemSpawn = otherCell.transform.FindChild ("Item Spawn").gameObject;
+				Destroy (otherItemSpawn);
+			}
+		}
+
 	}
 }

@@ -18,7 +18,6 @@ public class ItemSpawn : MonoBehaviour {
 			item.transform.parent = this.transform;
 			item.transform.rotation = this.transform.rotation;
 			hasSpawned = true;
-		
 		}
 	}
 	

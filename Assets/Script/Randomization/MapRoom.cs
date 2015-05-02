@@ -153,7 +153,7 @@ public class MapRoom : MonoBehaviour {
 			}
 			else
 			{
-				Destroy(cell.itemSpawn);
+				//Destroy(cell.itemSpawn);
 			}
 		}
 	}
