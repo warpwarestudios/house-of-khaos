@@ -50,7 +50,8 @@ public class KillCountUI : MonoBehaviour {
 	public IEnumerator EndGameWin()
 	{
 		yield return new WaitForSeconds (5f);
-
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
 		Application.LoadLevel ("GameOverScene");
 	}
 }
