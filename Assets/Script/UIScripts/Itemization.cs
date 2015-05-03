@@ -16,12 +16,6 @@ public class Itemization : MonoBehaviour {
 	public bool usesAmmo;
 	public float maxAmmo;
 	
-	
-	void Start()
-	{
-		duraSaniAmmoRemaining = duraSaniAmmo;
-	}
-	
 //	public string ItemName{
 //		get ; 
 //	    set ;}
