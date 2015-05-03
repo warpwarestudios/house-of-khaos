@@ -3,7 +3,7 @@ guid: 38e1dc56dc3ff67408818e90d8d1ba0a
 AudioImporter:
   serializedVersion: 6
   defaultSettings:
-    loadType: 1
+    loadType: 0
     sampleRateSetting: 0
     sampleRateOverride: 0
     compressionFormat: 0
@@ -12,7 +12,7 @@ AudioImporter:
   platformSettingOverrides: {}
   forceToMono: 0
   preloadAudioData: 1
-  loadInBackground: 0
+  loadInBackground: 1
   3D: 1
   userData: 
   assetBundleName: 
