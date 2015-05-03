@@ -17,7 +17,7 @@ public class Crosshair : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		Debug.DrawRay(this.transform.position, this.transform.forward * distanceToSee, Color.magenta);
+		//Debug.DrawRay(this.transform.position, this.transform.forward * distanceToSee, Color.magenta);
 		if(Physics.Raycast(this.transform.position, this.transform.forward, out hit, distanceToSee))
 		{
 			if(hit.collider.tag == "Interactable")

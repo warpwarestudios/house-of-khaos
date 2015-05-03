@@ -57,11 +57,11 @@ public class HotbarManager : MonoBehaviour {
 		}
 		else
 		{
-			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().itemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmoRemaining + "/" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmo;
+			status.GetComponent<UILabel>().text = BuildResourceOutputString();
 		}
 		
 		currentItem = items[hotbarNumber];
-		Debug.Log(currentItem);
+//		Debug.Log(currentItem);
 		FireButton();
 		DropButton();	
 	}
@@ -90,7 +90,6 @@ public class HotbarManager : MonoBehaviour {
 		}
 		else
 		{
-			DropItem();
 			EquipItem(item);
 		}
 		
@@ -101,7 +100,12 @@ public class HotbarManager : MonoBehaviour {
 	{
 		if(item.GetComponent<Itemization>().itemName == items[hotbarNumber].GetComponent<Itemization>().itemName && item.GetComponent<Itemization>().usesAmmo == true)
 		{
+<<<<<<< HEAD
 			items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmo += item.GetComponent<Itemization>().duraSaniAmmoRemaining;
+=======
+			//add ammo clip (resourceAmount) to remaining amount (resourceRemaining
+			items[hotbarNumber].GetComponent<Itemization>().resourceRemaining += item.GetComponent<Itemization>().resourceAmount;
+>>>>>>> origin/Development-Branch
 			Destroy(item);
 		}
 		else
@@ -148,7 +152,7 @@ public class HotbarManager : MonoBehaviour {
 			hotbars[hotbarNumber].GetComponent<UIButton>().SetState(UIButtonColor.State.Normal, true); //hovers hot barto false
 			items[hotbarNumber].GetComponent<ItemVisible>().HideChildren();
 			currentItem = hotbars[hotbarNumber];
-			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().itemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmoRemaining + "/" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmo;
+			status.GetComponent<UILabel>().text = BuildResourceOutputString();
 			hotbarNumber++;
 			
 			
@@ -160,7 +164,7 @@ public class HotbarManager : MonoBehaviour {
 			hotbars[hotbarNumber].GetComponent<UIButton>().SetState(UIButtonColor.State.Hover, true); //hovers on hotbar to true
 			items[hotbarNumber].GetComponent<ItemVisible>().ShowChildren();
 			currentItem = hotbars[hotbarNumber];
-			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().itemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmoRemaining + "/" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmo;
+			status.GetComponent<UILabel>().text = BuildResourceOutputString();
 			
 			
 		}
@@ -169,7 +173,7 @@ public class HotbarManager : MonoBehaviour {
 			hotbars[hotbarNumber].GetComponent<UIButton>().SetState(UIButtonColor.State.Normal, true); //hovers hot barto false
 			items[hotbarNumber].GetComponent<ItemVisible>().HideChildren();
 			currentItem = hotbars[hotbarNumber];
-			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().itemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmoRemaining + "/" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmo;			
+			status.GetComponent<UILabel>().text = BuildResourceOutputString();
 			hotbarNumber--;
 			
 			if (hotbarNumber < (items.Length - items.Length))
@@ -180,9 +184,15 @@ public class HotbarManager : MonoBehaviour {
 			hotbars[hotbarNumber].GetComponent<UIButton>().SetState(UIButtonColor.State.Hover, true); //hovers on hotbar to true
 			items[hotbarNumber].GetComponent<ItemVisible>().ShowChildren();
 			currentItem = hotbars[hotbarNumber];
-			status.GetComponent<UILabel>().text = items[hotbarNumber].GetComponent<Itemization>().itemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmoRemaining + "/" + items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmo;
+			status.GetComponent<UILabel>().text = BuildResourceOutputString();
 		}
 	}
+
+	private string BuildResourceOutputString()
+	{
+		return items[hotbarNumber].GetComponent<Itemization>().itemName + "\n" + items[hotbarNumber].GetComponent<Itemization>().resourceAmount + "/" + items[hotbarNumber].GetComponent<Itemization>().resourceRemaining;
+	}
+	
 	
 	
 }

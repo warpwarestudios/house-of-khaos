@@ -9,15 +9,15 @@ public class ItemSpawn : MonoBehaviour {
 	public bool hasSpawned = false;
 	// Use this for initialization
 	void Start () {
+		hasSpawned = false;
 		if( Random.value <= itemSpawnProbability)
 		{
 			GameObject chosen = items[Random.Range (0,items.Length - 1)].gameObject; 
-			item = Instantiate(chosen, transform.position , Quaternion.identity) as GameObject;
+			item = Instantiate(chosen, transform.position , this.transform.rotation) as GameObject;
 			item.name = chosen.name;
 			item.transform.parent = this.transform;
 			item.transform.rotation = this.transform.rotation;
 			hasSpawned = true;
-		
 		}
 	}
 	

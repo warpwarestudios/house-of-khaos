@@ -6,16 +6,25 @@ public class Itemization : MonoBehaviour {
 	public string itemName;
 	public string skillIconName;
 	public string skillName = "None";
-	public float duraSaniAmmo;
+	public float resourceAmount;
 	public float damage;
 	public float heal;
 	public Vector3 position;
 	public Quaternion rotation;
 	public Vector3 scale;
-	public float duraSaniAmmoRemaining;
+	public float resourceRemaining;
 	public bool usesAmmo;
 	public float maxAmmo;
 	
+<<<<<<< HEAD
+=======
+	
+	void Start()
+	{
+		resourceRemaining = resourceAmount;
+	}
+	
+>>>>>>> origin/Development-Branch
 //	public string ItemName{
 //		get ; 
 //	    set ;}

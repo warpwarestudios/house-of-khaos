@@ -11,12 +11,10 @@ public class Wall : CellEdge {
 			//50/50 chance of clock or bookshelf
 			if(Random.value < 0.9)
 			{
-				Debug.Log("Spawning Shelves!");
 				itemSpawn = this.transform.FindChild("Item Spawn - Bookshelf");
 			}
 			else
 			{	
-				Debug.Log("Spawning Clocks!");
 				itemSpawn = this.transform.FindChild("Item Spawn - Clock");
 			}
 			if(itemSpawn != null)

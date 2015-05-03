@@ -88,15 +88,7 @@ public class Map : MonoBehaviour {
 		//remove unconnected halls
 		foreach (MapRoom hall in halls) 
 		{
-			Destroy(hall.gameObject);
-		}
-		//remove dead ends
-		foreach (Cell cell in cells) 
-		{
-			if(cell != null)
-			{
-				RemoveDeadEnd(cell);
-			}
+			DestroyImmediate(hall.gameObject);
 		}
 
 		//randomly add windows
@@ -142,34 +134,53 @@ public class Map : MonoBehaviour {
 				
 			}
 		}
-	
 
-		foreach(MapRoom room in connectedRooms)
+
+		//remove dead ends
+		foreach (Cell cell in cells) 
 		{
-			room.InitializeTextures();
+			if(cell != null)
+			{
+				RemoveDeadEnd(cell);
+			}
 		}
 
 		foreach (MapRoom room in connectedRooms) 
 		{
+			room.InitializeTextures();
+
 			//delete all spawn points and way points from item cells
-			room.UpdateSpawnAndWayPoints();
+			room.UpdateSpawnPoints();
 		
-			//use list of outside walls to remove spawn points from edges
+			//use list of outside walls to remove spawn points and item spawns from edges
 			activeCells = room.returnOutsideWallsList(this);
 
 			foreach (Cell cell in activeCells) 
 			{
-				GameObject spawnPoint = cell.transform.FindChild ("Floor").transform.FindChild ("Spawn Point").gameObject;
-				Destroy (spawnPoint);
+				GameObject spawnPoint = cell.transform.FindChild ("Spawn Point").gameObject;
+				GameObject itemSpawn = cell.transform.FindChild ("Item Spawn").gameObject;
+				DestroyImmediate (itemSpawn.gameObject);
+				DestroyImmediate (spawnPoint.gameObject);
 			}
 		}
 		
 
-
 		//put player in random room
 		GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
 
-		player = PhotonNetwork.Instantiate(player.name, spawnPoints[Random.Range(0,spawnPoints.Length - 1)].transform.position , Quaternion.identity,0);
+		GameObject playerSpawn = spawnPoints[Random.Range(0,spawnPoints.Length - 1)];
+
+		Vector3 playerPos = new Vector3(playerSpawn.transform.position.x * scale, 0.5f, playerSpawn.transform.position.z * scale);
+
+		player = PhotonNetwork.Instantiate("Mafioso", playerPos , Quaternion.identity,0);
+
+		//Debug.Log ("Player Spawn Parent: " + playerSpawn.transform.parent.name);
+		//Debug.Log ("Player Spawn: X = " + (playerSpawn.transform.position.x * scale) + " Z = " +  (playerSpawn.transform.position.z * scale));
+		//Debug.Log ("Player: X = " + player.transform.position.x + " Z = " + player.transform.position.z);
+		//Debug.Log ("Player Spawn Offset: X = " + (playerSpawn.transform.position.x - player.transform.position.x) + " Z = " +  (playerSpawn.transform.position.z - player.transform.position.z));
+		//player.transform.parent = playerSpawn.transform;
+		//player.transform.localPosition = new Vector3(0,0,0);
+		//player.transform.parent = null;
 		PhotonView pv = player.GetComponent<PhotonView>();
 		if (pv.isMine) {
 			MouseLook mouselook  = player.GetComponent<MouseLook>();
@@ -185,6 +196,7 @@ public class Map : MonoBehaviour {
 		//destroy all player spawn points
 		foreach(GameObject spawn in spawnPoints)
 		{
+			//spawn.transform.DetachChildren();
 			//Destroy(spawn);
 		}
 
@@ -195,7 +207,11 @@ public class Map : MonoBehaviour {
 		{
 			if(Random.value < wayPointProbability)
 			{
-
+				waypoint.GetComponent<Waypoint>().canSpawn = true;
+			}
+			else
+			{
+				DestroyImmediate(waypoint);
 			}
 		}
 	}
@@ -347,8 +363,13 @@ public class Map : MonoBehaviour {
 					IntVector2 coordinates = start.coordinates + direction.ToIntVector2();
 					//if neighbor exists then...
 					Cell next = GetCell(coordinates);
+
+					DestroyImmediate(next.itemSpawn.gameObject);
+					DestroyImmediate(next.playerSpawn.gameObject);
+
 					if(next.room != hallway)
 					{
+
 						next.Initialize(hallway);
 					}
 					else
@@ -485,7 +506,9 @@ public class Map : MonoBehaviour {
 		if (Random.value <= windowProbability) 
 		{
 			//create window
+
 			Destroy(window.GetEdge(direction).gameObject);
+
 			//Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
 			CreateWindow(window, neighbor, direction);
 		}
@@ -676,7 +699,7 @@ public class Map : MonoBehaviour {
 			//Create wall between new cell and old cell
 			CreateWall(newCell,cell,openDirection.GetOpposite());
 			//delete old cell
-			Destroy(cell.gameObject);
+			DestroyImmediate(cell.gameObject);
 
 			//continue with new cell
 			RemoveDeadEnd(newCell);

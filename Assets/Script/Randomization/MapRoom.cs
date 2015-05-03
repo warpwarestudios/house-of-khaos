@@ -49,7 +49,6 @@ public class MapRoom : MonoBehaviour {
 
 	public void InitializeTextures()
 	{
-		Debug.Log (this.name);
 		foreach(Cell cell in cells.ToArray())
 		{
 			foreach(Transform child in cell.transform)
@@ -143,14 +142,18 @@ public class MapRoom : MonoBehaviour {
 		return false;
 	}
 
-	public void UpdateSpawnAndWayPoints()
+	public void UpdateSpawnPoints()
 	{
 		foreach (Cell cell in cells) 
 		{
-			if(cell.itemSpawn.GetComponent<ItemSpawn>().hasSpawned = true)
+			if(cell.itemSpawn.GetComponent<ItemSpawn>().hasSpawned == true)
 			{
 				Destroy(cell.playerSpawn);
 				Destroy(cell.waypoint);
+			}
+			else
+			{
+				//Destroy(cell.itemSpawn);
 			}
 		}
 	}
