@@ -100,12 +100,9 @@ public class HotbarManager : MonoBehaviour {
 	{
 		if(item.GetComponent<Itemization>().itemName == items[hotbarNumber].GetComponent<Itemization>().itemName && item.GetComponent<Itemization>().usesAmmo == true)
 		{
-<<<<<<< HEAD
-			items[hotbarNumber].GetComponent<Itemization>().duraSaniAmmo += item.GetComponent<Itemization>().duraSaniAmmoRemaining;
-=======
 			//add ammo clip (resourceAmount) to remaining amount (resourceRemaining
 			items[hotbarNumber].GetComponent<Itemization>().resourceRemaining += item.GetComponent<Itemization>().resourceAmount;
->>>>>>> origin/Development-Branch
+
 			Destroy(item);
 		}
 		else

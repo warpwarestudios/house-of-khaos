@@ -16,15 +16,6 @@ public class Itemization : MonoBehaviour {
 	public bool usesAmmo;
 	public float maxAmmo;
 	
-<<<<<<< HEAD
-=======
-	
-	void Start()
-	{
-		resourceRemaining = resourceAmount;
-	}
-	
->>>>>>> origin/Development-Branch
 //	public string ItemName{
 //		get ; 
 //	    set ;}
