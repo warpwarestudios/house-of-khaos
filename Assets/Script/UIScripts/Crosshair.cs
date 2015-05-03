@@ -6,10 +6,13 @@ public class Crosshair : MonoBehaviour {
 	public RaycastHit hit;
 	public float distanceToSee = 5f;
 	public GameObject interactLabel;
+
+	private Brighten lastObject;
+
 	// Use this for initialization
 	void Start () {
 		interactLabel = GameObject.Find("InteractLabel");
-		
+		lastObject = null;
 		Cursor.visible = false;
 		Cursor.lockState = CursorLockMode.Locked;
 	}
@@ -25,8 +28,7 @@ public class Crosshair : MonoBehaviour {
 				if(hit.collider.GetComponent<Interaction>().interactionType == Interaction.TestEnum.Item)
 				{
 					interactLabel.GetComponent<UILabel>().text = "'E' to pickup " + hit.collider.name.ToLower();
-					Debug.Log("'E' to pick up Item");
-					
+
 					if (Input.GetKeyDown(KeyCode.E))
 					{
 						hit.collider.GetComponent<Interaction>().Item();
@@ -36,7 +38,6 @@ public class Crosshair : MonoBehaviour {
 				{
 					//if door open
 					interactLabel.GetComponent<UILabel>().text = "'E' to interact";
-					Debug.Log("'E' to open/close door");
 
 					//if door closed
 					if (Input.GetKeyDown(KeyCode.E))
@@ -45,6 +46,7 @@ public class Crosshair : MonoBehaviour {
 					}
 				}
 			}
+
 		}
 		else
 		{

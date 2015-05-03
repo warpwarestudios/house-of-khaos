@@ -37,7 +37,9 @@ public class ZombieAI : MonoBehaviour {
 			animController.SetBool ("Attack", false);
 			Dead ();
 
+			Debug.Log ("Current NUmber of Enemies before death: " + Waypoint.CurrentNumberOFEnemies); 
 			Waypoint.CurrentNumberOFEnemies--;
+			Debug.Log ("Current NUmber of Enemies after death: " + Waypoint.CurrentNumberOFEnemies); 
 			Waypoint.killCounter.AddEnemyDeath();
 		}
 

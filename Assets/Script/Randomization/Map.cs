@@ -44,6 +44,11 @@ public class Map : MonoBehaviour {
 
 	public List<Cell> activeCells = new List<Cell> ();
 
+	public void Awake()
+	{
+	}
+
+
 	public void Generate () {
 
 		cells = new Cell[size.x, size.z];
