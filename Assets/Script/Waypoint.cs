@@ -23,6 +23,7 @@ public class Waypoint : MonoBehaviour {
 		} else {
 			Debug.Log("KILL COUNTER IS NULL!");
 		}
+		CurrentNumberOFEnemies = 0;
 	}
 	
 	// Update is called once per frame
