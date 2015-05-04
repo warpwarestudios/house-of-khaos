@@ -4,7 +4,7 @@ using System.Collections;
 public class MessageUI : MonoBehaviour {
 	
 	public GameObject messageBox;
-	public GameObject mesBox;
+	private GameObject mesBox;
 	// Use this for initialization
 	void Start () {
 		

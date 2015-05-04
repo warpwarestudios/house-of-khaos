@@ -6,7 +6,9 @@ public class LobbyManager : Photon.MonoBehaviour {
 	public GameObject playerNameHolder;
 	public GameObject joinNameHolder;
 	public GameObject createNameHolder;
+	public GameObject ErrorMessage;
 
+	private MessageUI errorMessenger;
 	private GameObject joinNameHolderListed;
 	private GameObject RoomObject;
 
@@ -20,6 +22,9 @@ public class LobbyManager : Photon.MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
+
+		errorMessenger = ErrorMessage.GetComponent<MessageUI>();
+
 		if (!PhotonNetwork.connected) 
 		{
 			PhotonNetwork.ConnectUsingSettings("0.01");
@@ -58,6 +63,7 @@ public class LobbyManager : Photon.MonoBehaviour {
 			}
 			lobbyScreen = false;
 		}
+		
 	}
 
 	public void LobbyEntered()
@@ -117,22 +123,27 @@ public class LobbyManager : Photon.MonoBehaviour {
 		PhotonNetwork.CreateRoom(createNameHolder.GetComponent <UIInput>().value, new RoomOptions() { maxPlayers = 6 }, TypedLobby.Default);;
 	}
 
+	void OnPhotonJoinRoomFailed() 
+	{
+		Debug.Log("Could not find room");
+		errorMessenger.Message("Failed to Join", "Could not connect to specified room.");
+	}
+
+	void OnPhotonCreateRoomFailed()
+	{
+		Debug.Log("Could not create room");
+		errorMessenger.Message("Failed to create room", "Room name already in use");
+	}
+
 	void OnJoinedRoom()
 	{
-		// precondition: player has been properly switched to game lobby screen
-
-		if (PhotonNetwork.playerName.ToLower() == "debug") 
-		{
-			PhotonNetwork.LoadLevel ("GameScreen");
-		}
-
 		inPlayerHub = true;
 		PopulateLobby();
-
 	}
 
 	private void PopulateLobby()
 	{
+		
 		GameObject lobbyPlayer;
 		playerList = PhotonNetwork.playerList;
 
@@ -161,6 +172,7 @@ public class LobbyManager : Photon.MonoBehaviour {
 			{
 				lobbyPlayer = GameObject.Find("LobbyPlayer 1");
 				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
+				photonView.RPC ("ReadyUp", PhotonTargets.All);
 				listedPlayers.Remove(player);
 				break;
 			}
@@ -192,7 +204,7 @@ public class LobbyManager : Photon.MonoBehaviour {
 		else 
 		{
 			//TODO: set player to ready state
-			//photonView.RPC ("ReadyUp", PhotonTargets.All);
+			photonView.RPC ("ReadyUp", PhotonTargets.All);
 		}
 
 	}
@@ -208,7 +220,10 @@ public class LobbyManager : Photon.MonoBehaviour {
 	[RPC]
 	private void ReadyUp()
 	{
-
+		GameObject lobbyPlayer;
+		lobbyPlayer = GameObject.Find("LobbyPlayer 1");
+		bool status = lobbyPlayer.transform.FindChild("ReadyCheck").gameObject.GetActive();
+		lobbyPlayer.transform.FindChild("ReadyCheck").gameObject.SetActive(!status);
 	}
 
 	// called if player leaves photon room, governed by button
@@ -259,11 +274,13 @@ public class LobbyManager : Photon.MonoBehaviour {
 	void OnFailedToConnectToPhoton()
 	{
 		PhotonNetwork.offlineMode = true;
+		errorMessenger.Message("Connection Error", "Could not connect to photon.\n Playing in offline mode.");
 	}
 
 	// called if connection is interupted
 	void OnConnectionFail ()
 	{
+		errorMessenger.Message("Connection Error", "Could not connect to photon.\n Playing in offline mode.");
 		PhotonNetwork.offlineMode = true;
 	}
 

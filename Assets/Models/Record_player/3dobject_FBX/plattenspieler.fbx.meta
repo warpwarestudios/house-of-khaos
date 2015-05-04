@@ -3,9 +3,26 @@ guid: a1785c07807e4aa489164840bba94f21
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
+    100000: arm
+    100002: Camera
+    100004: //RootNode
+    100006: plattenspieler
+    100008: teller
+    400000: arm
+    400002: Camera
+    400004: //RootNode
+    400006: plattenspieler
+    400008: teller
+    2300000: arm
+    2300002: plattenspieler
+    2300004: teller
+    3300000: arm
+    3300002: plattenspieler
+    3300004: teller
     4300000: plattenspieler
     4300002: teller
     4300004: arm
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 2
