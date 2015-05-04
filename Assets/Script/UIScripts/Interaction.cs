@@ -4,6 +4,7 @@ using System.Collections;
 public class Interaction : MonoBehaviour {
 	
 	public bool selected;
+	public Animator doorAnimation;
 	
 	private GameObject interactLabel;
 	private GameObject itemLabel;
@@ -18,7 +19,7 @@ public class Interaction : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		hotBar = GameObject.Find("HotbarManager");
+		hotBar = GameObject.Find("HotBarManager");
 		itemControl = hotBar.GetComponent<HotbarManager>();
 	}
 	
@@ -35,61 +36,7 @@ public class Interaction : MonoBehaviour {
 	public void Door()
 	{
 		//Insert door animation here
+		doorAnimation.SetBool("Open", !doorAnimation.GetBool("Open"));
 	}
 	
-//	void Interact()
-//	{
-//		if (interactionType == TestEnum.Door)
-//		{
-//			if (selected == true)
-//			{
-//				//If door is open
-//				interactLabel.GetComponent<UILabel>().text = "'E' to open door";
-//				
-//				if (Input.GetKeyDown(KeyCode.E))
-//				{
-//					//animate the door to be opened
-//				}
-//				
-//				//if door is closed
-//				interactLabel.GetComponent<UILabel>().text = "'E' to close door";
-//			}
-//		}
-//		if(interactionType == TestEnum.Item)
-//		{
-//			if (selected == true)
-//			{
-//				interactLabel.GetComponent<UILabel>().text = "'E' to pickup item";
-//				
-//				if (Input.GetKeyDown(KeyCode.E))
-//				{
-//					itemControl.SetItem(this.gameObject);
-//				}
-//			}
-//		}
-//
-//		//if (!selected) 
-//		//{
-//			interactLabel.GetComponent<UILabel>().text = "";
-//		//}
-//	//	selected = false;
-//	}
-//	
-//	
-//	
-////	public void OnLookEnter()
-////	{
-////	 	selected = !selected;
-////	}
-////	
-//	
-//	public void setSelected()
-//	{
-//		selected = !selected;
-//	}
-//	
-////	public bool getSelected()
-////	{
-////		return selected;
-////	}
 }

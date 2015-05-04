@@ -5,7 +5,7 @@ public class GameManager : MonoBehaviour {
 
 	public Map mapPrefab;
 	
-	private Map mapInstance;
+	private GameObject mapInstance;
 
 	private void Start () {
 		BeginGame();
@@ -19,8 +19,13 @@ public class GameManager : MonoBehaviour {
 	
 
 	private void BeginGame () {
-		mapInstance = Instantiate(mapPrefab) as Map;
-	    mapInstance.Generate ();
+
+		if(PhotonNetwork.isMasterClient)
+		{
+			mapInstance = PhotonNetwork.Instantiate("Map", new Vector3(0,0,0),Quaternion.identity, 0) as GameObject;
+			mapInstance.GetComponent<Map>().Generate();
+		}
+
 	}
 	
 	private void RestartGame () {

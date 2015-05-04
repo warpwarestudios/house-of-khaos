@@ -3,14 +3,14 @@ using System.Collections;
 
 public class NetworkManager : MonoBehaviour {
 
-	private bool createPlayer = true;
+	private bool createPlayer = false;
 
 	// Use this for initialization
 	void Start()
 	{
 		if (createPlayer) 
 		{
-			GameObject player = PhotonNetwork.Instantiate("Player", this.transform.position, Quaternion.identity, 0);
+			GameObject player = PhotonNetwork.Instantiate("Player", new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity,0);
 			PhotonView pv = player.GetComponent<PhotonView>();
 			if (pv.isMine) {
 				MouseLook mouselook  = player.GetComponent<MouseLook>();

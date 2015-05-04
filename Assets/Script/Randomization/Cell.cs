@@ -7,6 +7,10 @@ public class Cell : MonoBehaviour {
 	public MapRoom room;
 	public Material defaultMat;
 
+	public GameObject playerSpawn;
+	public GameObject itemSpawn;
+	public GameObject waypoint;
+
 	private CellEdge[] edges = new CellEdge[MapDirections.Count];
 	private int initializedEdgeCount;
 	
@@ -18,18 +22,18 @@ public class Cell : MonoBehaviour {
 
 	public void Initialize (MapRoom room) {
 		room.Add(this);
-		transform.GetChild(0).GetComponent<Renderer>().material = room.settings.floorMaterial;
+		transform.Find("Floor").GetComponent<Renderer>().material = room.settings.floorMaterial;
 		transform.parent = room.transform;
 	}
 
 	public void ChangeColor()
-	{
-		transform.GetChild(0).GetComponent<Renderer>().material = room.settings.floorMaterial;
+	{	
+		transform.Find("Floor").GetComponent<Renderer>().material = room.settings.floorMaterial;
 	}
 
 	public void ResetMaterial()
 	{
-		transform.GetChild(0).GetComponent<Renderer>().material = defaultMat;
+		transform.Find("Floor").GetComponent<Renderer>().material = defaultMat;
 	}
 
 	public CellEdge GetEdge (MapDirection direction) {

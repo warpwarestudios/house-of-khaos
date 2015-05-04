@@ -1,17 +1,18 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class SkillManager : MonoBehaviour {
 
 	public GameObject player;
 	
-	void Start()
+	void Update()
 	{
-		player = GameObject.FindWithTag("Player");
+		if(player == null)
+			player = GameObject.FindWithTag("Player");
 	}
 	
 	void Shoot()
 	{
-		player.transform.FindChild("Main Camera").transform.FindChild("Gun").GetComponent<Shoot>().Fire();
+//		player.transform.FindChild("Main Camera").transform.FindChild("Pistol").GetComponent<Shoot>().Fire();
 	}
 }

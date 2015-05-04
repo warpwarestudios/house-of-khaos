@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Map : MonoBehaviour {
 
+	public float wayPointProbability;
+
 	public IntVector2 size;
 	public float scale;
 	public int numRooms;
@@ -14,12 +16,14 @@ public class Map : MonoBehaviour {
 	public Wall wallWindowPrefab;
 	public Wall wallLampPrefab;
 	public Door doorPrefab;
+	public Door doorFramePrefab;
+	public GameObject player;
 	public float lampProbability;
 	public float windowProbability;
 	public MapRoomSettings[] roomSettings;
 	public IntVector2 minRoomSize;
 	public IntVector2 maxRoomSize;
-	public MapRoom connectedRegion;
+	private MapRoom connectedRegion;
 
 
 	public IntVector2 RandomCoordinates {
@@ -28,7 +32,7 @@ public class Map : MonoBehaviour {
 		}
 	}
 
-	private Cell[,] cells;
+	public Cell[,] cells;
 	public List<MapRoom> rooms = new List<MapRoom>();
 	public List<MapRoom> halls = new List<MapRoom>();
 
@@ -38,11 +42,18 @@ public class Map : MonoBehaviour {
 		this.transform.localScale = new Vector3 (scale, scale, scale);
 	}
 
+	public List<Cell> activeCells = new List<Cell> ();
+
+	public void Awake()
+	{
+	}
+
+
 	public void Generate () {
 
 		cells = new Cell[size.x, size.z];
 		//create active cell list
-		List<Cell> activeCells = new List<Cell> ();
+
 		//create all cells
 		for (int x = 0; x < size.x; x++) {
 			for (int z = 0; z < size.z; z++) {
@@ -82,13 +93,26 @@ public class Map : MonoBehaviour {
 		//remove unconnected halls
 		foreach (MapRoom hall in halls) 
 		{
-			Destroy(hall.gameObject);
+			DestroyImmediate(hall.gameObject);
 		}
-
-		//remove dead ends
 
 		//randomly add windows
 		//step 1: get all edges that open to the outside
+		//step 1a: clear out cells in map that do not exist
+		Cell removedCell;
+
+		for (int x = 0; x < size.x; x++) {
+			for (int z = 0; z < size.z; z++) {
+				removedCell = GetCell(new IntVector2(x,z));
+				//if the cell does not exist in the map anymore, set it to null
+				if(!rooms[0].InRoom(removedCell))
+				{
+					cells[x,z] = null;
+				}
+			}
+		}
+
+		//step 1b: call function to return all outside walls
 		activeCells = rooms[0].returnOutsideWallsList(this);
 
 
@@ -105,21 +129,96 @@ public class Map : MonoBehaviour {
 					if(coordinates.x < size.x  && coordinates.z < size.z && coordinates.x > 0 && coordinates.z > 0)
 					{
 						Cell neighbor = GetCell(coordinates);
-						CreateWindow(cell,neighbor, direction);
+						//if neighbor is null
+						if(neighbor == null)
+						{
+							CreateWindowInWall(cell,neighbor, direction);
+						}
 					}
 				}
 				
 			}
 		}
 
-		//put player in random room
-		Cell randPosition = connectedRooms[0].GetRandomPosition();
-		GameObject netMan = GameObject.Find("NetworkManager");
-		if(netMan != null)
+
+		//remove dead ends
+		foreach (Cell cell in cells) 
 		{
-			netMan.transform.position = new Vector3(randPosition.transform.position.x,1.001f * scale, randPosition.transform.position.z);
+			if(cell != null)
+			{
+				RemoveDeadEnd(cell);
+			}
 		}
 
+		foreach (MapRoom room in connectedRooms) 
+		{
+			room.InitializeTextures();
+
+			//delete all spawn points and way points from item cells
+			room.UpdateSpawnPoints();
+		
+			//use list of outside walls to remove spawn points and item spawns from edges
+			activeCells = room.returnOutsideWallsList(this);
+
+			foreach (Cell cell in activeCells) 
+			{
+				GameObject spawnPoint = cell.transform.FindChild ("Spawn Point").gameObject;
+				GameObject itemSpawn = cell.transform.FindChild ("Item Spawn").gameObject;
+				DestroyImmediate (itemSpawn.gameObject);
+				DestroyImmediate (spawnPoint.gameObject);
+			}
+		}
+		
+
+		//put player in random room
+		GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
+
+		GameObject playerSpawn = spawnPoints[Random.Range(0,spawnPoints.Length - 1)];
+
+		Vector3 playerPos = new Vector3(playerSpawn.transform.position.x * scale, 0.5f, playerSpawn.transform.position.z * scale);
+
+		player = PhotonNetwork.Instantiate("Mafioso", playerPos , Quaternion.identity,0);
+
+		//Debug.Log ("Player Spawn Parent: " + playerSpawn.transform.parent.name);
+		//Debug.Log ("Player Spawn: X = " + (playerSpawn.transform.position.x * scale) + " Z = " +  (playerSpawn.transform.position.z * scale));
+		//Debug.Log ("Player: X = " + player.transform.position.x + " Z = " + player.transform.position.z);
+		//Debug.Log ("Player Spawn Offset: X = " + (playerSpawn.transform.position.x - player.transform.position.x) + " Z = " +  (playerSpawn.transform.position.z - player.transform.position.z));
+		//player.transform.parent = playerSpawn.transform;
+		//player.transform.localPosition = new Vector3(0,0,0);
+		//player.transform.parent = null;
+		PhotonView pv = player.GetComponent<PhotonView>();
+		if (pv.isMine) {
+			MouseLook mouselook  = player.GetComponent<MouseLook>();
+			mouselook.enabled = true;
+			FPSInputController controller  = player.GetComponent<FPSInputController>();
+			controller.enabled = true;
+			CharacterMotor charactermotor = player.GetComponent<CharacterMotor>(); 
+			charactermotor.enabled = true;
+			Transform playerCam = player.transform.Find ("Main Camera");
+			playerCam.gameObject.active = true;
+			GameObject.Find("UI Root").transform.FindChild("Camera").GetComponent<Camera>().enabled = true;
+		}
+		//destroy all player spawn points
+		foreach(GameObject spawn in spawnPoints)
+		{
+			//spawn.transform.DetachChildren();
+			//Destroy(spawn);
+		}
+
+		//Waypoint cleanup
+		GameObject[] wayPoints = GameObject.FindGameObjectsWithTag("Waypoint");
+		//destroy all player spawn points
+		foreach(GameObject waypoint in wayPoints)
+		{
+			if(Random.value < wayPointProbability)
+			{
+				waypoint.GetComponent<Waypoint>().canSpawn = true;
+			}
+			else
+			{
+				DestroyImmediate(waypoint);
+			}
+		}
 	}
 
 	private void DoFirstGenerationStep (List<Cell> activeCells) {
@@ -235,7 +334,7 @@ public class Map : MonoBehaviour {
 				//generate hallway
 				MapRoom newHallway = Instantiate (roomPrefab) as MapRoom;
 				newHallway.size = new IntVector2 (0,0);
-				newHallway.settingsIndex = 2;
+				newHallway.settingsIndex = 0;
 				newHallway.settings = roomSettings[newHallway.settingsIndex];
 				newHallway.name = "Hallway " + count;
 				newHallway.transform.parent = transform;
@@ -269,8 +368,13 @@ public class Map : MonoBehaviour {
 					IntVector2 coordinates = start.coordinates + direction.ToIntVector2();
 					//if neighbor exists then...
 					Cell next = GetCell(coordinates);
+
+					DestroyImmediate(next.itemSpawn.gameObject);
+					DestroyImmediate(next.playerSpawn.gameObject);
+
 					if(next.room != hallway)
 					{
+
 						next.Initialize(hallway);
 					}
 					else
@@ -291,7 +395,7 @@ public class Map : MonoBehaviour {
 		//create region
 		connectedRegion = Instantiate (roomPrefab) as MapRoom;
 		connectedRegion.size = new IntVector2 (0,0);
-		connectedRegion.settingsIndex = 1;
+		connectedRegion.settingsIndex = 0;
 		connectedRegion.settings = roomSettings[connectedRegion.settingsIndex];
 		connectedRegion.name = "Connected Region";
 		connectedRegion.transform.parent = transform;
@@ -334,9 +438,10 @@ public class Map : MonoBehaviour {
 								{
 									rooms.Remove(newCell.room);
 									CreateDoorInWall(door, neighbor, direction);
+									connectedRooms.Add(newCell.room);
 									neighbor.room.MergeInto(connectedRegion);
 									newCell.room.MergeInto(connectedRegion);
-									connectedRooms.Add(newCell.room);
+
 								}
 							}
 							//if it is a room add to connected rooms
@@ -403,9 +508,15 @@ public class Map : MonoBehaviour {
 
 	private void CreateWindowInWall(Cell window, Cell neighbor, MapDirection direction)
 	{
-		Destroy(window.GetEdge(direction).gameObject);
-		Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
-		CreateWindow(window, neighbor, direction);
+		if (Random.value <= windowProbability) 
+		{
+			//create window
+
+			Destroy(window.GetEdge(direction).gameObject);
+
+			//Destroy(neighbor.GetEdge(direction.GetOpposite()).gameObject);
+			CreateWindow(window, neighbor, direction);
+		}
 		
 	}
 
@@ -460,7 +571,7 @@ public class Map : MonoBehaviour {
 		Passage passage = Instantiate(doorPrefab) as Passage;
 		passage.Initialize(cell, otherCell, direction);
 		passage.transform.localScale = new Vector3 (1, 1, 1);
-		passage = Instantiate(doorPrefab) as Passage;
+		passage = Instantiate(doorFramePrefab) as Passage;
 		passage.Initialize(otherCell, cell, direction.GetOpposite());
 		passage.transform.localScale = new Vector3 (1, 1, 1);
 	}
@@ -508,7 +619,7 @@ public class Map : MonoBehaviour {
 		newRoom.size = new IntVector2 (Random.Range(minRoomSize.z,maxRoomSize.x), Random.Range(minRoomSize.z, maxRoomSize.z));
 		bool overlap = false;
 		//TODO: add randomization elements
-		newRoom.settingsIndex = 0;
+		newRoom.settingsIndex = Random.Range(1, roomSettings.Length -1);
 		newRoom.settings = roomSettings[newRoom.settingsIndex];
 		newRoom.name = "Room " + newRoom.size.x + " x " + newRoom.size.z;
 		newRoom.transform.parent = transform;
@@ -564,6 +675,42 @@ public class Map : MonoBehaviour {
 
 	public Cell GetCell (IntVector2 coordinates) {
 		return cells[coordinates.x, coordinates.z];
+	}
+
+	private void RemoveDeadEnd(Cell cell)
+	{
+		int wallCount = 0;
+		MapDirection openDirection = new MapDirection ();
+		Cell newCell;
+		//check each direction
+		for(int i = 0; i < 4; i++)
+		{
+			MapDirection direction = (MapDirection)i;
+			if(cell.GetEdge(direction).GetType() == typeof(Wall))
+			{
+				wallCount++;
+			}
+			if(cell.GetEdge(direction).GetType() == typeof(Passage))
+			{
+				openDirection = direction;
+			}
+		}
+
+		//if wall count = 3, move through passage
+		if (wallCount == 3) 
+		{
+			newCell = cell.GetEdge(openDirection).otherCell;
+
+			//Create wall between new cell and old cell
+			CreateWall(newCell,cell,openDirection.GetOpposite());
+			//delete old cell
+			DestroyImmediate(cell.gameObject);
+
+			//continue with new cell
+			RemoveDeadEnd(newCell);
+		}
+
+		//stops when walls != 3
 	}
 
 }

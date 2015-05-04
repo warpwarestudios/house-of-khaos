@@ -6,6 +6,7 @@ public class UITitleManager : MonoBehaviour {
 	public GameObject titleCamera;
 	public GameObject lobbyCamera;
 	public GameObject optionCamera;
+	public GameObject gameLobbyCamera;
 	
 	public GameObject videoTab;
 	public GameObject soundTab;
@@ -15,6 +16,7 @@ public class UITitleManager : MonoBehaviour {
 		titleCamera.SetActive(true);
 		lobbyCamera.SetActive(false);
 		optionCamera.SetActive(false);
+		gameLobbyCamera.SetActive(false);
 	}
 	
 	public void SwitchTitleToLobby()
@@ -52,6 +54,26 @@ public class UITitleManager : MonoBehaviour {
 	{
 		videoTab.SetActive(false);
 		soundTab.SetActive(true);
+	}
+
+	public void SwitchLobbyToMainScreen()
+	{
+		lobbyCamera.SetActive (false);
+		titleCamera.SetActive(true);
+	}
+
+	public void SwitchToGameLobby()
+	{
+		lobbyCamera.SetActive (false);
+		gameLobbyCamera.SetActive(true);
+	}
+
+
+
+	public void LeaveGameLobby()
+	{
+		lobbyCamera.SetActive (true);
+		gameLobbyCamera.SetActive(false);
 	}
 	
 	public void QuitGame()
