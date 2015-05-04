@@ -29,12 +29,15 @@ public class TimerUI : Photon.MonoBehaviour
 			time = string.Format ("{0:00}:{1:00}", minutes.ToString ("00"), seconds.ToString ("00"));
 
 			this.photonView.RPC ("UpdateTime", PhotonTargets.All);
+<<<<<<< HEAD
 			
 			if (theTimer <= 0)
 			{
 				theTimer = 0;
 				StartCoroutine(EndGameLose());
 			}
+=======
+>>>>>>> origin/Development-Branch
 		}
 	}
 	
