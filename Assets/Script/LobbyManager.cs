@@ -219,7 +219,7 @@ public class LobbyManager : Photon.MonoBehaviour {
 	private void ReadyUp()
 	{
 		GameObject lobbyPlayer;
-		// remove player from list
+
 		for(int i=2; i<=6; i++)
 		{
 			lobbyPlayer = GameObject.Find("LobbyPlayer "+i);
