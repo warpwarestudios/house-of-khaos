@@ -187,10 +187,14 @@ public class ZombieAI : MonoBehaviour {
 		if (AttackedObject.tag == "Player")
 		{
 			Health health = AttackedObject.GetComponent<Health>();
+			health.damaged = true;
 			health.updateHealth(-Damage);
+			health.lastDamageTime = Time.time + 10f;
+			float screenFlashAlpha = (health.currentHealth / health.maxHealth) <= 0.4f ? 1f - (health.currentHealth / health.maxHealth) : 0;
+			UIDamage.Show(this.transform.position, true, screenFlashAlpha, true);
 		}
 	}
-
+	
 	public void OnTriggerEnter(Collider col)
 	{
 		AttackedObject = col.gameObject;
