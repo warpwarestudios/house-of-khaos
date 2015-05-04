@@ -18,7 +18,7 @@ public class MessageUI : MonoBehaviour {
 	public void Message(string title, string message)
 	{
 		mesBox = Instantiate(messageBox) as GameObject;
-		this.transform.parent = mesBox.transform;
+		mesBox.transform.parent = this.transform;
 		mesBox.gameObject.transform.FindChild("Box").transform.FindChild("MessageLabel").GetComponent<UILabel>().text = title;
 		mesBox.gameObject.transform.FindChild("Box").transform.FindChild("Message").GetComponent<UILabel>().text = message;
 		
