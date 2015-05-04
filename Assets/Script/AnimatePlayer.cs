@@ -5,7 +5,6 @@ public class AnimatePlayer : MonoBehaviour {
 
 	Animator anim;
 	bool heldItem = false;
-	public GameObject hotTab;
 
 	// Use this for initialization
 	void Start () 
@@ -34,23 +33,8 @@ public class AnimatePlayer : MonoBehaviour {
 			return;
 		}
 
-		if(1 == 1)
-		{
-			heldItem = true;
-		}
-		else
-		{
-			heldItem = false;
-		}
-
-		if(heldItem)
-		{
-			PistolLocomotion();
-		}
-		else
-		{
-			NormalLocomotion();
-		}
+		NormalLocomotion();
+		
 	}
 
 	void NormalLocomotion()
