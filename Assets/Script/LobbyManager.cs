@@ -32,7 +32,7 @@ public class LobbyManager : Photon.MonoBehaviour {
 		}
 
 		// start up
-		PhotonNetwork.logLevel = PhotonLogLevel.Full;
+		//PhotonNetwork.logLevel = PhotonLogLevel.Full;
 
 		// Hold player name
 		string tempName = PlayerPrefs.GetString ("playerName", "Guest" + Random.Range (1, 9999));
@@ -172,7 +172,6 @@ public class LobbyManager : Photon.MonoBehaviour {
 			{
 				lobbyPlayer = GameObject.Find("LobbyPlayer 1");
 				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
-				photonView.RPC ("ReadyUp", PhotonTargets.All, lobbyPlayer);
 				listedPlayers.Remove(player);
 				break;
 			}
@@ -203,8 +202,7 @@ public class LobbyManager : Photon.MonoBehaviour {
 		} 
 		else 
 		{
-			//TODO: set player to ready state
-			//photonView.RPC ("ReadyUp", PhotonTargets.All);
+			photonView.RPC ("ReadyUp", PhotonTargets.All);
 		}
 
 	}
@@ -218,10 +216,19 @@ public class LobbyManager : Photon.MonoBehaviour {
 
 	// call to apply ready up check
 	[RPC]
-	private void ReadyUp(GameObject lobbyPlayer)
+	private void ReadyUp()
 	{
-		bool status = lobbyPlayer.transform.FindChild("ReadyCheck").gameObject.GetActive();
-		lobbyPlayer.transform.FindChild("ReadyCheck").gameObject.SetActive(!status);
+		GameObject lobbyPlayer;
+		// remove player from list
+		for(int i=2; i<=6; i++)
+		{
+			lobbyPlayer = GameObject.Find("LobbyPlayer "+i);
+			if(lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text == PhotonNetwork.playerName)
+			{
+				bool status = lobbyPlayer.transform.FindChild("ReadyCheck").gameObject.GetActive();
+				lobbyPlayer.transform.FindChild("ReadyCheck").gameObject.SetActive(!status);
+			}
+		}
 	}
 
 	// called if player leaves photon room, governed by button
