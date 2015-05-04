@@ -17,13 +17,13 @@ public class Map : MonoBehaviour {
 	public Wall wallLampPrefab;
 	public Door doorPrefab;
 	public Door doorFramePrefab;
-	public GameObject player;
 	public float lampProbability;
 	public float windowProbability;
 	public MapRoomSettings[] roomSettings;
 	public IntVector2 minRoomSize;
 	public IntVector2 maxRoomSize;
 	private MapRoom connectedRegion;
+	public bool generationDone = false;
 
 
 	public IntVector2 RandomCoordinates {
@@ -168,42 +168,7 @@ public class Map : MonoBehaviour {
 				DestroyImmediate (spawnPoint.gameObject);
 			}
 		}
-		
 
-		//put player in random room
-		GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
-
-		GameObject playerSpawn = spawnPoints[Random.Range(0,spawnPoints.Length - 1)];
-
-		Vector3 playerPos = new Vector3(playerSpawn.transform.position.x * scale, 0.5f, playerSpawn.transform.position.z * scale);
-
-		player = PhotonNetwork.Instantiate("Mafioso", playerPos , Quaternion.identity,0);
-
-		//Debug.Log ("Player Spawn Parent: " + playerSpawn.transform.parent.name);
-		//Debug.Log ("Player Spawn: X = " + (playerSpawn.transform.position.x * scale) + " Z = " +  (playerSpawn.transform.position.z * scale));
-		//Debug.Log ("Player: X = " + player.transform.position.x + " Z = " + player.transform.position.z);
-		//Debug.Log ("Player Spawn Offset: X = " + (playerSpawn.transform.position.x - player.transform.position.x) + " Z = " +  (playerSpawn.transform.position.z - player.transform.position.z));
-		//player.transform.parent = playerSpawn.transform;
-		//player.transform.localPosition = new Vector3(0,0,0);
-		//player.transform.parent = null;
-		PhotonView pv = player.GetComponent<PhotonView>();
-		if (pv.isMine) {
-			MouseLook mouselook  = player.GetComponent<MouseLook>();
-			mouselook.enabled = true;
-			FPSInputController controller  = player.GetComponent<FPSInputController>();
-			controller.enabled = true;
-			CharacterMotor charactermotor = player.GetComponent<CharacterMotor>(); 
-			charactermotor.enabled = true;
-			Transform playerCam = player.transform.Find ("Main Camera");
-			playerCam.gameObject.active = true;
-			GameObject.Find("UI Root").transform.FindChild("Camera").GetComponent<Camera>().enabled = true;
-		}
-		//destroy all player spawn points
-		foreach(GameObject spawn in spawnPoints)
-		{
-			//spawn.transform.DetachChildren();
-			//Destroy(spawn);
-		}
 
 		//Waypoint cleanup
 		GameObject[] wayPoints = GameObject.FindGameObjectsWithTag("Waypoint");
@@ -219,6 +184,8 @@ public class Map : MonoBehaviour {
 				DestroyImmediate(waypoint);
 			}
 		}
+
+		generationDone = true;
 	}
 
 	private void DoFirstGenerationStep (List<Cell> activeCells) {
