@@ -6,7 +6,8 @@ public class EscapeScreen : MonoBehaviour {
 	private bool isMenu = false;
 	// Use this for initialization
 	void Start () {
-		GameObject.Find("UI Root").transform.FindChild("EscapeScreen").gameObject.SetActive(false);
+		if(Application.loadedLevel == 1)
+			GameObject.Find("UI Root").transform.FindChild("EscapeScreen").gameObject.SetActive(false);
 	}
 	
 	// Update is called once per frame

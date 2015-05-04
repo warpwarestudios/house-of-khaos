@@ -26,11 +26,27 @@ public class Health: MonoBehaviour {
 		}
 
 		if (currentHealth <= 0) {
-			StartCoroutine("TimeDisappear");
+			if(this.tag == "Enemy")
+			{
+				StartCoroutine("TimeDisappear");
+			}
+			else
+			{
+				StartCoroutine(EndGameLose());
+			}
+				
 		}
 
 		modifyHealth();
 
+	}
+	
+	public IEnumerator EndGameLose()
+	{
+		yield return new WaitForSeconds (5f);
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
+		Application.LoadLevel ("GameOverScene");
 	}
 
 	IEnumerator TimeDisappear() 
@@ -41,7 +57,7 @@ public class Health: MonoBehaviour {
 	
 	void Update()
 	{
-		if(damaged == true)
+		if(damaged == true && this.tag == "Player")
 		{
 			StartCoroutine(Regenerate());
 		}
