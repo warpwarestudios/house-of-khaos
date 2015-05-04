@@ -112,7 +112,7 @@ public class LobbyManager : Photon.MonoBehaviour {
 	}
 
 	// call back for failed to join
-	void OnPhotonRandomJoinFailed()
+	 public void OnPhotonRandomJoinFailed()
 	{
 		Debug.Log("Can't join random room!");
 		// should relay why the join failed, either too many players in room or no rooms available
@@ -123,19 +123,19 @@ public class LobbyManager : Photon.MonoBehaviour {
 		PhotonNetwork.CreateRoom(createNameHolder.GetComponent <UIInput>().value, new RoomOptions() { maxPlayers = 6 }, TypedLobby.Default);;
 	}
 
-	void OnPhotonJoinRoomFailed() 
+	public void OnPhotonJoinRoomFailed() 
 	{
 		Debug.Log("Could not find room");
 		errorMessenger.Message("Failed to Join", "Could not connect to specified room.");
 	}
 
-	void OnPhotonCreateRoomFailed()
+	public void OnPhotonCreateRoomFailed()
 	{
 		Debug.Log("Could not create room");
 		errorMessenger.Message("Failed to create room", "Room name already in use");
 	}
 
-	void OnJoinedRoom()
+	public void OnJoinedRoom()
 	{
 		inPlayerHub = true;
 		PopulateLobby();
@@ -172,7 +172,7 @@ public class LobbyManager : Photon.MonoBehaviour {
 			{
 				lobbyPlayer = GameObject.Find("LobbyPlayer 1");
 				lobbyPlayer.transform.FindChild("PlayerName").GetComponent<UILabel>().text = player.name;
-				photonView.RPC ("ReadyUp", PhotonTargets.All);
+				photonView.RPC ("ReadyUp", PhotonTargets.All, lobbyPlayer);
 				listedPlayers.Remove(player);
 				break;
 			}
@@ -204,7 +204,7 @@ public class LobbyManager : Photon.MonoBehaviour {
 		else 
 		{
 			//TODO: set player to ready state
-			photonView.RPC ("ReadyUp", PhotonTargets.All);
+			//photonView.RPC ("ReadyUp", PhotonTargets.All);
 		}
 
 	}
@@ -218,10 +218,8 @@ public class LobbyManager : Photon.MonoBehaviour {
 
 	// call to apply ready up check
 	[RPC]
-	private void ReadyUp()
+	private void ReadyUp(GameObject lobbyPlayer)
 	{
-		GameObject lobbyPlayer;
-		lobbyPlayer = GameObject.Find("LobbyPlayer 1");
 		bool status = lobbyPlayer.transform.FindChild("ReadyCheck").gameObject.GetActive();
 		lobbyPlayer.transform.FindChild("ReadyCheck").gameObject.SetActive(!status);
 	}
