@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class KillCountUI : MonoBehaviour {
+public class KillCountUI : Photon.MonoBehaviour {
 	
 	public int enemyDeathCount = 0;
 	public int totalEnemies = 0;
@@ -39,10 +39,22 @@ public class KillCountUI : MonoBehaviour {
 	
 	public void AddEnemy()
 	{
+		photonView.RPC ("PhotonAddEnemy", PhotonTargets.All);
+	}
+
+	[RPC]
+	public void PhotonAddEnemy()
+	{
 		totalEnemies++;
 	}
 	
 	public void AddEnemyDeath()
+	{
+		photonView.RPC ("PhotonAddEnemyDeath", PhotonTargets.All);
+	}
+
+	[RPC]
+	public void PhotonAddEnemyDeath()
 	{
 		enemyDeathCount++;
 	}
