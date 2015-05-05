@@ -22,8 +22,8 @@ public class GameManager : MonoBehaviour {
 
 		if(map.generationDone && !playerSpawned)
 		{
-			PlayerSpawn();
 			playerSpawned = true;
+			StartCoroutine("PlayerSpawn");
 		}
 	}
 	
@@ -37,8 +37,9 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	private void PlayerSpawn()
+	private IEnumerator PlayerSpawn()
 	{
+		yield return new WaitForSeconds (5);
 		//put player in random room
 		GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("Spawn Point");
 		

@@ -70,10 +70,11 @@ public class Shoot : MonoBehaviour {
 		RaycastHit rayHit;	
 		if (Physics.Raycast(ray, out rayHit, 100f))
 		{
-			Debug.Log ("Hit " + rayHit.collider.gameObject.name + "!");
+			//Debug.Log ("Hit " + rayHit.collider.gameObject.name + "!");
 			if (rayHit.collider.tag == "Enemy")
 			{
-				Debug.Log("Enemy Hit!");
+				//Debug.Log("Enemy Hit!");
+				rayHit.transform.GetComponent<ZombieSounds>().GetShot();
 				Health health = rayHit.collider.GetComponent<Health>();
 				health.updateHealth(-transform.GetComponent<Itemization>().damage);
 				
@@ -82,7 +83,7 @@ public class Shoot : MonoBehaviour {
 			{	
 				var hitRotation = Quaternion.FromToRotation(Vector3.forward, rayHit.normal);
 				Instantiate(bulletHolePrefab, rayHit.point, hitRotation);
-				Debug.Log ("Bullet Hole made!");
+				//Debug.Log ("Bullet Hole made!");
 				
 			}
 		

@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ZombieAI : MonoBehaviour {
 
 	public GameObject player;
 	public NavMeshAgent navAgent;
 	public Animator animController;
-	private GameObject AttackedObject; // Hit Detection for zombie attack
+	public List<GameObject> AttackedObjects; // Hit Detection for zombie attack
 
 	public int Damage = 10;// Damge dealt by melee attack
 	public float wanderSpeed = 3f;// The nav mesh agent's speed when chasing.
@@ -21,6 +22,7 @@ public class ZombieAI : MonoBehaviour {
 		//player = GameObject.FindGameObjectWithTag ("Player");
 		navAgent = GetComponent <NavMeshAgent> ();
 		animController = GetComponent <Animator> ();
+		AttackedObjects = new List<GameObject> (); // Hit Detection for zombie attack
 	}
 	
 	// Update is called once per frame
@@ -37,9 +39,7 @@ public class ZombieAI : MonoBehaviour {
 			animController.SetBool ("Attack", false);
 			Dead ();
 
-			Debug.Log ("Current NUmber of Enemies before death: " + Waypoint.CurrentNumberOFEnemies); 
 			Waypoint.CurrentNumberOFEnemies--;
-			Debug.Log ("Current NUmber of Enemies after death: " + Waypoint.CurrentNumberOFEnemies); 
 			Waypoint.killCounter.AddEnemyDeath();
 		}
 
@@ -179,25 +179,37 @@ public class ZombieAI : MonoBehaviour {
 
 	public void ZombieDamage()
 	{
-		if (AttackedObject == null) {
-			Debug.Log("No Hit Detected");
-			return;
+		foreach (GameObject attackedObject in AttackedObjects) 
+		{
+			if (attackedObject == null) {
+				Debug.Log("No Hit Detected");
+				return;
+			}
+			
+			if (attackedObject.tag == "Player")
+			{
+				Debug.Log("Hit player!");
+				Health health = attackedObject.GetComponent<Health>();
+				health.damaged = true;
+				health.updateHealth(-Damage);
+				health.lastDamageTime = Time.time + 10f;
+				float screenFlashAlpha = (health.currentHealth / health.maxHealth) <= 0.4f ? 1f - (health.currentHealth / health.maxHealth) : 0;
+				UIDamage.Show(this.transform.position, true, screenFlashAlpha, true);
+			}
 		}
 
-		if (AttackedObject.tag == "Player")
-		{
-			Health health = AttackedObject.GetComponent<Health>();
-			health.damaged = true;
-			health.updateHealth(-Damage);
-			health.lastDamageTime = Time.time + 10f;
-			float screenFlashAlpha = (health.currentHealth / health.maxHealth) <= 0.4f ? 1f - (health.currentHealth / health.maxHealth) : 0;
-			UIDamage.Show(this.transform.position, true, screenFlashAlpha, true);
-		}
 	}
 	
 	public void OnTriggerEnter(Collider col)
 	{
-		AttackedObject = col.gameObject;
+		//add objects to the list
+		AttackedObjects.Add (col.gameObject);
+	}
+
+	public void OnTriggerExit(Collider col)
+	{
+		//add objects to the list
+		AttackedObjects.Remove(col.gameObject);
 	}
 
 	private void IdleAnim()

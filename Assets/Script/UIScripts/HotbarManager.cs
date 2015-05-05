@@ -114,6 +114,7 @@ public class HotbarManager : MonoBehaviour {
 			items[hotbarNumber].transform.localRotation = items[hotbarNumber].GetComponent<Itemization>().rotation;
 			items[hotbarNumber].transform.localScale = items[hotbarNumber].GetComponent<Itemization>().scale;
 			items[hotbarNumber].GetComponent<Rigidbody>().useGravity = false;
+			items[hotbarNumber].GetComponent<Rigidbody>().freezeRotation = true;
 			items[hotbarNumber].GetComponent<MeshCollider>().enabled = false;
 		}
 
@@ -129,6 +130,7 @@ public class HotbarManager : MonoBehaviour {
 		items[hotbarNumber].transform.parent = null;
 		items[hotbarNumber].transform.position = spawnPos;
 		items[hotbarNumber].GetComponent<Rigidbody>().useGravity = true;
+		items[hotbarNumber].GetComponent<Rigidbody>().freezeRotation = false;
 		items[hotbarNumber].GetComponent<MeshCollider>().enabled = true;
 		items[hotbarNumber] = empty;
 		hotbars[hotbarNumber].GetComponent<UISprite>().spriteName = empty.GetComponent<Itemization>().skillIconName;
