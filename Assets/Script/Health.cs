@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Health: MonoBehaviour {
 	
-	public int maxHealth = 100;
-	public int currentHealth = 100;
+	public float maxHealth = 100;
+	public float currentHealth = 100;
 	public float regenerateSpeed;
 	public float lastDamageTime = 0;
 	public delegate void ModifyHealth ();
@@ -67,7 +67,7 @@ public class Health: MonoBehaviour {
 	IEnumerator Regenerate () {
 		if (regenerateSpeed > 0.0f) {
 
-			yield return new WaitForSeconds (1.0f);
+			yield return new WaitForSeconds (1);
 			if (Time.time > lastDamageTime)
 			{
 				updateHealth(regenerateSpeed);
